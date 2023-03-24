@@ -22,6 +22,7 @@ import { getAllPrePayments, updatePrePaymentById, confirmPrePayment } from '../.
 import { getComputersByCity } from "../../services/paymentServices";
 
 import convertCurrency from '../../utils/convertCurrency';
+import { socket } from '../../utils/socket'
 
 import { PrePaymentStyle } from './style';
 
@@ -103,6 +104,16 @@ const PrePayment = () => {
   const [taxNoteSerie, setTaxNoteSerie] = useState(`${modalData?.tax_note_serie}`);
   // ===================================
 
+  useEffect(() => {
+    socket.on('/pre-payments/create', (socketResponse) => {
+      if(socketResponse == 'Refresh') {
+        getAllPrePayments().then(response => {
+          setPrePaymentData(response.rows);
+        });
+      }
+    });
+    return function cleanup() {socket.off('/pre-payments/create')}
+  }, [])
   
   useEffect(() => {
     (async () => {
