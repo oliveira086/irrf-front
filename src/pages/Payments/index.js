@@ -45,6 +45,7 @@ const Payments = () => {
   ];
   const navigate = useNavigate();
   const toast = chakra.useToast();
+  const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
 
 
   async function searchPayment () {
@@ -77,6 +78,7 @@ const Payments = () => {
   }
 
   async function openAndCloseModal(data) {
+    console.log(data);
     if(isOpen == true) {
       await updatePaymentStatus({ status: status.label, payment_id: modalData.id }).then(response => {
         console.log(response);
@@ -297,6 +299,34 @@ const Payments = () => {
                               </div>
                             </div>
                           </div>
+                        </div>
+
+                        <div className="flex flex-col w-full mt-4 items-start">
+                          <span className="font-semibold text-lg">Memória de Cálculo</span>
+                          <div className="flex w-[32vw] p-2 bg-[#F2F5FF] items-center justify-between rounded ">
+                            <span className="font-semibold">Crédito / Pagamento</span>
+                            <span>{fromCurrency.format(modalData?.value)}</span>
+                          </div>
+                          <div className="flex w-[32vw] p-2 bg-[#F2F5FF] items-center justify-between rounded mt-2">
+                            <span className="font-semibold">Base de Cálculo da Retenção</span>
+                            <span>{fromCurrency.format(modalData?.calculation_basis)}</span>
+                          </div>
+
+                          <div className="flex w-[32vw] p-2 bg-[#F2F5FF] items-center justify-between rounded mt-2">
+                            <span className="font-semibold">{modalData?.type == 'simples' ? 'Aliquota do Imposto Sobre Serviço Retido na Fonte' : 'Alíquota do Imposto de Renda Retido na Fonte'}</span>
+                            <span>{modalData?.index} %</span>
+                          </div>
+
+                          <div className="flex w-[32vw] p-2 bg-[#F2F5FF] items-center justify-between rounded mt-2">
+                            <span className="font-semibold">{ modalData?.type == 'simples' ? 'Valor do ISS Retido na fonte': 'Valor do IR Retido na Fonte'}</span>
+                            <span>{fromCurrency.format(modalData?.withheld_tax)}</span>
+                          </div>
+
+                          <div className="flex w-[32vw] p-2 bg-[#F2F5FF] items-center justify-between rounded mt-2">
+                            <span className="font-semibold">Valor do Saldo de Pagamento</span>
+                            <span>{fromCurrency.format(modalData?.net_of_tax)}</span>
+                          </div>
+
                         </div>
                       </div>
                     </chakra.TabPanel>

@@ -7,5 +7,5 @@ export const PaymentStyles = {
   ModalBodyContainer: 'flex w-auto h-auto',
   ImageModalContainer: 'w-[30vw] min-w-[36vh] h-auto min-h-[54vh] rounded h-full mr-2',
   ContentModalContainer: 'flex flex-col w-auto h-auto min-h-[56vh] pb-2 justify-between',
-  PaymentContentContainer: ''
+  PaymentContentContainer: 'h-[54vh] overflow-y-scroll'
 }
