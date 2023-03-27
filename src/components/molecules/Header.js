@@ -28,7 +28,7 @@ const Header = ({ userName, cityName }) => {
               <TbHeartRateMonitor color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Painel Administrativo</span>
             </button>
-            <button className={style.Button}>
+            <button  onClick={() => navigate('/pagamentos') } className={uri.indexOf('/pagamentos') > -1 ? style.ButtonSelected : style.Button} >
               <MdAttachMoney color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Pagamentos</span>
             </button>

@@ -12,6 +12,7 @@ import FiscalRegister from './pages/Register/FiscalRegister';
 import RegisterConfirm from './pages/Register/RegisterConfirm';
 import HomeAdmin from './pages/HomeAdmin';
 import PrePayment from './pages/PrePayments';
+import Payments from './pages/Payments';
 
 const theme = extendTheme({
   fonts: {
@@ -34,6 +35,7 @@ function Router(){
           <Route path='/cadastro-confirmado' exact element={<RegisterConfirm />} />
           <Route path='/home-admin' exact element={<HomeAdmin />} />
           <Route path='/pre-pagamentos' exact element={<PrePayment />} />
+          <Route path='/pagamentos' exact element={<Payments />}/>
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
