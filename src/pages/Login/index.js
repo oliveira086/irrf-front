@@ -44,7 +44,6 @@ const Login = () => {
       cookies.set('@IRRF:bearerToken', responseToAuth.body['x-access-token']);
       sessionStorage.setItem('role', responseToAuth?.body?.role);
 
-      console.log(responseToAuth?.body?.role)
       switch(responseToAuth?.body?.role){
         case 'ADMIN':
           navigate('/home-admin');

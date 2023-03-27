@@ -8,7 +8,6 @@ import Zoom from 'react-medium-image-zoom'
 
 import 'moment/locale/pt-br';
 import 'react-medium-image-zoom/dist/styles.css'
-import { useForm } from "react-hook-form";
 
 import Header from '../../components/molecules/Header';
 import Button from '../../components/atoms/Button';
@@ -23,28 +22,29 @@ import { getAllPrePayments, updatePrePaymentById, confirmPrePayment } from '../.
 import { getComputersByCity } from "../../services/paymentServices";
 
 import convertCurrency from '../../utils/convertCurrency';
+import { socket } from '../../utils/socket'
 
 import { PrePaymentStyle } from './style';
 
-const PrePaymentItem = ({ img, city, state, date, tax_note, data, setData, onClick, computers, setComputer, setComputerSelected }) => {
+const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, setData, onClick, computers, setComputer, computerSelected, setComputerSelected }) => {
   
   async function openModal() {
-    setComputerSelected([]);
     setData(data);
     onClick();
 
     let responseComputers = await getComputersByCity({ city_id: data.city_id});
     setComputer(responseComputers.body);
+    setComputerSelected([]);
   }
 
   computers.map(computerDataCallback => {
-    if(computerDataCallback.id == data?.computer_id) {
-      setComputerSelected(computerDataCallback);
+    if(computerDataCallback.id == modalData?.computer_id) {
+      return setComputerSelected(computerSelected.length == 0 ? computerDataCallback : computerSelected);
     }
   });
 
   return (
-    <div className={PrePaymentStyle.ItemContainer} onClick={() => {openModal()}}>
+    <div className={PrePaymentStyle.ItemContainer} onClick={() => { openModal()} }>
       {img.indexOf('.pdf') == -1 ? 
         <div className={`w-28 h-28 mr-10`}>
           <img src={img} className='w-28 h-28' />
@@ -103,8 +103,17 @@ const PrePayment = () => {
   const [taxNote, setTaxNote] = useState(`${modalData?.tax_note}`);
   const [taxNoteSerie, setTaxNoteSerie] = useState(`${modalData?.tax_note_serie}`);
   // ===================================
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
+  useEffect(() => {
+    socket.on('/pre-payments/create', (socketResponse) => {
+      if(socketResponse == 'Refresh') {
+        getAllPrePayments().then(response => {
+          setPrePaymentData(response.rows);
+        });
+      }
+    });
+    return function cleanup() {socket.off('/pre-payments/create')}
+  }, [])
   
   useEffect(() => {
     (async () => {
@@ -125,7 +134,18 @@ const PrePayment = () => {
     setValue(modalData?.value);
     setTaxNoteSerie(modalData?.tax_note_serie);
     setCalculateBasis(modalData?.calculation_basis);
-    setAliquot(modalData?.index);
+
+    // Logica para inserir a aliquota correta
+    if(modalData?.['company_id_pre_payments.is_simple'] == true && modalData?.index == null) {
+      setAliquot('');
+    } else if(modalData?.index !== null) {
+      setAliquot(modalData?.index);
+    } else if(modalData?.['company_id_pre_payments.is_simple'] == false && modalData?.['company_id_pre_payments.is_service'] == true) {
+      setAliquot(modalData?.['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.value']);
+    } else if(modalData?.['company_id_pre_payments.is_product'] == true && modalData?.['company_id_pre_payments.is_service'] == false) {
+      setAliquot(modalData?.['company_id_pre_payments.aliquot']);
+    }
+    // =====================================
   }, [modalData]);
 
   function openAndCloseModal () {
@@ -146,7 +166,7 @@ const PrePayment = () => {
 
     await updatePrePaymentById(object).then(response => {
       toast({
-        title: 'Pre pagamento Atualizado!',
+        title: 'Pré pagamento Atualizado!',
         status: 'success',
         position: 'top-right',
         isClosable: true,
@@ -155,16 +175,46 @@ const PrePayment = () => {
       openAndCloseModal();
     }).catch(error => {
       toast({
-        title: 'Houve um problema ao atualizar esse pre pagamento!',
+        title: 'Houve um problema ao atualizar esse pré pagamento!',
         status: 'error',
         position: 'top-right',
         isClosable: true,
       });
-    })
+    });
   }
 
-  const HandleCalculatePrePayment = () => {
+  const HandleCalculatePrePayment = async () => {
 
+    try {
+      await HandleSavePrePayment();
+
+      confirmPrePayment({ pre_payment_id: modalData.id }).then(response => {
+        toast({
+          title: 'Pré pagamento Calculado com sucesso!',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
+
+        navigate(0);
+      }).catch(error => {
+        toast({
+          title: 'Houve um problema ao calcular esse pré pagamento!',
+          status: 'error',
+          position: 'top-right',
+          isClosable: true,
+        });
+      });
+      
+    } catch(error) {
+      toast({
+        title: 'Houve um problema ao calcular esse pré pagamento!',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    }
+    
   }
 
   return (
@@ -189,25 +239,23 @@ const PrePayment = () => {
             {imagem?.indexOf('.pdf') == -1 ?
               <div className={`w-full h-[36vh]`}>
                 <Zoom>
-                  <img src={modalData?.tax_note_link} className='w-full h-[56vh]' />
+                  <img src={modalData?.tax_note_link} className='w-full h-[56vh] pb-2' />
                 </Zoom>
               </div>
               :
               <div className={`w-full h-[36vh]`}>
-                <embed src={modalData?.tax_note_link} className={`w-full h-[56vh]`}></embed>
+                <embed src={modalData?.tax_note_link} className={`w-full h-[56vh] pb-2`}></embed>
               </div>
             }
             </div>
 
             <div className={PrePaymentStyle.ContentModalContainer}>
-              <form>
+              <form className='h-auto'>
                 <div className={PrePaymentStyle.RowContainer}>
                   <div className='w-full pr-16'>
                     <Select placeholder={'Ordenador de despesa'}
                       selectedValue={computerSelected}
-                      setSelectedValue={(item) =>
-                        setComputerSelected(item)
-                      }
+                      setSelectedValue={(item) => setComputerSelected(item)}
                       options={computerData}
                     />
                   </div>
@@ -241,8 +289,12 @@ const PrePayment = () => {
                   </div>
                 </div>
 
-                <div className='flex flex-col w-full mt-2'>
+                <div className='flex flex-col w-full h-auto mt-2'>
                   <span className='text-2xl font-semibold'>Informações do Fornecedor</span>
+                  <div className='w-full h-auto'>
+                    <span className='font-semibold'>Objeto do contrato: </span>
+                    <span>{modalData?.['company_id_pre_payments.object']}</span>
+                  </div>
                   <div className='flex w-full mt-2'>
                     <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
                       {modalData?.['company_id_pre_payments.is_simple'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
@@ -260,12 +312,12 @@ const PrePayment = () => {
                 </div>
               </form>
 
-              <div className='flex mt-8'>
+              <div className='flex mt-8 h-auto'>
                 <div className='w-56 mr-10'>
                   <Button label='Salvar' type='second' onPress={HandleSavePrePayment}/>
                 </div>
                 <div className='w-56'>
-                  <Button label='Calcular' />
+                  <Button label='Calcular' onPress={HandleCalculatePrePayment} />
                 </div>
               </div>
             </div>
@@ -284,8 +336,10 @@ const PrePayment = () => {
                     date={moment(prePaymentDataCallback.createdAt).format('DD/MM/YYYY')}
                     tax_note={prePaymentDataCallback.tax_note}
                     data={prePaymentDataCallback}
+                    modalData={modalData}
                     setData={setModalData}
                     computers={computerData}
+                    computerSelected={computerSelected}
                     setComputer={setComputerData}
                     setComputerSelected={setComputerSelected}
                     onClick={openAndCloseModal}

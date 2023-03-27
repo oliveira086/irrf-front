@@ -7,8 +7,8 @@ export const PrePaymentStyle = {
   ItemContainer: 'flex w-full h-auto rounded bg-[#F5F5FA] p-2 mt-2 rounded cursor-pointer',
   ImageItemContainer: 'w-28 h-28 mr-10',
   InfoItemContainer: 'flex flex-col w-4/5 justify-between',
-  ModalBodyContainer: 'flex h-[60vh]',
-  ImageModalContainer: 'w-80 h-auto rounded h-full mr-2',
-  ContentModalContainer: 'flex flex-col w-4/6 h-[56vh] justify-between',
+  ModalBodyContainer: 'flex h-auto',
+  ImageModalContainer: 'w-80 h-auto rounded h-full mr-2 pb-2',
+  ContentModalContainer: 'flex flex-col w-4/6 h-auto min-h-[56vh] pb-2 justify-between',
   RowContainer: 'flex w-full'
 }
