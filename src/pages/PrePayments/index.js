@@ -222,7 +222,7 @@ const PrePayment = () => {
       <Header userName={userName} cityName={cityName} />
       <div className={PrePaymentStyle.BodyContainer}>
         <div className={PrePaymentStyle.TitleContainer}>
-          <h1 className='text-3xl font-semibold'>Pre pagamentos</h1>
+          <h1 className='text-3xl font-semibold'>Pré pagamentos</h1>
           <div className='w-auto flex items-end mt-2'>
             <div className='w-72 mr-4'>
               <Input label='Pesquisar' placeholder='Pesquisar por CNPJ'/>

@@ -8,6 +8,7 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import Header from '../../components/molecules/Header';
 import Button from '../../components/atoms/Button';
 import Modal from '../../components/atoms/Modal';
+import Pagination from '../../components/molecules/Pagination';
 
 import { getUserInformations } from '../../services/authServices';
 
@@ -19,16 +20,26 @@ const HomeAdmin = () => {
   const [cityName, setCityName] = useState('');
   const [modalData, setModalData] = useState();
   const [isOpen, setIsOpen] = useState();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [countPages, setCountPages] = useState(1);
+
   moment.locale('pt-br');
   const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
 
   useEffect(() => {
     (async () => await getUserInformations().then(response => {
+      setCountPages(response.body.meta.count);
+      setCurrentPage(response.body.meta.currentPage);
       setPaymentsData(response.body.rows);
       setUserName(response.body.user_name);
       setCityName(response.body.city_name);
     }))()
   }, []);
+
+  useEffect(() => {
+    console.log(currentPage);
+  }, [currentPage])
 
   function openAndCloseModal () {
     setIsOpen(!isOpen);
@@ -140,6 +151,7 @@ const HomeAdmin = () => {
                   })}
                 </chakra.Tbody>
               </chakra.Table>
+              <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} pages={countPages} />
             </chakra.TableContainer>
           </div>
           :

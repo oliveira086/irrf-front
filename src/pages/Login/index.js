@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 
@@ -11,6 +11,7 @@ import * as chakra from '@chakra-ui/react';
 import { LoginStyle } from './style';
 
 import { loginService } from "../../services/authServices";
+import { getUserInformations } from '../../services/authServices';
 
 
 const Login = () => {
@@ -23,6 +24,26 @@ const Login = () => {
   const navigate = useNavigate();
   const toast = chakra.useToast();
   const cookies = new Cookies();
+
+  useEffect(() => {
+    const bearerToken = cookies.get('@IRRF:bearerToken');
+    if(bearerToken !== null) {
+      switch(sessionStorage.getItem('role')) {
+        case 'ADMIN':
+          navigate('/home-admin')
+          break
+        case 'SECRETARY':
+          // navigate('/home-admin')
+          break
+        case 'CITY MANAGER':
+          // navigate('/home-admin')
+          break
+        case 'USER':
+          // navigate('/home-admin')
+          break
+      }
+    }
+  }, []);
 
   function openAndCloseModal () {
     setIsOpen(!isOpen);
@@ -51,8 +72,6 @@ const Login = () => {
         default:
           break
       }
-
-      
 
     } catch(error) {
       toast({
@@ -110,7 +129,6 @@ const Login = () => {
           </div>    
         </div>
       </div>
-      
     </section>
   )
 }
