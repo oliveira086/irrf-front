@@ -78,10 +78,8 @@ const Payments = () => {
   }
 
   async function openAndCloseModal(data) {
-    console.log(data);
     if(isOpen == true) {
       await updatePaymentStatus({ status: status.label, payment_id: modalData.id }).then(response => {
-        console.log(response);
         navigate(0);
       })
       setIsOpen(!isOpen);

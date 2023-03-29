@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 import { BiHomeSmile, BiChevronDown } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { TbHeartRateMonitor } from 'react-icons/tb';
-import { MdAttachMoney } from 'react-icons/md';
+import { MdAttachMoney, MdExitToApp } from 'react-icons/md';
 import * as chakra from '@chakra-ui/react';
 
 import logo from '../../assets/images/logo-irrf.png'
@@ -10,6 +12,15 @@ import logo from '../../assets/images/logo-irrf.png'
 const Header = ({ userName, cityName }) => {
   const uri = window.location.pathname;
   const navigate = useNavigate();
+
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  function logout() {
+    const cookies = new Cookies();
+    cookies.set('@IRRF:bearerToken', null);
+    sessionStorage.setItem('role', null);
+    window.location.href = '/'
+  }
 
   function ButtonByRole (role) {
     switch(role) {
@@ -24,7 +35,7 @@ const Header = ({ userName, cityName }) => {
               <BsImageFill color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Pré Pagamentos</span>
             </button>
-            <button className={style.Button}>
+            <button onClick={() => navigate('/painel-administrativo') } className={uri.indexOf('/painel') > -1 ? style.ButtonSelected : style.Button}> 
               <TbHeartRateMonitor color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Painel Administrativo</span>
             </button>
@@ -64,14 +75,23 @@ const Header = ({ userName, cityName }) => {
             <span>{cityName}</span>
           </div>
           <div className={style.UserAvatarContainer}>
+            {menuVisible == true ? 
+              <div onClick={() => logout()} className="absolute mt-28 mr-20 w-40 rounded p-2 border border-[#BB0000] bg-[#fff] cursor-pointer">
+                <div className="flex items-center">
+                  <MdExitToApp size={24} className="mr-4"/>
+                  <span>Sair</span>
+                </div>
+              </div>
+              :
+              <></>
+            }
             <chakra.Avatar />
             <div className="">
-              <BiChevronDown size={24} className="cursor-pointer" />
+              <BiChevronDown size={24} className="cursor-pointer" onClick={() => setMenuVisible(!menuVisible)}/>
             </div>
           </div>
         </div>
       </chakra.Skeleton>
-      
     </div>
   )
 }

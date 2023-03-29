@@ -13,6 +13,8 @@ import RegisterConfirm from './pages/Register/RegisterConfirm';
 import HomeAdmin from './pages/HomeAdmin';
 import PrePayment from './pages/PrePayments';
 import Payments from './pages/Payments';
+import AdminPanel from './pages/AdminPanel';
+import AdminSupplier from './pages/AdminSupplier';
 
 const theme = extendTheme({
   fonts: {
@@ -36,6 +38,8 @@ function Router(){
           <Route path='/home-admin' exact element={<HomeAdmin />} />
           <Route path='/pre-pagamentos' exact element={<PrePayment />} />
           <Route path='/pagamentos' exact element={<Payments />}/>
+          <Route path='/painel-administrativo' exact element={<AdminPanel />} />
+          <Route path='/painel-fornecedores' exact element={<AdminSupplier />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
