@@ -1,5 +1,5 @@
 const axios = require('axios');
-const ambient = 'prod'
+const ambient = 'dev'
 
 const Cookies = require('universal-cookie').default;
 
@@ -10,7 +10,7 @@ function getToken () {
 }
 
 var axiosInstance = axios.create({
-  baseURL: ambient === 'dev' ? 'http://localhost:8080' : 'https://api-dev.cefitem.net',
+  baseURL: ambient === 'dev' ? 'http://localhost:8080' : 'https://api.centralderetencao.com.br',
   "Authorization": `Bearer ${getToken()}`
 });
 

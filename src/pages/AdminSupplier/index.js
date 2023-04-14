@@ -13,13 +13,16 @@ import { TbEdit } from "react-icons/tb";
 import Header from '../../components/molecules/Header';
 import Button from "../../components/atoms/Button";
 import Input from "../../components/atoms/Input";
+import Select from "../../components/atoms/Select";
 import Modal from "../../components/atoms/Modal";
+import UploadFile from '../../components/atoms/UploadFile';
 import Pagination from "../../components/molecules/Pagination";
 
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { getUserInformations } from "../../services/authServices";
-import { getAllCompaniesAdmin } from "../../services/companyServices";
+import { getAllCompaniesAdmin, findCompanyByCNPJ } from "../../services/companyServices";
+import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices";
 
 
 import { AdminSupplierStyle } from './style';
@@ -27,6 +30,7 @@ import { AdminSupplierStyle } from './style';
 const AdminSupplier = () => {
   const [userName, setUserName] = useState('');
   const [cityName, setCityName] = useState('');
+  const [cnpjSearch, setCnpjSearch] = useState('');
 
   const [countPages, setCountPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,13 +39,42 @@ const AdminSupplier = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState();
 
+  const [RegisterSupplierIsOpen, setRegisterSupplierIsOpen] = useState(false);
+  const [productAndServices, setProductAndServices] = useState([]);
+  const [productAndServicesSelected, setProductAndServicesSelected ] = useState();
+
+  const [issItems, setIssItems] = useState([]);
+  const [issItemSelected, setIssItemSelected] = useState();
+
+  const [companyName, setCompanyName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [objectToContract, setObjectToContract] = useState('');
+  const [address, setAddress] = useState('');
+  const [cep, setCep] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [district, setDistrict] = useState('');
+  const [number, setNumber] = useState('');
+  const [complement, setComplement] = useState('');
+
+  const [isProduct, setIsProduct] = useState(false);
+  const [isService, setIsService] = useState(false);
+  const [isSimple, setIsSimple] = useState(false);
+  const [isSimei, setIsSimei] = useState(false);
+  const [isExemptIR, setIsExemptIR] = useState(false);
+  const [isExemptISS, setIsExemptISS] = useState(false);
+  const [isImmuneIss, setIsImmuneIss] = useState(false);
+  const [isImmuneIR, setIsImmuneIR] = useState(false);
+
+  const [fileUpload, setFileUpload] = useState();
+
   const [rows, setRows] = useState([]);
 
   const [cnpj, setCnpj] = useState('');
 
   const query = useQuery();
   const navigate = useNavigate();
-
 
   function useQuery() {
     const { search } = useLocation();
@@ -50,16 +83,67 @@ const AdminSupplier = () => {
   }
 
   async function openAndCloseModal(data) {
-		console.log(data);
     setModalData(data);
     setIsOpen(!isOpen);
+  }
+
+  async function openAndCloseRegisterSupplier() {
+
+    setRegisterSupplierIsOpen(!RegisterSupplierIsOpen);
+    getAllProducts().then(response => {
+      setProductAndServices(response.body)
+    });
+
+    getAllServices().then(response => {
+      setIssItems(response.body);
+    });
+  }
+
+  function handleUploadFile(files) {
+    setFileUpload(files[0]);
+  }
+
+  async function searchCompanyByCnpj() {
+    await findCompanyByCNPJ({ cnpj: cnpj }).then(response => {
+      setCompanyName(response.body?.razao_social);
+      setCep(response.body?.cep);
+      setDistrict(response.body?.bairro);
+      setCity(response.body?.municipio);
+      setState(response.body?.uf);
+      setNumber(response.body?.numero);
+      setIsSimple(response?.body?.opcao_pelo_simples);
+    }) 
+  }
+
+  async function registerCompany () {
+
+    const object = {
+      "city_id": query.get("cityId"),
+      "products_services_id": productAndServicesSelected.id,
+      "label": companyName,
+      "cnpj": cnpj,
+      "email": email,
+      "object": objectToContract,
+      "phone": phone,
+      "aliquot": productAndServicesSelected,
+      "address": address,
+      "district": "",
+      "complement": "",
+      "cep": "",
+      "number": "",
+      "city": "",
+      "uf": ''
+
+
+    }
+
+    console.log(object);
   }
 
   useEffect(() => {
     (async () => {
       await getUserInformations().then(response => {
         setUserName(response.body.user_name);
-        setCityName(response.body.city_name);
       });
     })();
   }, []);
@@ -69,9 +153,22 @@ const AdminSupplier = () => {
       await getAllCompaniesAdmin({ city_id: query.get("cityId"), audited: audited }, { currentPage: currentPage }).then(response => {
         setRows(response.body.rows);
         setCountPages(response.body.meta.pageCount);
+        setCityName(response?.body?.rows[0]?.['company_city_id.label']);
       })
     })()
   }, [currentPage, audited]);
+
+  useEffect(() => {
+
+    if(productAndServicesSelected?.product_or_service == false) {
+      setIsService(true);
+      setIsProduct(false);
+    } else if(productAndServicesSelected?.product_or_service == true) {
+      setIsProduct(true);
+      setIsService(false);
+    }
+    
+  }, [productAndServicesSelected])
 
 
   return (
@@ -81,20 +178,20 @@ const AdminSupplier = () => {
         <div className={AdminSupplierStyle.TitleContainer}>
           <div className='flex w-full justify-between'>
             <h1 className='text-3xl font-semibold'>Fornecedores</h1>
-            <h2 className='text-2xl font-medium text-[#2F4ECC]'>Jaíba</h2>
+            <h2 className='text-2xl font-medium text-[#2F4ECC]'>{cityName}</h2>
           </div>
             
           <div className='w-auto flex justify-between items-end mt-2'>
             <div className='flex items-end'>
               <div className='w-72 mr-4'>
-                <Input label='Pesquisar' placeholder='Pesquisar Fornecedor' value={cnpj} onChange={e => setCnpj(e.target.value)} />
+                <Input label='Pesquisar' placeholder='Pesquisar Fornecedor' value={cnpjSearch} onChange={e => setCnpjSearch(e.target.value)} />
               </div>
               <div className={AdminSupplierStyle.TitleButtonContainer}>
                 <Button label={<AiOutlineSearch />} onPress={() => {}} />
               </div>
             </div>
             <div className='w-56'>
-              <Button label={<><AiOutlinePlus className='mr-4'/><span>Cadastrar Fornecedor</span></>} onPress={() => {}} />
+              <Button label={<><AiOutlinePlus className='mr-4'/><span>Cadastrar Fornecedor</span></>} onPress={openAndCloseRegisterSupplier} />
             </div>
           </div>
         </div>
@@ -134,6 +231,7 @@ const AdminSupplier = () => {
             </chakra.Table>
           </chakra.Skeleton>
         </div>
+
         <Modal isCentered size={'xl'} title={'Fornecedor'} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
 					<div className={AdminSupplierStyle.ModalBody}>
 						<div className={AdminSupplierStyle.ModalContentRow}>
@@ -228,10 +326,169 @@ const AdminSupplier = () => {
 						</div>
 					</div>
 				</Modal>
+
+        <Modal isCentered size={'xl'} title={'Cadastro de Fornecedor'} isOpen={RegisterSupplierIsOpen} modalOpenAndClose={openAndCloseRegisterSupplier} >
+          <div className='w-full h-[60vh] overflow-y-scroll pl-2'>
+            <div className={AdminSupplierStyle.ModalContentRow}>
+              <span className='text-xl font-semibold'>Dados da Empresa</span>
+            </div>
+            
+            <div className='flex justify-between mb-2'>
+              <div className='flex w-auto items-end'>
+                <div className='w-96 mr-2'>
+                  <Input label='CNPJ' placeholder='CNPJ' value={cnpj} onChange={e => setCnpj(e.target.value)} />
+                </div>
+              
+                <div className={AdminSupplierStyle.TitleButtonContainer}>
+                  <Button label={<AiOutlineSearch />} onPress={searchCompanyByCnpj} />
+                </div>
+              </div>
+
+              <div className='w-5/12'>
+                <Input label='Email' placeholder='Nome Fantasia ou Razão Social' value={email} onChange={e => setEmail(e.target.value)} />
+              </div>
+              
+            </div>
+            <div className='flex justify-between mb-2'>
+              <div className='w-5/12'>
+                <Input label='Nome' placeholder='Nome Fantasia ou Razão Social' value={companyName} onChange={e => setCompanyName(e.target.value)} />
+              </div>
+
+              <div className='w-5/12'>
+                <Input label='Telefone' placeholder='Telefone' value={phone} onChange={e => setPhone(e.target.value)} />
+              </div>
+            </div>
+
+            <div>
+              <Select placeholder={'Produto / Serviço'} options={productAndServices} setSelectedValue={setProductAndServicesSelected} selectedValue={productAndServicesSelected} />       
+            </div>
+            
+            {productAndServicesSelected?.product_or_service == false ?
+              <div>
+                <Select placeholder={'Item ISS'} options={issItems} setSelectedValue={setIssItemSelected} selectedValue={issItemSelected} />
+              </div>
+              :
+              <></>
+            }
+
+            <div className='mb-2'>
+              <Input label='Objeto do contrato' placeholder='Objeto do contrato' value={objectToContract} onChange={e => setObjectToContract(e.target.value)} />
+            </div>
+
+            <div>
+              <span className='text-xl mt-2'>Localização</span>
+            </div>
+
+            <div className='flex justify-between mb-2'>
+              <div className='w-5/12'>
+                <Input label='Estado' placeholder='Estado' value={state} onChange={e => setState(e.target.value)} />
+              </div>
+
+              <div className='w-5/12'>
+                <Input label='Cidade' placeholder='Cidade' value={city} onChange={e => setCity(e.target.value)} />
+              </div>
+            </div>
+
+            <div className='mb-2'>
+              <div className='w-5/12'>
+                <Input label='CEP' placeholder='CEP' value={cep} onChange={e => setCep(e.target.value)} />
+              </div>
+
+              <div className='w-5/12'>
+                <Input label='Rua' placeholder='CEP' value={address} onChange={e => setAddress(e.target.value)} />
+              </div>
+            </div>
+
+            <div className='flex justify-between mb-2'>
+              <div className='w-72'>
+                <Input label='Bairro' placeholder='Bairro' value={district} onChange={e => setDistrict(e.target.value)} />
+              </div>
+
+              <div className='w-96'>
+                <Input label='Cidade' placeholder='Rua' value={city} onChange={e => setCity(e.target.value)} />
+              </div>
+
+              <div className='w-72'>
+                <Input label='Número' placeholder='Número' value={number} onChange={e => setNumber(e.target.value)} />
+              </div>
+            </div>
+            
+            <div className='mb-2'>
+              <Input label='Complemento' placeholder='Complemento' value={complement} onChange={e => setComplement(e.target.value)} />
+            </div>
+
+            <div>
+              <span className='text-xl'>Informações Complementares</span>
+            </div>
+
+            <div className='mb-4'>
+              <div>
+                <chakra.Switch isChecked={isService} onChange={(e) => {setIsService(!isService)}} />
+                <span className='ml-2'>Fornece Serviço</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isProduct} onChange={(e) => {setIsProduct(!isProduct)}} />
+                <span className='ml-2'>Fornece Produto</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isSimple} onChange={(e) => {setIsSimple(!isSimple)}} />
+                <span className='ml-2'>Optante pelo simples</span>
+              </div>
+
+              <div>
+                <chakra.Switch  isChecked={isSimei} onChange={(e) => {setIsSimei(!isSimei)}} />
+                <span className='ml-2'>Simei</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isExemptISS} onChange={(e) => {setIsExemptISS(!isExemptISS)}} />
+                <span className='ml-2'>Isento ISS</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isExemptIR} onChange={(e) => {setIsExemptIR(!isExemptIR)}} />
+                <span className='ml-2'>Isento IRRF</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isImmuneIss} onChange={(e) => {setIsImmuneIss(!isImmuneIss)}} />
+                <span className='ml-2'>Imune ISS</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isImmuneIR} onChange={(e) => {setIsImmuneIR(!isImmuneIR)}} />
+                <span className='ml-2'>Imune IRRF</span>
+              </div>
+            </div>
+
+            <div className='flex flex-col h-auto min-h-[10vh]'>
+              <span className='text-xl'>Anexar Arquivo</span>
+              <div className='w-72 mt-2'>
+                <UploadFile title="Anexar Objeto do contrato"
+                  onUpload={handleUploadFile}
+                  accept={{'image/pdf': ['.pdf', '.png', '.jpg', '.jpeg']}}
+                  file={fileUpload}
+                />
+              </div>
+            </div>
+
+            <div className='flex pl-20 pr-20 justify-between mt-6 mb-6'>
+              <div className='w-56'>
+                <Button label='Cancelar' type='second' onPress={openAndCloseRegisterSupplier}/>
+              </div>
+
+              <div className='w-56'>
+                <Button label='Salvar' onPress={registerCompany}/>
+              </div>
+              
+            </div>
+          </div>
+        </Modal>
       
         <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} pages={countPages} />
       </div>
-
     </section>
   )
 }

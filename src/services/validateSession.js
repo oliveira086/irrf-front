@@ -4,7 +4,7 @@ const ValidateSession = (status) => {
   try {
     const cookies = new Cookies();
 
-    if(status == 500) {
+    if(status == 500 || status == 401) {
       cookies.set('@IRRF:bearerToken', null);
       sessionStorage.setItem('role', null);
       window.location.href = '/'

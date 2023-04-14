@@ -20,7 +20,7 @@ const unlockUserService = async (params) => {
 
 const getAllCitiesRegisted = async () => {
   try {
-    let response = await api.post('/city/get-all-cities-admin', {});
+    let response = await api.get('/city/get-all-cities-admin', {});
     return response.data
   } catch (error) {
     return error.response.status

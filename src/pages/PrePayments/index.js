@@ -20,17 +20,28 @@ import Modal from '../../components/atoms/Modal';
 import { getUserInformations } from '../../services/authServices';
 import { getAllPrePayments, updatePrePaymentById, confirmPrePayment } from '../../services/prePaymentServices';
 import { getComputersByCity } from "../../services/paymentServices";
+import { verifyCompany } from "../../services/companyServices";
 
 import convertCurrency from '../../utils/convertCurrency';
 import { socket } from '../../utils/socket'
 
 import { PrePaymentStyle } from './style';
 
-const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, setData, onClick, computers, setComputer, computerSelected, setComputerSelected }) => {
+const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, setData, onClick, computers, setComputer, computerSelected, setComputerSelected,
+  companyData, setCompanyData }) => {
   
   async function openModal() {
     setData(data);
     onClick();
+    
+    const verifyCompanyData = await verifyCompany({ body:{ city_id: data.city_id }, cnpj: data.cnpj });
+    let replacementData = [];
+
+    verifyCompanyData.body.map(companyCallback => {
+      replacementData.push({ label: companyCallback.object, value: companyCallback })
+    });
+
+    setCompanyData(replacementData);
 
     let responseComputers = await getComputersByCity({ city_id: data.city_id});
     setComputer(responseComputers.body);
@@ -88,6 +99,8 @@ const PrePayment = () => {
   const [modalData, setModalData] = useState([]);
   const [computerData, setComputerData] = useState([]);
   const [computerSelected, setComputerSelected] = useState([]);
+  const [companyData, setCompanyData] = useState([]);
+  const [companySelected, setCompanySelected] = useState();
 
   const [isOpen, setIsOpen] = useState();
   const imagem = modalData?.tax_note_link;
@@ -150,11 +163,17 @@ const PrePayment = () => {
 
   function openAndCloseModal () {
     setIsOpen(!isOpen);
+    setCompanyData([]);
+  }
+
+  function selectedCompanyWithObject(params) {
+    console.log(params);
   }
 
   const HandleSavePrePayment = async () => {
 
     const object = {
+      company_id: companySelected?.value == undefined ? '' : companySelected?.value?.id,
       pre_payment_id: modalData.id,
       tax_note: taxNote,
       calculation_basis: parseFloat(convertCurrency(calculateBasis)),
@@ -260,7 +279,7 @@ const PrePayment = () => {
                     />
                   </div>
                 </div>
-
+                
                 <div className={PrePaymentStyle.RowContainer}>
                   <div className='w-60 mr-4'>
                     <Input label='CNPJ' placeholder='CNPJ' value={cnpj} onChange={e => setCnpj(e.target.value)} />
@@ -271,6 +290,20 @@ const PrePayment = () => {
                   </div>
                 </div>
 
+                { companyData.length > 1 ?
+                  <div className={PrePaymentStyle.RowContainer}>
+                    <div className='w-full pr-16'>
+                      <Select placeholder={'Objeto'}
+                        selectedValue={companySelected}
+                        setSelectedValue={(item) => selectedCompanyWithObject(item)}
+                        options={companyData} />
+                    </div>
+                  </div>
+                : 
+                  <>
+                  </>
+                }
+                
                 <div className={PrePaymentStyle.RowContainer}>
                   <div className='w-60'>
                     <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={value} onChange={e => setValue(e.target.value)} />
@@ -343,6 +376,8 @@ const PrePayment = () => {
                     setComputer={setComputerData}
                     setComputerSelected={setComputerSelected}
                     onClick={openAndCloseModal}
+                    companyData={companyData}
+                    setCompanyData={setCompanyData}
                   />
                 )
               })}

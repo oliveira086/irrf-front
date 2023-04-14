@@ -9,6 +9,15 @@ const createCompany = async (params) => {
   }
 };
 
+const registerCompany = async (params) => {
+  try {
+    let response = await api.post('/company/create-company', params);
+    return response.data
+  } catch (error) {
+    return error.response.status;
+  }
+}
+
 const getAllCompanies = async (params) => {
   try {
     let response = await api.post(`/company/get-all-companies?currentPage=${params.currentPage}&pageSize=9`);
@@ -27,6 +36,16 @@ const getCompanyByCnpj = async (params) => {
   }
 };
 
+const findCompanyByCNPJ = async (params) => {
+  try {
+    let response = await api.post(`/company/cnpj-finder?cnpj=${params.cnpj}`,);
+    return response.data
+  } catch (error) {
+    throw new Error(error.response.status);
+    return error.response.status;
+  }
+}
+
 const getCompanyByProductServices = async (params) => {
   try {
     let response = await api.post(`/company/get-company-by-product-services`, params);
@@ -39,7 +58,7 @@ const getCompanyByProductServices = async (params) => {
 const uploadReceiptCompany = async (params, id) => {
   try {
     let response = await api.post(`/company/upload-contract?id=${id}`, params, {
-      headers: {"Content-Type": undefined}
+      headers: { "Content-Type": undefined }
     });
     return response.data
   } catch (error) { 
@@ -92,7 +111,17 @@ const setCompanyAudited = async (params) => {
   }
 }
 
-export { createCompany, getAllCompanies, getCompanyByCnpj,
+const verifyCompany = async (params) => {
+  try {
+    let response = await api.post(`/company/company-search?cnpj=${params.cnpj}`, params.body);
+    return response.data
+  } catch (error) {
+
+  }
+}
+
+export { createCompany, registerCompany, getAllCompanies, getCompanyByCnpj,
   getCompanyByProductServices, uploadReceiptCompany, getCompanyById,
-  editCompany, getAllCompaniesAdmin, disableCompany, setCompanyAudited
+  editCompany, getAllCompaniesAdmin, disableCompany, setCompanyAudited,
+  findCompanyByCNPJ, verifyCompany 
 }
