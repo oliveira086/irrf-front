@@ -116,6 +116,11 @@ const PrePayment = () => {
   const [taxNote, setTaxNote] = useState(`${modalData?.tax_note}`);
   const [taxNoteSerie, setTaxNoteSerie] = useState(`${modalData?.tax_note_serie}`);
   // ===================================
+  // Informações sobre o fornecedor
+  const [isService, setIsService] = useState();
+  const [isProduct, setIsProduct] = useState();
+  const [isSimple, setIsSimple] = useState();
+  // ===================================
 
   useEffect(() => {
     socket.on('/pre-payments/create', (socketResponse) => {
@@ -148,6 +153,10 @@ const PrePayment = () => {
     setTaxNoteSerie(modalData?.tax_note_serie);
     setCalculateBasis(modalData?.calculation_basis);
 
+    setIsService(modalData?.['company_id_pre_payments.is_service']);
+    setIsProduct(modalData?.['company_id_pre_payments.is_product']);
+    setIsSimple(modalData?.['company_id_pre_payments.is_simple']);
+
     // Logica para inserir a aliquota correta
     if(modalData?.['company_id_pre_payments.is_simple'] == true && modalData?.index == null) {
       setAliquot('');
@@ -167,7 +176,18 @@ const PrePayment = () => {
   }
 
   function selectedCompanyWithObject(params) {
-    console.log(params);
+    setIsService(params?.value?.is_service);
+    setIsProduct(params?.value?.is_product);
+    setIsSimple(params?.value?.is_simple);
+
+    // Logica para inserir a aliquota correta
+    if(params?.value?.is_simple == true && modalData?.index == null) {
+      setAliquot('');
+    } else if(params?.value?.is_simple == false && params?.value?.is_service == true) {
+      setAliquot(params?.value?.['iss_companies_id.iss_companies_iss_services_id.value']);
+    } else if(params?.value?.is_product == true && params?.value?.is_service == false) {
+      setAliquot(params?.value?.aliquot);
+    }
   }
 
   const HandleSavePrePayment = async () => {
@@ -330,15 +350,15 @@ const PrePayment = () => {
                   </div>
                   <div className='flex w-full mt-2'>
                     <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
-                      {modalData?.['company_id_pre_payments.is_simple'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                      {isSimple == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                       <span className='font-semibold ml-2'>Simples</span>
                     </div>
                     <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
-                      {modalData?.['company_id_pre_payments.is_service'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                      {isService == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                       <span className='font-semibold ml-2'>Fornece Serviços</span>
                     </div>
                     <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
-                      {modalData?.['company_id_pre_payments.is_product'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                      {isProduct == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                       <span className='font-semibold ml-2'>Fornece Produtos</span>
                     </div>
                   </div>
