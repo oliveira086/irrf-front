@@ -37,8 +37,7 @@ const HomeAdmin = () => {
     }))()
   }, []);
 
-  useEffect(() => {
-    console.log(currentPage);
+  useEffect(() => {;
   }, [currentPage])
 
   function openAndCloseModal () {

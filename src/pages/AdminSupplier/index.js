@@ -133,11 +133,8 @@ const AdminSupplier = () => {
       "number": "",
       "city": "",
       "uf": ''
-
-
     }
 
-    console.log(object);
   }
 
   useEffect(() => {

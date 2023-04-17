@@ -156,6 +156,7 @@ const PrePayment = () => {
     setIsService(modalData?.['company_id_pre_payments.is_service']);
     setIsProduct(modalData?.['company_id_pre_payments.is_product']);
     setIsSimple(modalData?.['company_id_pre_payments.is_simple']);
+    console.log(modalData);
 
     // Logica para inserir a aliquota correta
     if(modalData?.['company_id_pre_payments.is_simple'] == true && modalData?.index == null) {
@@ -193,7 +194,7 @@ const PrePayment = () => {
   const HandleSavePrePayment = async () => {
 
     const object = {
-      company_id: companySelected?.value == undefined ? '' : companySelected?.value?.id,
+      company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
       pre_payment_id: modalData.id,
       tax_note: taxNote,
       calculation_basis: parseFloat(convertCurrency(calculateBasis)),
