@@ -156,7 +156,6 @@ const PrePayment = () => {
     setIsService(modalData?.['company_id_pre_payments.is_service']);
     setIsProduct(modalData?.['company_id_pre_payments.is_product']);
     setIsSimple(modalData?.['company_id_pre_payments.is_simple']);
-    console.log(modalData);
 
     // Logica para inserir a aliquota correta
     if(modalData?.['company_id_pre_payments.is_simple'] == true && modalData?.index == null) {
@@ -180,6 +179,7 @@ const PrePayment = () => {
     setIsService(params?.value?.is_service);
     setIsProduct(params?.value?.is_product);
     setIsSimple(params?.value?.is_simple);
+    setCompanySelected(params);
 
     // Logica para inserir a aliquota correta
     if(params?.value?.is_simple == true && modalData?.index == null) {
