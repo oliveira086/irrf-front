@@ -38,7 +38,7 @@ const getCompanyByCnpj = async (params) => {
 
 const findCompanyByCNPJ = async (params) => {
   try {
-    let response = await api.post(`/company/cnpj-finder?cnpj=${params.cnpj}`,);
+    let response = await api.post(`/company/cnpj-finder?cnpj=${params?.cnpj}`, { city_id: params?.city_id });
     return response.data
   } catch (error) {
     throw new Error(error.response.status);

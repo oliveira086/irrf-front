@@ -23,6 +23,7 @@ import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 import { getUserInformations } from "../../services/authServices";
 import { getAllCompaniesAdmin, findCompanyByCNPJ } from "../../services/companyServices";
 import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices";
+import { registerCompany } from "../../services/companyServices";
 
 
 import { AdminSupplierStyle } from './style';
@@ -57,6 +58,7 @@ const AdminSupplier = () => {
   const [district, setDistrict] = useState('');
   const [number, setNumber] = useState('');
   const [complement, setComplement] = useState('');
+  const [uf, setUf] = useState('');
 
   const [isProduct, setIsProduct] = useState(false);
   const [isService, setIsService] = useState(false);
@@ -104,7 +106,7 @@ const AdminSupplier = () => {
   }
 
   async function searchCompanyByCnpj() {
-    await findCompanyByCNPJ({ cnpj: cnpj }).then(response => {
+    await findCompanyByCNPJ({ cnpj: cnpj, city_id: query.get("cityId") }).then(response => {
       setCompanyName(response.body?.razao_social);
       setCep(response.body?.cep);
       setDistrict(response.body?.bairro);
@@ -112,28 +114,43 @@ const AdminSupplier = () => {
       setState(response.body?.uf);
       setNumber(response.body?.numero);
       setIsSimple(response?.body?.opcao_pelo_simples);
+      setAddress(response?.body?.logradouro);
+      setUf(response?.body?.uf);
     }) 
   }
 
   async function registerCompany () {
 
-    const object = {
+    const objectToSaveCompany = {
       "city_id": query.get("cityId"),
-      "products_services_id": productAndServicesSelected.id,
+      "products_services_id": productAndServicesSelected?.id,
       "label": companyName,
       "cnpj": cnpj,
       "email": email,
       "object": objectToContract,
       "phone": phone,
-      "aliquot": productAndServicesSelected,
+      "aliquot": productAndServicesSelected?.['index_values_id_products.value'],
       "address": address,
-      "district": "",
-      "complement": "",
-      "cep": "",
-      "number": "",
-      "city": "",
-      "uf": ''
+      "district": district,
+      "complement": complement,
+      "cep": cep,
+      "number": number,
+      "city": city,
+      "uf": uf,
+      "is_simple": isSimple,
+      "is_simei": isSimei,
+      "is_product": isProduct,
+      "is_service": isService,
+      "is_exempt_irrf": isExemptIR,
+      "is_exempt_iss": isExemptISS,
+      "is_immune_irrf": isImmuneIR,
+      "is_immune_iss": isImmuneIss,
+      "iss_services_id": issItemSelected?.id
     }
+
+    registerCompany(objectToSaveCompany).then(response => {
+      console.log(response);
+    });
 
   }
 
@@ -386,13 +403,13 @@ const AdminSupplier = () => {
               </div>
             </div>
 
-            <div className='mb-2'>
+            <div className='flex justify-between mb-2'>
               <div className='w-5/12'>
                 <Input label='CEP' placeholder='CEP' value={cep} onChange={e => setCep(e.target.value)} />
               </div>
 
               <div className='w-5/12'>
-                <Input label='Rua' placeholder='CEP' value={address} onChange={e => setAddress(e.target.value)} />
+                <Input label='Rua' placeholder='Rua' value={address} onChange={e => setAddress(e.target.value)} />
               </div>
             </div>
 
