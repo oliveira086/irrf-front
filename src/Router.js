@@ -15,12 +15,14 @@ import PrePayment from './pages/PrePayments';
 import Payments from './pages/Payments';
 import AdminPanel from './pages/AdminPanel';
 import AdminSupplier from './pages/AdminSupplier';
+import Home from './pages/Home';
+import Holding from './pages/Holding';
 
 const theme = extendTheme({
   fonts: {
     body: `'Poppins', sans-serif`,
-  },
-})
+  }
+});
 
 function Router(){
   return(
@@ -36,10 +38,12 @@ function Router(){
           <Route path='/cadastro-fiscal' exact element={<FiscalRegister />} />
           <Route path='/cadastro-confirmado' exact element={<RegisterConfirm />} />
           <Route path='/home-admin' exact element={<HomeAdmin />} />
+          <Route path='/home' exact element={<Home />} />
           <Route path='/pre-pagamentos' exact element={<PrePayment />} />
           <Route path='/pagamentos' exact element={<Payments />}/>
           <Route path='/painel-administrativo' exact element={<AdminPanel />} />
           <Route path='/painel-fornecedores' exact element={<AdminSupplier />} />
+          <Route path='/retencao' exact element={<Holding />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

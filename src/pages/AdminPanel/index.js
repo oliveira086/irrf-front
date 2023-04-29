@@ -27,7 +27,7 @@ const AdminPanel = () => {
   useEffect(() => {
 
     (async () => {
-      await getUserInformations().then(response => {
+      await getUserInformations({ currentPage: 1 }).then(response => {
         setUserName(response.body.user_name);
         setCityName(response.body.city_name);
       });

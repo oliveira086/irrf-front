@@ -23,7 +23,7 @@ import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 import { getUserInformations } from "../../services/authServices";
 import { getAllCompaniesAdmin, findCompanyByCNPJ } from "../../services/companyServices";
 import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices";
-import { registerCompany } from "../../services/companyServices";
+import { registerCompany, uploadReceiptCompany } from "../../services/companyServices";
 
 
 import { AdminSupplierStyle } from './style';
@@ -77,11 +77,36 @@ const AdminSupplier = () => {
 
   const query = useQuery();
   const navigate = useNavigate();
+  const toast = chakra.useToast();
 
   function useQuery() {
     const { search } = useLocation();
   
     return useMemo(() => new URLSearchParams(search), [search]);
+  }
+
+  async function resetState () {
+    setCompanyName('');
+    setEmail('');
+    setPhone('');
+    setObjectToContract('');
+    setAddress('');
+    setCep('');
+    setState('');
+    setCity('');
+    setDistrict('');
+    setNumber('');
+    setComplement('');
+    setUf('');
+
+    setIsProduct(false);
+    setIsService(false);
+    setIsSimple(false);
+    setIsSimei(false);
+    setIsExemptIR(false);
+    setIsExemptISS(false);
+    setIsImmuneIR(false);
+    setIsImmuneIss(false);
   }
 
   async function openAndCloseModal(data) {
@@ -99,6 +124,7 @@ const AdminSupplier = () => {
     getAllServices().then(response => {
       setIssItems(response.body);
     });
+
   }
 
   function handleUploadFile(files) {
@@ -116,10 +142,18 @@ const AdminSupplier = () => {
       setIsSimple(response?.body?.opcao_pelo_simples);
       setAddress(response?.body?.logradouro);
       setUf(response?.body?.uf);
-    }) 
+    }).catch(async error => {
+      await openAndCloseRegisterSupplier();
+      toast({
+        title: 'Esse fornecedor não pode ser cadastrado!',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    });
   }
 
-  async function registerCompany () {
+  async function registerCompanyFunction () {
 
     const objectToSaveCompany = {
       "city_id": query.get("cityId"),
@@ -148,9 +182,43 @@ const AdminSupplier = () => {
       "iss_services_id": issItemSelected?.id
     }
 
-    registerCompany(objectToSaveCompany).then(response => {
-      console.log(response);
-    });
+    await registerCompany(objectToSaveCompany).then(async responseToRegisterCompany => {
+
+      if(fileUpload == undefined || fileUpload == null) {
+      } else {
+
+        const formData = new FormData();
+        formData.append('file', fileUpload);
+
+        await uploadReceiptCompany(formData, responseToRegisterCompany.company_id).then(resposenUploadContract => {
+
+        }).catch(error => {
+          
+          toast({
+            title: 'Erro ao salvar o objeto do contrato!',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true,
+          });
+        })
+      }
+
+      await openAndCloseRegisterSupplier();
+      await resetState();
+      toast({
+        title: 'Fornecedor Cadastrado!',
+        status: 'success',
+        position: 'top-right',
+        isClosable: true,
+      });
+    }).catch(error => {
+      toast({
+        title: 'Erro ao cadastrar fornecedor!',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    })
 
   }
 
@@ -494,7 +562,7 @@ const AdminSupplier = () => {
               </div>
 
               <div className='w-56'>
-                <Button label='Salvar' onPress={registerCompany}/>
+                <Button label='Salvar' onPress={registerCompanyFunction}/>
               </div>
               
             </div>

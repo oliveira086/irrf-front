@@ -119,7 +119,7 @@ const Payments = () => {
   useEffect(() => {
     setRows([]);
     (async () => {
-      await getUserInformations().then(response => {
+      await getUserInformations({ currentPage: currentPage }).then(response => {
         setUserName(response.body.user_name);
         setCityName(response.body.city_name);
       });

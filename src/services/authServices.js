@@ -53,7 +53,7 @@ const getComputersService = async (params) => {
 
 const getUserInformations = async (params) => {
   try {
-    let response = await api.post('/user/me');
+    let response = await api.post(`/user/me?currentPage=${params.currentPage}&pageSize=9`);
     return response.data;
   } catch (error) {
     ValidateSession(error.response.status);

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import * as chakra from '@chakra-ui/react';
 import { FiEye, FiX } from 'react-icons/fi';
 import moment from 'moment/moment';
@@ -12,7 +13,7 @@ import Pagination from '../../components/molecules/Pagination';
 
 import { getUserInformations } from '../../services/authServices';
 
-import { HomeAdminStyle } from './style';
+import { HomeStyle } from './style';
 
 const HomeAdmin = () => {
   const [paymentsData, setPaymentsData] = useState([]);
@@ -26,8 +27,10 @@ const HomeAdmin = () => {
 
   moment.locale('pt-br');
   const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
+  const navigate = useNavigate();
 
   useEffect(() => {
+    
     (async () => await getUserInformations({ currentPage: currentPage }).then(response => {
       setCountPages(response.body.meta.pageCount);
       setCurrentPage(response.body.meta.currentPage);
@@ -38,20 +41,20 @@ const HomeAdmin = () => {
   }, []);
 
   useEffect(() => {
-  }, [currentPage])
+  }, [currentPage]);
 
   function openAndCloseModal () {
     setIsOpen(!isOpen);
   }
 
   return (
-    <section className={HomeAdminStyle.Container}>
+    <section className={HomeStyle.Container}>
       <Header userName={userName} cityName={cityName} />
-      <div className={HomeAdminStyle.BodyContainer}>
-        <div className={HomeAdminStyle.TitleContainer}>
+      <div className={HomeStyle.BodyContainer}>
+        <div className={HomeStyle.TitleContainer}>
           <h1>Central de Renteção</h1>
-          <div className={HomeAdminStyle.TitleButtonContainer}>
-            <Button label='Nova Retenção'/>
+          <div className={HomeStyle.TitleButtonContainer}>
+            <Button label='Nova Retenção' onPress={() => navigate('/retencao')}/>
           </div>
         </div>
 
@@ -121,10 +124,9 @@ const HomeAdmin = () => {
           </div>
         </Modal>
 
-
         {
           paymentsData.length > 0 ? 
-          <div className={HomeAdminStyle.TableContainer}>
+          <div className={HomeStyle.TableContainer}>
             <chakra.TableContainer>
               <chakra.Table variant='simple' size='lg'>
                 <chakra.Thead>
@@ -166,7 +168,7 @@ const HomeAdmin = () => {
         }
       </div>
     </section>
-  );
-}
+  )
+};
 
 export default HomeAdmin;

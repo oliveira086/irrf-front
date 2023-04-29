@@ -4,7 +4,8 @@ import Cookies from "universal-cookie";
 import { BiHomeSmile, BiChevronDown } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { TbHeartRateMonitor } from 'react-icons/tb';
-import { MdAttachMoney, MdExitToApp } from 'react-icons/md';
+import { MdAttachMoney, MdExitToApp, MdStore } from 'react-icons/md';
+import { HiOutlineUserGroup } from 'react-icons/hi';
 import * as chakra from '@chakra-ui/react';
 
 import logo from '../../assets/images/logo-irrf.png'
@@ -42,6 +43,24 @@ const Header = ({ userName, cityName }) => {
             <button  onClick={() => navigate('/pagamentos') } className={uri.indexOf('/pagamentos') > -1 ? style.ButtonSelected : style.Button} >
               <MdAttachMoney color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Pagamentos</span>
+            </button>
+          </div>
+        )
+        break
+      case 'CITY MANAGER':
+        return (
+          <div className='flex'>
+            <button onClick={() => navigate('/home') } className={uri.indexOf('home') > -1 ? style.ButtonSelected : style.Button}>
+              <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Home</span>
+            </button>
+            <button onClick={() => navigate('/home') } className={uri.indexOf('fornecedores') > -1 ? style.ButtonSelected : style.Button}>
+              <MdStore color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Fornecedores</span>
+            </button>
+            <button onClick={() => navigate('/home') } className={uri.indexOf('usuarios') > -1 ? style.ButtonSelected : style.Button}>
+              <HiOutlineUserGroup color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Usuários</span>
             </button>
           </div>
         )

@@ -19,17 +19,24 @@ function SelectFilter ({
   const [count, setCount] = useState(0);
   
   const promiseOptions = async (inputValue) => { // Metodo que vai no componente de filtro para iniciar a pesquisa da empresa
+    const initialArray = [];
     const responseCompanies = await searchCompanyByCNPJ({ cnpj: inputValue });
-    setData([responseCompanies.body]);
+
+    responseCompanies.body.map(companiesCallback => {
+      initialArray.push({ label: companiesCallback.label, value: companiesCallback })
+    });
+
+    setData(initialArray);
     return data;
   }
 
   /*
     value: Object - Objeto da empresa que retorna do backend
   */
-  const setValueAndGet = async (value) => { // Metodo que consulta o cnpj encontrado e verifica se ele possui mais de 1 produto/serviço
-    setCompany(value);
-    const responseCompanies = await getCompanyByCnpj({ cnpj: value.cnpj });
+  const setValueAndGet = async (params) => { // Metodo que consulta o cnpj encontrado e verifica se ele possui mais de 1 produto/serviço
+    
+    setCompany(params.value);
+    const responseCompanies = await getCompanyByCnpj({ cnpj: params.value.cnpj });
     setCount(responseCompanies?.body.length);
 
     if(responseCompanies?.body.length > 1) {
@@ -38,9 +45,9 @@ function SelectFilter ({
         productServices.push({ label: companiesCallback['products_services_id_company.label'], value: companiesCallback['products_services_id'] });
       });
     } else {
-      setSelectedValue(value);
-      setIsProduct(value?.is_product);
-      setIsService(value?.is_service);
+      setSelectedValue(params.value);
+      setIsProduct(params.value?.is_product);
+      setIsService(params.value?.is_service);
     }
   };
 
@@ -55,7 +62,7 @@ function SelectFilter ({
   return (
     <>
       <div>
-        <span>Digite o CNPJ da empresa</span>
+        <span className='font-semibold'>Digite o CNPJ da empresa</span>
         <AsyncSelect
           loadOptions={promiseOptions}
           value={company}

@@ -1,18 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import * as chakra from '@chakra-ui/react';
 import Cookies from "universal-cookie";
 
 import Input from '../../components/atoms/Input';
 import Button from '../../components/atoms/Button';
 import Modal from '../../components/atoms/Modal';
 
-import * as chakra from '@chakra-ui/react';
-
-import { LoginStyle } from './style';
-
 import { loginService } from "../../services/authServices";
-import { getUserInformations } from '../../services/authServices';
-
+import { LoginStyle } from './style';
 
 const Login = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,13 +26,13 @@ const Login = () => {
     if(bearerToken !== null) {
       switch(sessionStorage.getItem('role')) {
         case 'ADMIN':
-          navigate('/home-admin')
+          navigate('/home-admin');
           break
         case 'SECRETARY':
           // navigate('/home-admin')
           break
         case 'CITY MANAGER':
-          // navigate('/home-admin')
+          navigate('/home');
           break
         case 'USER':
           // navigate('/home-admin')
@@ -68,6 +64,9 @@ const Login = () => {
       switch(responseToAuth?.body?.role){
         case 'ADMIN':
           navigate('/home-admin');
+          break
+        case 'CITY MANAGER':
+          navigate('/home');
           break
         default:
           break
