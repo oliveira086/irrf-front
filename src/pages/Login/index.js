@@ -31,11 +31,14 @@ const Login = () => {
         case 'SECRETARY':
           // navigate('/home-admin')
           break
+        case 'MAIN SECRETARY':
+          navigate('/painel-fiscal');
+          break
         case 'CITY MANAGER':
           navigate('/home');
           break
         case 'USER':
-          // navigate('/home-admin')
+          navigate('/home');
           break
       }
     }
@@ -66,6 +69,12 @@ const Login = () => {
           navigate('/home-admin');
           break
         case 'CITY MANAGER':
+          navigate('/home');
+          break
+        case 'MAIN SECRETARY':
+          navigate('/painel-fiscal');
+          break
+        case 'USER':
           navigate('/home');
           break
         default:

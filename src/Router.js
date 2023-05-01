@@ -17,6 +17,7 @@ import AdminPanel from './pages/AdminPanel';
 import AdminSupplier from './pages/AdminSupplier';
 import Home from './pages/Home';
 import Holding from './pages/Holding';
+import FiscalPanel from './pages/FiscalPanel';
 
 const theme = extendTheme({
   fonts: {
@@ -44,6 +45,7 @@ function Router(){
           <Route path='/painel-administrativo' exact element={<AdminPanel />} />
           <Route path='/painel-fornecedores' exact element={<AdminSupplier />} />
           <Route path='/retencao' exact element={<Holding />} />
+          <Route path='/painel-fiscal' exact element={<FiscalPanel />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

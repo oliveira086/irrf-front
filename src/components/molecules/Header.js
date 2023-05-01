@@ -65,6 +65,17 @@ const Header = ({ userName, cityName }) => {
           </div>
         )
         break
+      case 'MAIN SECRETARY':
+        return (
+          <div className='flex'>
+            <button onClick={() => navigate('/painel-fiscal') } className={uri.indexOf('/painel-fiscal') > -1 ? style.ButtonSelected : style.Button}>
+              <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Home</span>
+            </button>
+          </div>
+        )
+        break
+        
       default:
         return (
           <div className='flex'>

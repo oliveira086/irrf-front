@@ -27,6 +27,10 @@ const HomeAdmin = () => {
   moment.locale('pt-br');
   const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
 
+  function openAndCloseModal () {
+    setIsOpen(!isOpen);
+  }
+  
   useEffect(() => {
     (async () => await getUserInformations({ currentPage: currentPage }).then(response => {
       setCountPages(response.body.meta.pageCount);
@@ -39,10 +43,6 @@ const HomeAdmin = () => {
 
   useEffect(() => {
   }, [currentPage])
-
-  function openAndCloseModal () {
-    setIsOpen(!isOpen);
-  }
 
   return (
     <section className={HomeAdminStyle.Container}>
