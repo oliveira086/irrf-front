@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import * as chakra from '@chakra-ui/react';
-import { FiEye, FiX } from 'react-icons/fi';
+import { FiEye, FiDownload } from 'react-icons/fi';
 import moment from 'moment/moment';
 import 'moment/locale/pt-br';
 import { Player } from '@lottiefiles/react-lottie-player';
@@ -135,6 +135,7 @@ const HomeAdmin = () => {
                     <chakra.Th>Data</chakra.Th>
                     <chakra.Th>Empresa</chakra.Th>
                     <chakra.Th></chakra.Th>
+                    <chakra.Th></chakra.Th>
                   </chakra.Tr>
                 </chakra.Thead>
                 <chakra.Tbody>
@@ -146,6 +147,7 @@ const HomeAdmin = () => {
                           <chakra.Td>{moment(paymentsDataCallback.createdAt).format('DD/MM/YYYY')}</chakra.Td>
                           <chakra.Td>{paymentsDataCallback.company_name}</chakra.Td>
                           <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => {openAndCloseModal(); setModalData(paymentsDataCallback)}}/></chakra.Td>
+                          <chakra.Td><FiDownload size={28} className='cursor-pointer' onClick={() => {navigate('/despacho')}} /></chakra.Td>
                         </chakra.Tr>
                       </>
                     )

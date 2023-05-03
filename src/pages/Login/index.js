@@ -29,7 +29,7 @@ const Login = () => {
           navigate('/home-admin');
           break
         case 'SECRETARY':
-          // navigate('/home-admin')
+          navigate('/painel-fiscal');
           break
         case 'MAIN SECRETARY':
           navigate('/painel-fiscal');
@@ -72,6 +72,9 @@ const Login = () => {
           navigate('/home');
           break
         case 'MAIN SECRETARY':
+          navigate('/painel-fiscal');
+          break
+        case 'SECRETARY':
           navigate('/painel-fiscal');
           break
         case 'USER':

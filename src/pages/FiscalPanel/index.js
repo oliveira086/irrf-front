@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import * as chakra from '@chakra-ui/react';
-import { FiEye, FiX, FiDownload } from 'react-icons/fi';
+import { FiEye, FiDownload } from 'react-icons/fi';
 import moment from 'moment/moment';
 import 'moment/locale/pt-br';
 import { Player } from '@lottiefiles/react-lottie-player';
@@ -29,6 +29,8 @@ const FiscalPanel = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [countPages, setCountPages] = useState(1);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   moment.locale('pt-br');
   const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
   const navigate = useNavigate();
@@ -38,7 +40,7 @@ const FiscalPanel = () => {
   }
 
   function generateDocument (item) {
-    sessionStorage.setItem('payment_id', item);
+    sessionStorage.setItem('payment_id', 3399);
     navigate('/extrato-fiscal');
   }
 
@@ -46,15 +48,15 @@ const FiscalPanel = () => {
     (async () => await getUserInformations({ currentPage: 1 }).then(response => {
       setUserName(response.body.user_name);
       setCityName(response.body.city_name);
-      
     }))()
   }, []);
 
   useEffect(() => {
     const paymentInserted = new Set();
     const paymentsArray = [];
+    setIsLoading(false);
 
-    (async () => await getSecretaryPayments({ currentPage: 1 }).then(response => {
+    (async () => await getSecretaryPayments({ currentPage: currentPage }).then(response => {
       setCountPages(response.meta.pageCount);
       response.rows.map(paymentCallback => {
         if(paymentInserted.has(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 )) == false) {
@@ -63,8 +65,10 @@ const FiscalPanel = () => {
         }
       });
       setPaymentsData(paymentsArray);
+      
     }))()
-  }, []);
+    setIsLoading(true);
+  }, [currentPage]);
 
   return (
     <section className={FiscalPanelStyle.Container}>
@@ -309,36 +313,39 @@ const FiscalPanel = () => {
         {
           paymentsData.length > 0 ? 
           <div className={FiscalPanelStyle.TableContainer}>
-            <chakra.TableContainer>
-              <chakra.Table variant='simple' size='lg'>
-                <chakra.Thead>
-                  <chakra.Tr>
-                    <chakra.Th>Nota fiscal</chakra.Th>
-                    <chakra.Th>Data</chakra.Th>
-                    <chakra.Th>Empresa</chakra.Th>
-                    <chakra.Th></chakra.Th>
-                    <chakra.Th></chakra.Th>
-                  </chakra.Tr>
-                </chakra.Thead>
-                <chakra.Tbody>
-                  {paymentsData.map(paymentsDataCallback => {
-                    return (
-                      <>
-                        <chakra.Tr>
-                          <chakra.Td>{paymentsDataCallback.tax_note.split('-')[0]}</chakra.Td>
-                          <chakra.Td>{moment(paymentsDataCallback.createdAt).format('DD/MM/YYYY')}</chakra.Td>
-                          <chakra.Td>{paymentsDataCallback.company_name}</chakra.Td>
-                          <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => {openAndCloseModal(); setModalData(paymentsDataCallback)}}/></chakra.Td>
-                          <chakra.Td><FiDownload size={28} className='cursor-pointer' onClick={() => {generateDocument(paymentsDataCallback.id)}}/></chakra.Td>
-                          
-                        </chakra.Tr>
-                      </>
-                    )
-                  })}
-                </chakra.Tbody>
-              </chakra.Table>
-              <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} pages={countPages} />
-            </chakra.TableContainer>
+            <chakra.Skeleton className="w-full h-auto" isLoaded={isLoading}>
+              <chakra.TableContainer>
+                <chakra.Table variant='simple' size='lg'>
+                  <chakra.Thead>
+                    <chakra.Tr>
+                      <chakra.Th>Nota fiscal</chakra.Th>
+                      <chakra.Th>Data</chakra.Th>
+                      <chakra.Th>Empresa</chakra.Th>
+                      <chakra.Th></chakra.Th>
+                      <chakra.Th></chakra.Th>
+                    </chakra.Tr>
+                  </chakra.Thead>
+                  <chakra.Tbody>
+                    {paymentsData.map(paymentsDataCallback => {
+                      return (
+                        <>
+                          <chakra.Tr>
+                            <chakra.Td>{paymentsDataCallback.tax_note.split('-')[0]}</chakra.Td>
+                            <chakra.Td>{moment(paymentsDataCallback.createdAt).format('DD/MM/YYYY')}</chakra.Td>
+                            <chakra.Td>{paymentsDataCallback.company_name}</chakra.Td>
+                            <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => {openAndCloseModal(); setModalData(paymentsDataCallback)}}/></chakra.Td>
+                            <chakra.Td><FiDownload size={28} className='cursor-pointer' onClick={() => {generateDocument(paymentsDataCallback.id)}}/></chakra.Td>
+                            
+                          </chakra.Tr>
+                        </>
+                      )
+                    })}
+                  </chakra.Tbody>
+                </chakra.Table>
+                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} pages={countPages} />
+              </chakra.TableContainer>
+            </chakra.Skeleton>
+            
           </div>
           :
           <div className='flex flex-col w-5/12 h-full items-center justify-center'>

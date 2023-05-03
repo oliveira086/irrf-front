@@ -58,6 +58,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                     </div>
                   </div>
                 </tr>
+  
                 <tr/>
                 <tr/>
                 <tr />
@@ -85,14 +86,14 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 </tr>
                 <tr/>
                 <tr/>
-                <tr/>
-                <tr/>
-                <tr>
+                <tr />
+                <tr />
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '10px'}}>
                     <span style={{fontWeight: 'bold'}}>2.1 IMPOSTO DE RENDA RETIDO NA FONTE</span>
                   </div>
                 </tr>
-                <tr>
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '20px'}}>
                     <span>2.1.1 Fato gerador IRRF : Crédito / Pagamento</span>
                     <span>2.1.2 Código: {`${this.props.irrf_code}`}</span>
@@ -105,12 +106,12 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr/>
                 <tr/>
                 <tr/>
-                <tr>
+                <tr >
                 <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '10px'}}>
                   <span style={{fontWeight: 'bold'}}>2.2 IMPOSTO SOBRE SERVIÇO RETIDO NA FONTE</span>
                 </div>
                 </tr>
-                <tr>
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '20px'}}>
                     <span>2.2.1 Fato gerador ISSRF: {this.props.payment_associate.calculation_basis == null ? '' : this.props.company_object}</span>
                     <span>2.2.2 Item Serviço: {`${this.props.payment_associate.calculation_basis == null ? '' : this.props.iss_item.split('–')[0]}`}</span>
@@ -123,7 +124,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr/>
                 <tr/>
                 <tr/>
-                <tr>
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '10px'}}>
                     <span style={{fontWeight: 'bold'}}>3. AUTUAÇÃO</span>
                   </div>
@@ -136,29 +137,13 @@ export class TemplateDoubleRecibo extends React.PureComponent {
   fiscal de arrecadação em anexo, deverá ser retido do pagamento do fornecedor acima 
   identificado, a título de pagamento do Imposto de Renda Retido na fonte e Imposto Sobre 
   Serviço Retido na fonte.`}
+                      <br></br>
                     </div>
                   </div>
                 </tr>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
+                <div style={{ width: '100%', heigth: '20px'}}>
+                  <span style={{visibility: 'hidden'}}>teste</span>
+                </div>
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
                     <div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div>
@@ -193,10 +178,10 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                   <div style={{ display: 'flex', width: '100%', heigth: '10px', borderRadius: '6px'}}>{`CNPJ: ${cnpjOrCpfFormated}`}</div>
                 </div>
               </thead>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
+              <tr />
+              <tr />
+              <tr />
+              <tr />
               <tbody>
                 <tr>
                   <div style={{ display: 'flex', width: '100%', heigth: '10px'}}>
@@ -211,12 +196,12 @@ export class TemplateDoubleRecibo extends React.PureComponent {
   
                 <tr/>
                 <tr/>
-                <tr/>
-                <tr/>
+                <tr />
+                <tr />
                 <tr>
                   <span style={{fontWeight: 'bold'}}>1. DADOS DA INCIDÊNCIA</span><br></br>
                 </tr>
-                <tr>
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '10px'}}>
                     <span>1.1 Município: {`${this.props.city}`}</span>
                     <span>1.2 CNPJ: {`${this.props.prefecture_cnpj}`}</span>
@@ -229,21 +214,21 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 </tr>
                 <tr/>
                 <tr/>
-                <tr/>
-                <tr/>
+                <tr />
+                <tr />
                 <tr>
                   <span style={{fontWeight: 'bold'}}>2. MEMÓRIA DE CÁLCULO RETENÇÃO</span><br></br>
                 </tr>
                 <tr/>
                 <tr/>
-                <tr/>
-                <tr/>
-                <tr>
+                <tr />
+                <tr />
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '10px'}}>
                     <span style={{fontWeight: 'bold'}}>2.1 IMPOSTO SOBRE SERVIÇO RETIDO NA FONTE</span>
                   </div>
                 </tr>
-                <tr>
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '20px'}}>
                     <span>2.1.1 Fato gerador ISSRF: {this.props.company_object}</span>
                     <span>2.1.2 Item Serviço: {`${this.props.iss_item.split('–')[0]}`}</span>
@@ -256,12 +241,12 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr/>
                 <tr/>
                 <tr/>
-                <tr>
+                <tr >
                 <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '10px'}}>
                   <span style={{fontWeight: 'bold'}}>2.2 IMPOSTO DE RENDA RETIDO NA FONTE</span>
                 </div>
                 </tr>
-                <tr>
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '20px'}}>
                     <span>2.2.1 Fato gerador IRRF : Crédito / Pagamento</span>
                     <span>2.2.2 Código: {`${this.props.payment_associate.calculation_basis == null ? '0' : this.props.irrf_code}`}</span>
@@ -274,7 +259,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr/>
                 <tr/>
                 <tr/>
-                <tr>
+                <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '10px'}}>
                     <span style={{fontWeight: 'bold'}}>3. AUTUAÇÃO</span>
                   </div>
@@ -290,26 +275,9 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                     </div>
                   </div>
                 </tr>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
-                <tr/>
+                <div style={{ width: '100%', heigth: '20px'}}>
+                  <span style={{visibility: 'hidden'}}>teste</span>
+                </div>
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
                     <div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div>
@@ -336,6 +304,6 @@ export const FunctionalTemplateDoubleRecibo = React.forwardRef((props, ref) => {
   NF_value={props.NF_value} NF_index={props.NF_index} NF_tax_value={props.NF_tax_value} prefecture_cnpj={props.prefecture_cnpj}
   NF_liquid_value={props.NF_liquid_value} user_name={props.user_name} registration={props.registration} computer_cnpj={props.computer_cnpj}
   month_payment={props.month_payment} tax_note={props.tax_note} calculate_basis={props.calculate_basis} payment_associate={props.payment_associate}
-  company_object={props.company_object} iss_item={props.iss_item} irrf_code={props.irrf_code} payment_type={props.payment_type}
+  company_object={props.company_object} iss_item={props.iss_item} irrf_code={props.irrf_code} payment_type={props.payment_type} user_secretary={props.user_secretary}
   />;
 });
