@@ -193,58 +193,79 @@ const PrePayment = () => {
 
   const HandleSavePrePayment = async () => {
 
-    const object = {
-      company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
-      pre_payment_id: modalData.id,
-      tax_note: taxNote,
-      calculation_basis: parseFloat(convertCurrency(calculateBasis)),
-      computer_id: computerSelected.id,
-      index: parseFloat(aliquot),
-      tax_note_serie: taxNoteSerie,
-      value: parseFloat(convertCurrency(value)),
-    }
-
-    await updatePrePaymentById(object).then(response => {
+    if(aliquot == null || aliquot == undefined) {
       toast({
-        title: 'Pré pagamento Atualizado!',
-        status: 'success',
-        position: 'top-right',
-        isClosable: true,
-      });
-      
-      openAndCloseModal();
-    }).catch(error => {
-      toast({
-        title: 'Houve um problema ao atualizar esse pré pagamento!',
+        title: 'Aliquota não pode está vazia',
         status: 'error',
         position: 'top-right',
         isClosable: true,
       });
-    });
-  }
+    } else {
+      const object = {
+        company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
+        pre_payment_id: modalData.id,
+        tax_note: taxNote,
+        calculation_basis: parseFloat(convertCurrency(calculateBasis)),
+        computer_id: computerSelected.id,
+        index: parseFloat(aliquot),
+        tax_note_serie: taxNoteSerie,
+        value: parseFloat(convertCurrency(value))
+      }
 
-  const HandleCalculatePrePayment = async () => {
-
-    try {
-      await HandleSavePrePayment();
-
-      confirmPrePayment({ pre_payment_id: modalData.id }).then(response => {
+      await updatePrePaymentById(object).then(response => {
         toast({
-          title: 'Pré pagamento Calculado com sucesso!',
+          title: 'Pré pagamento Atualizado!',
           status: 'success',
           position: 'top-right',
           isClosable: true,
         });
-
-        navigate(0);
+        
+        openAndCloseModal();
       }).catch(error => {
         toast({
-          title: 'Houve um problema ao calcular esse pré pagamento!',
+          title: 'Houve um problema ao atualizar esse pré pagamento!',
           status: 'error',
           position: 'top-right',
           isClosable: true,
         });
       });
+
+    }
+
+    
+  }
+
+  const HandleCalculatePrePayment = async () => {
+
+    try {
+      if(aliquot == null || aliquot == undefined) {
+        toast({
+          title: 'Aliquota não pode está vazia',
+          status: 'error',
+          position: 'top-right',
+          isClosable: true,
+        });
+      } else {
+        await HandleSavePrePayment();
+
+        confirmPrePayment({ pre_payment_id: modalData.id }).then(response => {
+          toast({
+            title: 'Pré pagamento Calculado com sucesso!',
+            status: 'success',
+            position: 'top-right',
+            isClosable: true,
+          });
+  
+          navigate(0);
+        }).catch(error => {
+          toast({
+            title: 'Houve um problema ao calcular esse pré pagamento!',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true,
+          });
+        });
+      }
       
     } catch(error) {
       toast({

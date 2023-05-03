@@ -54,13 +54,8 @@ const Payments = () => {
       selectedPrefectureAndGetPayments();
     } else {
       const response = await searchPaymentByCnpj({ cnpj: cnpjSearch });
-      if(response.body.length == undefined) {
-        setRows([response.body]);
-        setCountPages(response.meta.pageCount);
-      } else {
-        setRows(response.body);
-        setCountPages(response.meta.pageCount);
-      }
+      setRows(response.body);
+      setCountPages(response.meta.pageCount);
     }
   } 
 
@@ -95,9 +90,11 @@ const Payments = () => {
   }
 
   async function auditPayment() {
-    const objetctToAuditPayment = [{
-      payment_id: modalData.id
-    }];
+    const objetctToAuditPayment = {
+      payment_id: modalData.id,
+      status: status.label
+    };
+
     await enablePayment(objetctToAuditPayment).then(response => {
       toast({
         title: 'Pagamento Auditado com sucesso!',
@@ -276,7 +273,7 @@ const Payments = () => {
                               </div>
                               <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded'>
                                 <span className='font-semibold'>Ordenador de despesa</span>
-                                <span>{modalData?.['computer_id_payments.label']}</span>
+                                <span className='text-left'>{modalData?.['computer_id_payments.label']}</span>
                               </div>
                             </div>
                           </div>

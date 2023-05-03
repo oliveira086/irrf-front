@@ -133,7 +133,6 @@ const Holding = () => {
           <div className={HoldingStyle.ButtonContainer}>
             <Button label='Salvar' isLoading={isLoading} onPress={() => handleSubmit()}/>
           </div>
-
         </div>
 
       </div>

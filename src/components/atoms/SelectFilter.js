@@ -3,7 +3,7 @@ import AsyncSelect from 'react-select/async';
 import Select from 'react-select'
 
 import { searchCompanyByCNPJ } from '../../services/paymentServices';
-import { getCompanyByCnpj, getCompanyByProductServices } from '../../services/companyServices';
+import { getCompanyByCnpj, getCompanyByProductServices, getCompanyById } from '../../services/companyServices';
 
 function SelectFilter ({
   selectedValue,
@@ -42,7 +42,7 @@ function SelectFilter ({
     if(responseCompanies?.body.length > 1) {
       setHasProductAndServices(true);
       responseCompanies?.body.map(companiesCallback => {
-        productServices.push({ label: companiesCallback['products_services_id_company.label'], value: companiesCallback['products_services_id'] });
+        productServices.push({ label: companiesCallback.object, value: companiesCallback['products_services_id'] });
       });
     } else {
       setSelectedValue(params.value);

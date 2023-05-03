@@ -19,10 +19,13 @@ const Pagination = ({ currentPage, setCurrentPage, pages }) => {
     setIsBiggestToTen(pagesArray.length >= 14);
     pagesArrayBiggestToTen = [];
 
-    if(pages < 5) {
+    if(pages < 10) {
       for(let i = 0; i < pages; i++) {
-        pagesArrayBiggestToTen.push(pagesArray[i])
+        if(pagesArrayBiggestToTen.length < pages) {
+          pagesArrayBiggestToTen.push(pagesArray[i])
+        }
       }
+
     } else {
       if(page > (pages / 2) && page > pages -5) {
         pagesArrayBiggestToTen.push(pagesArray[pagesArray.length -1])
@@ -45,11 +48,13 @@ const Pagination = ({ currentPage, setCurrentPage, pages }) => {
     
 
     if(page < (pages - (pages / 2) )) {
-      if(pages < 5) {
+      if(pages < 10) {
         for(let i = 0; i < pages; i++) {
-          pagesArrayBiggestToTen.push(pagesArray[i])
+          if(pagesArrayBiggestToTen.length < pages) {
+            pagesArrayBiggestToTen.push(pagesArray[i])
+          }
         }
-      } else {
+      } else if(pages > 10) {
         pagesArrayBiggestToTen.push(pagesArray[0])
         pagesArrayBiggestToTen.push(pagesArray[1])
         pagesArrayBiggestToTen.push(pagesArray[2])
