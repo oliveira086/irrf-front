@@ -137,7 +137,7 @@ const FiscalPanel = () => {
 
                     <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                       <span className='font-semibold'>Item</span>
-                      <span>{modalData?.['company_id_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label'].split('–')[0]}</span>
+                      <span>{modalData?.['company_id_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label'].split(' ')[0]}</span>
                     </div>
 
                     <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
@@ -282,7 +282,7 @@ const FiscalPanel = () => {
 
                         <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                           <span className='font-semibold'>Item</span>
-                          <span>{modalData?.['company_id_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label'].split('–')[0]}</span>
+                          <span>{modalData?.['company_id_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label'].split(' ')[0]}</span>
                         </div>
 
                         <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>

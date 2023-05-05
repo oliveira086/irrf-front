@@ -114,7 +114,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '20px'}}>
                     <span>2.2.1 Fato gerador ISSRF: {this.props.payment_associate.calculation_basis == null ? '' : this.props.company_object}</span>
-                    <span>2.2.2 Item Serviço: {`${this.props.payment_associate.calculation_basis == null ? '' : this.props.iss_item.split('–')[0]}`}</span>
+                    <span>2.2.2 Item Serviço: {`${this.props.payment_associate.calculation_basis == null ? '' : this.props.iss_item.split(' ')[0]}`}</span>
                     <span>2.2.3 Base de cálculo da retenção ISSRF: {`${this.props.payment_associate.calculation_basis == null ? '' : fromCurrency.format(this.props.payment_associate.calculation_basis)}`}</span>
                     <span>2.2.4 Alíquota Sobre ISSRF: {`${this.props.payment_associate.calculation_basis == null ? '' : this.props.payment_associate.index}`}%</span>
                     <span>2.2.5 Valor do ISSRF: {`${this.props.payment_associate.calculation_basis == null ? '' : fromCurrency.format(this.props.payment_associate.withheld_tax)}`}</span>
@@ -231,7 +231,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr >
                   <div style={{ display: 'flex', flexDirection: 'column', width: '98%', heigth: '10px', paddingLeft: '20px'}}>
                     <span>2.1.1 Fato gerador ISSRF: {this.props.company_object}</span>
-                    <span>2.1.2 Item Serviço: {`${this.props.iss_item.split('–')[0]}`}</span>
+                    <span>2.1.2 Item Serviço: {`${this.props?.iss_item?.split(' ')[0]}`}</span>
                     <span>2.1.3 Base de cálculo da retenção IRRF: {`${fromCurrency.format(this.props.calculate_basis)}`}</span>
                     <span>2.1.4 Alíquota Sobre ISSRF: {`${this.props.NF_index}`}%</span>
                     <span>2.1.5 Valor do ISSRF: {`${fromCurrency.format(this.props.NF_tax_value)}`}</span>
