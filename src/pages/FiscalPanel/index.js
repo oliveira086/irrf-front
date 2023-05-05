@@ -40,7 +40,7 @@ const FiscalPanel = () => {
   }
 
   function generateDocument (item) {
-    sessionStorage.setItem('payment_id', 3399);
+    sessionStorage.setItem('payment_id', item);
     navigate('/extrato-fiscal');
   }
 
