@@ -54,13 +54,9 @@ const Header = ({ userName, cityName }) => {
               <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Home</span>
             </button>
-            <button onClick={() => navigate('/home') } className={uri.indexOf('fornecedores') > -1 ? style.ButtonSelected : style.Button}>
+            <button onClick={() => navigate('/fornecedores') } className={uri.indexOf('fornecedores') > -1 ? style.ButtonSelected : style.Button}>
               <MdStore color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Fornecedores</span>
-            </button>
-            <button onClick={() => navigate('/home') } className={uri.indexOf('usuarios') > -1 ? style.ButtonSelected : style.Button}>
-              <HiOutlineUserGroup color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
-              <span className="mt-2 ">Usuários</span>
             </button>
           </div>
         )

@@ -186,7 +186,7 @@ const Payments = () => {
                     <chakra.Tr className={rowBgColor}>
                       <chakra.Td><div className={bgIndicator}></div></chakra.Td>
                       <chakra.Td>{moment(rowsCalback.createdAt).format('DD/MM/YYYY')}</chakra.Td>
-                      <chakra.Td>{rowsCalback?.['company_id_payments.label']}</chakra.Td>
+                      <chakra.Td>{rowsCalback?.['company_id_payments.label'] || rowsCalback?.company_name}</chakra.Td>
                       <chakra.Td>{formatCpfOrCnpj(rowsCalback.cnpj)}</chakra.Td>
                       <chakra.Td>{rowsCalback?.['city_id_payments.city_uf_id.label']}</chakra.Td>
                       <chakra.Td>{rowsCalback?.['city_id_payments.label']}</chakra.Td>

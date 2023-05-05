@@ -29,6 +29,10 @@ const HomeAdmin = () => {
   const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
   const navigate = useNavigate();
 
+  function openAndCloseModal () {
+    setIsOpen(!isOpen);
+  }
+  
   useEffect(() => {
     
     (async () => await getUserInformations({ currentPage: currentPage }).then(response => {
@@ -43,9 +47,6 @@ const HomeAdmin = () => {
   useEffect(() => {
   }, [currentPage]);
 
-  function openAndCloseModal () {
-    setIsOpen(!isOpen);
-  }
 
   return (
     <section className={HomeStyle.Container}>

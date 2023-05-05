@@ -20,7 +20,7 @@ const registerCompany = async (params) => {
 
 const getAllCompanies = async (params) => {
   try {
-    let response = await api.post(`/company/get-all-companies?currentPage=${params.currentPage}&pageSize=9`);
+    let response = await api.post(`/company/get-all-companies?currentPage=${params.currentPage}&pageSize=9`, { enabled: params.enabled });
     return response.data
   } catch (error) {
     return error.response.status;
