@@ -144,7 +144,7 @@ const HomeAdmin = () => {
                           <chakra.Td>{moment(paymentsDataCallback.createdAt).format('DD/MM/YYYY')}</chakra.Td>
                           <chakra.Td>{paymentsDataCallback.company_name}</chakra.Td>
                           <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => {openAndCloseModal(); setModalData(paymentsDataCallback)}}/></chakra.Td>
-                          <chakra.Td><FiDownload size={28} className='cursor-pointer' onClick={() => {navigate('/despacho')}} /></chakra.Td>
+                          <chakra.Td><FiDownload size={28} className='cursor-pointer' onClick={() => {sessionStorage.setItem('payment_id', paymentsDataCallback.id); navigate('/despacho')}} /></chakra.Td>
                         </chakra.Tr>
                       </>
                     )

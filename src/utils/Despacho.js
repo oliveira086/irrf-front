@@ -15,6 +15,8 @@ export class DespachoTemplate extends React.PureComponent {
 
   render() {
     const { text } = this.props;
+    // console.log(this.props.payment_associate);
+    let fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
     let cnpjOrCpfFormated;
     if(this.props.cnpj_company.length > 11) {
       cnpjOrCpfFormated = this.props.cnpj_company.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
@@ -22,159 +24,386 @@ export class DespachoTemplate extends React.PureComponent {
       cnpjOrCpfFormated = this.props.cnpj_company.replace(/^(\d{3})(\d{3})(\d{3})/, "$1.$2.$3-")
     }
 
-    return (
-      <>
-        <div className="relativeCSS">
-          <style type="text/css" media="print">
-          </style>
-          <div className="flash" />
-          <table className="testClass" style={{ marginLeft: '60px', marginTop: '60px'}}>
-            <thead style={{display:'flex', flexDirection: 'column', alingItems: 'flex-start', justifyContent: 'center'}}>
-              <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'flex-start'}}>
-                <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', width: '200px', heigth: '10px'}}>{`DESPACHO Nº: ${this.props.payment_id}`}</div>
-              </div>
-            </thead>
-            <tbody>
-              <div style={{ width: '100%', heigth: '20px'}}>
-                <span style={{visibility: 'hidden'}}>teste</span>
-              </div>
-              <tr>
-                <span style={{fontWeight: 'bold'}}>Dados do pagador</span><br></br>
-              </tr>
-              <tr/>
-              <tr/>
-              <tr>
-                <span>{`Municipio: Prefeitura Municipal de ${this.props.city} - ${this.props.UF}`}</span><br></br>
-              </tr>
-              <tr>
-                <span>{`CNPJ: ${this.props.prefecture_cnpj}`}</span><br></br>
-              </tr>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr>
-                <span>{`Ordenador de despesa: ${this.props.computer_name}`}</span><br></br>
-              </tr>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <div style={{ width: '100%', heigth: '20px'}}>
-                <span style={{visibility: 'hidden'}}>teste</span>
-              </div>
-              <tr>
-                <span style={{fontWeight: 'bold'}}>Dados do fornecedor</span><br></br> 
-              </tr>
-              <tr/>
-              <tr/>
-              <tr>
-                <span>Nome/Razão Social: </span>
-                <span style={{fontWeight: 'semibold'}}>{`${this.props.company}`}</span>
-              </tr>
-              <tr>
-                <span>CNPJ: </span>
-                <span style={{fontWeight: 'semibold'}}>{`${cnpjOrCpfFormated}`} </span>
-              </tr>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr>
-                <span>Competência:</span><br></br>
-                <div style={{width: '180px', heigth: '10px', border: '2px solid #000', borderRadius: '6px', padding: '6px'}}>
-                  <span>{`${this.props.month_payment.month} de 2023`}</span>
+    if(this.props.payment_type === 'ordinario') {
+      return (
+        <>
+          <div className="relativeCSS">
+            <style type="text/css" media="print">
+            </style>
+            <div className="flash" />
+            <table className="testClass" style={{marginLeft: '60px', marginTop: '60px'}}>
+              <thead style={{display:'flex', flexDirection: 'column', alingItems: 'flex-start', justifyContent: 'center'}}>
+                <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'flex-start'}}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', width: '200px', heigth: '10px'}}>{`DESPACHO Nº: ${this.props.payment_id}`}</div>
                 </div>
-              </tr>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <div style={{ width: '100%', heigth: '20px'}}>
-                <span style={{visibility: 'hidden'}}>teste</span>
-              </div>
-              <tr>
-                <span style={{fontWeight: 'bold'}}>{`DESPACHO Nº ${this.props.payment_id}`}</span><br></br>
-              </tr>
-              <tr/>
-              <tr/>
-              <tr>
-                <span style={{fontWeight: 'semibold'}}>{`De acordo, encaminhe-se este processo de pagamento à fazenda pública municipal, para que seja averiguado se é um caso de realização de retenção tributária, para que seja providenciado a emissão de Termo de Notificação de Lançamento, bem como a emissão do respectivo Documento de Arrecadação Municipal – DAM ou quando não for o caso, para que seja emitida certidão de não exigibilidade.`}</span><br></br>
-              </tr>
-              <div style={{ width: '100%', heigth: '20px'}}>
-                <span style={{visibility: 'hidden'}}>teste</span>
-              </div>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/> 
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr>
-                <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'center'}}>
-                  <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2023 `} </span>
+              </thead>
+              <tbody>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>1. Dados do pagador</span><br></br>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Municipio: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`Prefeitura Municipal de ${this.props.city} - ${this.props.UF}`}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>CNPJ: </span>
+                  <span style={{fontWeight: 'semibold'}}>{this.props.prefecture_cnpj}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Ordenador de despesa: </span>
+                  <span style={{fontWeight: 'semibold'}}>{this.props.computer_name}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>CNPJ: </span>
+                  <span style={{fontWeight: 'semibold'}}>{this.props.computer_cnpj}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Nota Fiscal: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`${this.props.tax_note.split('-')[0]} - ${this.props.tax_note.split('-')[2]}`}</span>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>2. Dados do fornecedor</span><br></br> 
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Nome/Razão Social: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`${this.props.company}`}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>CNPJ: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`${cnpjOrCpfFormated}`} </span>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>3. Dados Fiscais/Financeiros</span><br></br> 
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Valor Crédito/pagamento: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`${fromCurrency.format(this.props.NF_value)}`} </span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Cod. Receita: </span>
+                  <span style={{fontWeight: 'semibold'}}>{this.props.irrf_code}</span>
+                </tr>
+                {this.props.payment_associate.id == null ? <></> :
+                  <tr>
+                    <span style={{fontWeight: 'bold'}}>Item: </span>
+                    <span style={{fontWeight: 'semibold'}}>{this.props.payment_associate?.iss_item?.split(' ')[0]}</span>
+                  </tr>
+                }
+                
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Valor do IRRF: </span>
+                  <span style={{fontWeight: 'semibold'}}>{fromCurrency.format(this.props?.NF_tax_value)}</span>
+                </tr>
+                {this.props.payment_associate.id == null ? <></> :
+                  <tr>
+                    <span style={{fontWeight: 'bold'}}>Valor do ISS: </span>
+                    <span style={{fontWeight: 'semibold'}}>{fromCurrency.format(this.props.payment_associate?.withheld_tax)}</span>
+                  </tr>
+                }
+
+                {
+                  this.props.associate_validation == false ? 
+                  <tr>
+                    <span style={{fontWeight: 'bold'}}>Saldo Pagador: </span>
+                    <span style={{fontWeight: 'semibold'}}>{fromCurrency.format(this.props.NF_liquid_value)} </span>
+                  </tr>
+                  :
+                  <tr>
+                    <span style={{fontWeight: 'bold'}}>Saldo Pagador: </span>
+                    <span style={{fontWeight: 'semibold'}}>{fromCurrency.format( Number(this.props.NF_value) - (Number(this.props.payment_associate?.withheld_tax) + Number(this.props?.NF_tax_value) )   )} </span>
+                  </tr>
+                }
+                
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Competência</span><br></br>
+                  <div style={{width: '180px', heigth: '10px', border: '2px solid #000', borderRadius: '6px', padding: '6px'}}>
+                    <span>{`${this.props.month_payment.month} de 2023`}</span>
+                  </div>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>{`DESPACHO Nº ${this.props.payment_id}`}</span><br></br>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span>{`De acordo, encaminhe-se ao setor competente, com as memórias de cálculo de retenção tributária, aos quais servirão de referência para a realização de empenho, liquidação e pagamento.`}</span><br></br>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/> 
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'center'}}>
+                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2023 `} </span>
+                  </div>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
+                    <div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br></br>
+                    <span>{this.props.user_name}</span>
+                    <span>{this.props.registration}</span>
+                  </div>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <div className="relativeCSS">
+            <style type="text/css" media="print">
+            </style>
+            <div className="flash" />
+            <table className="testClass" style={{marginLeft: '60px', marginTop: '60px'}}>
+              <thead style={{display:'flex', flexDirection: 'column', alingItems: 'flex-start', justifyContent: 'center'}}>
+                <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'flex-start'}}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', width: '200px', heigth: '10px'}}>{`DESPACHO Nº: ${this.props.payment_id}`}</div>
                 </div>
-              </tr>
-              <div style={{ width: '100%', heigth: '20px'}}>
-                <span style={{visibility: 'hidden'}}>teste</span>
-              </div>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr/>
-              <tr>
-                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
-                  <div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br></br>
-                  <span>{this.props.user_name}</span>
-                  <span>{this.props.registration}</span>
-                </div>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </>
-    );
+              </thead>
+              <tbody>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>1. Dados do pagador</span><br></br>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Municipio: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`Prefeitura Municipal de ${this.props.city} - ${this.props.UF}`}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>CNPJ: </span>
+                  <span style={{fontWeight: 'semibold'}}>{this.props.prefecture_cnpj}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Ordenador de despesa: </span>
+                  <span style={{fontWeight: 'semibold'}}>{this.props.computer_name}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>CNPJ: </span>
+                  <span style={{fontWeight: 'semibold'}}>{this.props.computer_cnpj}</span>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>2. Dados do fornecedor</span><br></br> 
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Nome/Razão Social: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`${this.props.company}`}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>CNPJ: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`${cnpjOrCpfFormated}`} </span>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>3. Dados Fiscais/Financeiros</span><br></br> 
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Valor Crédito/pagamento: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`${fromCurrency.format(this.props.NF_value)}`} </span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Item: </span>
+                  <span style={{fontWeight: 'semibold'}}>{this.props.payment_associate?.iss_item?.split(' ')[0]}</span>
+                </tr>
+
+                {this.props.associate_validation == false ? <></> :
+                  <tr>
+                    <span style={{fontWeight: 'bold'}}>Cod. Receita: </span>
+                    <span style={{fontWeight: 'semibold'}}>{this.props.irrf_code}</span>
+                  </tr>
+                }
+                
+                <tr>
+                    <span style={{fontWeight: 'bold'}}>Valor do ISS: </span>
+                    <span style={{fontWeight: 'semibold'}}>{fromCurrency.format(this.props?.NF_tax_value)}</span>
+                  </tr>
+
+                
+                {this.props.associate_validation == false ? <></> :
+                  <tr>
+                    <span style={{fontWeight: 'bold'}}>Valor do IRRF: </span>
+                    <span style={{fontWeight: 'semibold'}}>{fromCurrency.format(this.props.payment_associate?.withheld_tax)}</span>
+                  </tr>
+                }
+
+                {
+                  this.props.associate_validation == false ? 
+                  <tr>
+                    <span style={{fontWeight: 'bold'}}>Saldo Pagador: </span>
+                    <span style={{fontWeight: 'semibold'}}>{fromCurrency.format(this.props.NF_liquid_value)} </span>
+                  </tr>
+                  :
+                  <tr>
+                    <span style={{fontWeight: 'bold'}}>Saldo Pagador: </span>
+                    <span style={{fontWeight: 'semibold'}}>{fromCurrency.format( Number(this.props.NF_value) - (Number(this.props.payment_associate?.withheld_tax) + Number(this.props?.NF_tax_value) )   )} </span>
+                  </tr>
+                }
+
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Competência</span><br></br>
+                  <div style={{width: '180px', heigth: '10px', border: '2px solid #000', borderRadius: '6px', padding: '6px'}}>
+                    <span>{`${this.props.month_payment.month} de 2023`}</span>
+                  </div>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>{`DESPACHO Nº ${this.props.payment_id}`}</span><br></br>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr>
+                  <span>{`De acordo, encaminhe-se ao setor competente, com as memórias de cálculo de retenção tributária, aos quais servirão de referência para a realização de empenho, liquidação e pagamento.`}</span><br></br>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/> 
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'center'}}>
+                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2023 `} </span>
+                  </div>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
+                    <div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br></br>
+                    <span>{this.props.user_name}</span>
+                    <span>{this.props.registration}</span>
+                  </div>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      );
+    }
   }
 }
 
