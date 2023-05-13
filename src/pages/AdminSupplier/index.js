@@ -21,7 +21,7 @@ import Pagination from "../../components/molecules/Pagination";
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { getUserInformations } from "../../services/authServices";
-import { getAllCompaniesAdmin, findCompanyByCNPJ } from "../../services/companyServices";
+import { getAllCompaniesAdmin, findCompanyByCNPJ, getCompanyByCnpj } from "../../services/companyServices";
 import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices";
 import { registerCompany, uploadReceiptCompany } from "../../services/companyServices";
 
@@ -74,6 +74,7 @@ const AdminSupplier = () => {
   const [rows, setRows] = useState([]);
 
   const [cnpj, setCnpj] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const query = useQuery();
   const navigate = useNavigate();
@@ -222,9 +223,28 @@ const AdminSupplier = () => {
 
   }
 
+  async function searchAndFilterCompany() {
+    setIsLoading(true);
+    if(cnpjSearch == '') {
+      (async () => {
+        await getAllCompaniesAdmin({ city_id: query.get("cityId"), audited: audited }, { currentPage: currentPage }).then(response => {
+          setRows(response.body.rows);
+          setCountPages(response.body.meta.pageCount);
+          setCityName(response?.body?.rows[0]?.['company_city_id.label']);
+          setIsLoading(false);
+        })
+      })();
+    } else {
+      const removeDotToCnpj = cnpjSearch.replace(/[^\w\s]/gi, '').trim();
+      const response = await getCompanyByCnpj({ cnpj: removeDotToCnpj, city_id: query.get("cityId") });
+      setRows(response.body);
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     (async () => {
-      await getUserInformations().then(response => {
+      await getUserInformations({ currentPage: 1 }).then(response => {
         setUserName(response.body.user_name);
       });
     })();
@@ -269,7 +289,7 @@ const AdminSupplier = () => {
                 <Input label='Pesquisar' placeholder='Pesquisar Fornecedor' value={cnpjSearch} onChange={e => setCnpjSearch(e.target.value)} />
               </div>
               <div className={AdminSupplierStyle.TitleButtonContainer}>
-                <Button label={<AiOutlineSearch />} onPress={() => {}} />
+                <Button label={<AiOutlineSearch />} onPress={() => searchAndFilterCompany()} isLoading={isLoading} />
               </div>
             </div>
             <div className='w-56'>
@@ -403,6 +423,16 @@ const AdminSupplier = () => {
 								<div className='flex w-56 p-2 bg-[#ededed] rounded items-center justify-center mt-2'>
 									{modalData?.is_immune_iss == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
 									<span className='font-semibold ml-4'>Imune ISS</span>
+								</div>
+                
+                <div className='flex w-56 p-2 bg-[#ededed] rounded items-center justify-center mt-2'>
+									{modalData?.art_3 == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+									<span className='font-semibold ml-4'>Artigo 3º</span>
+								</div>
+
+                <div className='flex w-56 p-2 bg-[#ededed] rounded items-center justify-center mt-2'>
+									{modalData?.non_incidence == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+									<span className='font-semibold ml-4'>Não Incidente</span>
 								</div>
 							</div>
 						</div>

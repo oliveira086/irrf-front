@@ -42,11 +42,7 @@ const HomeAdmin = () => {
       setUserName(response.body.user_name);
       setCityName(response.body.city_name);
     }))()
-  }, []);
-
-  useEffect(() => {
   }, [currentPage]);
-
 
   return (
     <section className={HomeStyle.Container}>

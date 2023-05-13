@@ -14,7 +14,7 @@ import Pagination from '../../components/molecules/Pagination';
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { getUserInformations } from '../../services/authServices';
-import { getAllCompanies } from '../../services/companyServices';
+import { getAllCompanies, getCompanyByCnpj } from '../../services/companyServices';
 
 import { CompaniesStyle } from './style';
 
@@ -23,10 +23,12 @@ const Companies = () => {
   const [companyData, setCompanyData] = useState([]);
   const [userName, setUserName] = useState('');
   const [cityName, setCityName] = useState('');
+  const [cityId, setCityId] = useState('');
   const [modalData, setModalData] = useState();
   const [isOpen, setIsOpen] = useState();
   const [cnpjSearch, setCnpjSearch] = useState();
   const [enabled, setEnabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [countPages, setCountPages] = useState(1);
@@ -36,10 +38,25 @@ const Companies = () => {
   }
 
   async function searchPayment () {
+    setIsLoading(true);
+    if(cnpjSearch == '') {
+      (async () => await getAllCompanies({ currentPage: currentPage, enabled: enabled }).then(response => {
+        setCompanyData(response.body.rows);
+        setCountPages(response.body.meta.pageCount);
+        setIsLoading(false);
+      }))()
+    } else {
+      const removeDotToCnpj = cnpjSearch.replace(/[^\w\s]/gi, '').trim();
+      const response =  await getCompanyByCnpj({ cnpj: removeDotToCnpj, city_id: cityId });
+      setCompanyData(response.body);
+      setCnpjSearch('');
+      setIsLoading(false);
+    }
   } 
 
   useEffect(() => {
     (async () => await getUserInformations({ currentPage: 1 }).then(response => {
+      setCityId(response.body.city_id);
       setUserName(response.body.user_name);
       setCityName(response.body.city_name);
     }))();
@@ -64,7 +81,7 @@ const Companies = () => {
                 <Input label='Pesquisar' placeholder='Pesquisar por CNPJ' value={cnpjSearch} onChange={e => setCnpjSearch(e.target.value)} />
               </div>
               <div className={CompaniesStyle.TitleButtonContainer}>
-                <Button label={<AiOutlineSearch />} onPress={searchPayment} isLoading={companyData.length == 0 ? true : false} />
+                <Button label={<AiOutlineSearch />} onPress={searchPayment} isLoading={isLoading} />
               </div>
             </div>
             <div className='w-80 mt-4 justify-center items-center'>
@@ -79,38 +96,58 @@ const Companies = () => {
 
 
         <Modal isCentered size={'xl'} title={modalData?.label} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
-          {console.log(modalData)}
           <div className='h-auto'>
-            <div className='flex'>
-              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+
+            <div className='flex mb-2 justify-between'>
+              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded'>
                 <span className='font-semibold'>Nome:</span>
                 <span>{modalData?.label}</span>
               </div>
-              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded'>
                 <span className='font-semibold'>CNPJ:</span>
                 <span>{formatCpfOrCnpj(modalData?.cnpj)}</span>
               </div>
-              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded'>
                 <span className='font-semibold'>Email:</span>
-                <span>{formatCpfOrCnpj(modalData?.email)}</span>
+                <span>{modalData?.email}</span>
+              </div>
+            </div>
+
+            <div className='flex justify-between mb-2'>
+              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded'>
+                <span className='font-semibold'>Objeto:</span>
+                <span>{modalData?.object}</span>
+              </div>
+              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded'>
+                <span className='font-semibold'>Telefone:</span>
+                <span>{modalData?.phone}</span>
+              </div>
+              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded'>
+                <span className='font-semibold'>CEP:</span>
+                <span>{modalData?.cep}</span>
+              </div>
+            </div>
+
+            <div className='flex mb-2'>
+              <div className='flex flex-col w-full p-2 bg-[#F2F5FF] items-start rounded'>
+                <span className='font-semibold'>Endereço:</span>
+                <span>{`Rua ${modalData?.address}, ${modalData?.number} - ${modalData?.district}, ${modalData?.complement} - ${modalData?.city} - ${modalData?.uf}`}</span>
               </div>
             </div>
 
             <div className='flex'>
-              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
-                <span className='font-semibold'>Objeto:</span>
-                <span>{modalData?.object}</span>
-              </div>
-              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
-                <span className='font-semibold'>Telefone:</span>
-                <span>{formatCpfOrCnpj(modalData?.phone)}</span>
-              </div>
-              <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
-                <span className='font-semibold'>Email:</span>
-                <span>{formatCpfOrCnpj(modalData?.email)}</span>
+              <div className='flex flex-col w-full p-2 bg-[#F2F5FF] items-start rounded'>
+                <span className='font-semibold'>Informações Complementares:</span>
+                <div><chakra.Switch isChecked={modalData?.is_service} className='mr-2' /><span>Fornece Serviço</span></div>
+                <div><chakra.Switch isChecked={modalData?.is_product} className='mr-2' /><span>Fornece Produto</span></div>
+                <div><chakra.Switch isChecked={modalData?.is_exempt_irrf} className='mr-2' /><span>Isento ISS</span></div>
+                <div><chakra.Switch isChecked={modalData?.is_exempt_iss} className='mr-2' /><span>Isento IRRF</span></div>
+                <div><chakra.Switch isChecked={modalData?.is_immune_iss} className='mr-2' /><span>Imune ISS</span></div>
+                <div><chakra.Switch isChecked={modalData?.is_immune_irrf} className='mr-2' /><span>Imune IRRF</span></div>
+                <div><chakra.Switch isChecked={modalData?.art_3} className='mr-2' /><span>Artigo 3º</span></div>
+                <div><chakra.Switch isChecked={modalData?.non_incidence} className='mr-2' /><span>Não incidente</span></div>
               </div>
             </div>
-
           </div>
         </Modal>
 
