@@ -51,10 +51,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', width: '100%', heigth: '10px'}}>
                     <div style={{ display: 'flex', width: '98%', justifyContent: 'center', alignItems: 'center', heigth: '10px'}}>
-                      {`Em 14 de abril de 2023, no exercício das atribuições inerentes ao poder de polícia 
-  administrativa tributária deste município, NOTIFICA-SE vossa senhoria para tomar 
-  conhecimento a respeito do lançamento do Imposto de Renda Retido e do Imposto
-  Sobre Serviço Retido, ambos a serem retidos na fonte, pertinente ao contribuinte supracitado.`}
+                      {`Em ${this.props.month_payment?.day} de ${this.props.month_payment.month} de ${this.props.month_payment?.year}, no exercício do poder de polícia administrativa tributária municipal, NOTIFICA-SE vossa senhoria para tomar ciência do(s) Lançamento(s) do Imposto de Renda e do Imposto Sobre Serviço, ambos a serem retidos na fonte.`}
                     </div>
                   </div>
                 </tr>
@@ -132,11 +129,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', width: '100%', heigth: '10px'}}>
                     <div style={{ display: 'flex', width: '98%', justifyContent: 'center', alignItems: 'center', heigth: '10px'}}>
-                      {`Desta forma, fica o(a) ordenador(a) de despesa ciente acerca de que o valor de 
-  ${fromCurrency.format(Number(this.props.NF_tax_value) + Number(this.props.payment_associate.withheld_tax))} (${extensiveNumber.porExtenso( (Number(this.props.NF_tax_value) + Number(this.props.payment_associate.withheld_tax)), extensiveNumber.estilo.monetario)}), representado pelo documento 
-  fiscal de arrecadação em anexo, deverá ser retido do pagamento do fornecedor acima 
-  identificado, a título de pagamento do Imposto de Renda Retido na fonte e Imposto Sobre 
-  Serviço Retido na fonte.`}
+                      {`Desta forma, fica o contribuinte ciente do lançamento do valor de ${fromCurrency.format(Number(this.props.NF_tax_value) + Number(this.props.payment_associate.withheld_tax))} (${extensiveNumber.porExtenso( (Number(this.props.NF_tax_value) + Number(this.props.payment_associate.withheld_tax)), extensiveNumber.estilo.monetario)}), que deverá ser retido do crédto/pagamento do fornecedor, a título de pagamento dos supramencionados tributos`}
                       <br></br>
                     </div>
                   </div>
@@ -186,10 +179,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', width: '100%', heigth: '10px'}}>
                     <div style={{ display: 'flex', width: '98%', justifyContent: 'center', alignItems: 'center', heigth: '10px'}}>
-                      {`Em 14 de abril de 2023, no exercício das atribuições inerentes ao poder de polícia 
-  administrativa tributária deste município, NOTIFICA-SE vossa senhoria para tomar 
-  conhecimento a respeito do lançamento do Imposto de Renda Retido e do Imposto
-  Sobre Serviço Retido, ambos a serem retidos na fonte, pertinente ao contribuinte supracitado.`}
+                      {`Em ${this.props.month_payment?.day} de ${this.props.month_payment.month} de ${this.props.month_payment?.year}, no exercício do poder de polícia administrativa tributária municipal, NOTIFICA-SE vossa senhoria para tomar ciência do(s) Lançamento(s) do Imposto de Renda e do Imposto Sobre Serviço, ambos a serem retidos na fonte.`}
                     </div>
                   </div>
                 </tr>
@@ -267,11 +257,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', width: '100%', heigth: '10px'}}>
                     <div style={{ display: 'flex', width: '98%', justifyContent: 'center', alignItems: 'center', heigth: '10px'}}>
-                      {`Desta forma, fica o(a) ordenador(a) de despesa ciente acerca de que o valor de 
-  ${fromCurrency.format(Number(this.props.NF_tax_value) + Number(this.props.payment_associate.withheld_tax))} (${extensiveNumber.porExtenso( (Number(this.props.NF_tax_value) + Number(this.props.payment_associate.withheld_tax)), extensiveNumber.estilo.monetario)}), representado pelo documento 
-  fiscal de arrecadação em anexo, deverá ser retido do pagamento do fornecedor acima 
-  identificado, a título de pagamento do Imposto de Renda Retido na fonte e Imposto Sobre 
-  Serviço Retido na fonte.`}
+                      {`Desta forma, fica o contribuinte ciente do lançamento do valor de ${fromCurrency.format(Number(this.props.NF_tax_value) + Number(this.props.payment_associate.withheld_tax))} (${extensiveNumber.porExtenso( (Number(this.props.NF_tax_value) + Number(this.props.payment_associate.withheld_tax)), extensiveNumber.estilo.monetario)}), que deverá ser retido do crédto/pagamento do fornecedor, a título de pagamento dos supramencionados tributos`}
                     </div>
                   </div>
                 </tr>
