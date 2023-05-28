@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FiKey } from 'react-icons/fi';
 
-const Input = ({ label, placeholder, isError, value, onChange, type, ref, ...props  }) => {
+const Input = ({ label, placeholder, isError, value, onChange, type, ref, icon, ...props  }) => {
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
 
@@ -38,7 +38,7 @@ const Input = ({ label, placeholder, isError, value, onChange, type, ref, ...pro
           <chakra.InputGroup>
             <chakra.InputLeftElement
               pointerEvents='none'
-              children={<FiKey color='gray.300' />}
+              children={icon}
             />
             <chakra.Input placeholder={placeholder} ref={ref} value={value} isInvalid={isError} onChange={onChange} props />
           </chakra.InputGroup>

@@ -7,10 +7,10 @@ import Input from '../../components/atoms/Input';
 import Button from '../../components/atoms/Button';
 import Modal from '../../components/atoms/Modal';
 
-import { loginService } from "../../services/authServices";
-import { LoginStyle } from './style';
+import { loginCompany } from "../../services/authServices";
+import { SupplierStyle } from './style';
 
-const Login = () => {
+const Supplier = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,20 +25,10 @@ const Login = () => {
     const bearerToken = cookies.get('@IRRF:bearerToken');
     if(bearerToken !== null) {
       switch(sessionStorage.getItem('role')) {
-        case 'ADMIN':
+        case 'COMPANY':
           navigate('/home-admin');
           break
-        case 'SECRETARY':
-          navigate('/painel-fiscal');
-          break
-        case 'MAIN SECRETARY':
-          navigate('/painel-fiscal');
-          break
-        case 'CITY MANAGER':
-          navigate('/home');
-          break
-        case 'USER':
-          navigate('/home');
+        default:
           break
       }
     }
@@ -51,39 +41,31 @@ const Login = () => {
   async function handleSubmit() {
     try {
       setIsLoading(true);
-      const responseToAuth = await loginService({ email: email, phrase: password });
+      const responseToAuth = await loginCompany({ email: email, phrase: password });
 
-      toast({
-        title: 'Login realizado com sucesso!',
-        status: 'success',
-        position: 'top-right',
-        isClosable: true,
-      });
-      setIsLoading(false);
+      if(responseToAuth?.message == 'Token inserted') {
+        toast({
+          title: 'Crie uma nova senha!',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
 
-      if(responseToAuth.body['x-access-token'] !== null || responseToAuth.body['x-access-token'] !== undefined) {
-        cookies.set('@IRRF:bearerToken', responseToAuth.body['x-access-token']);
+        sessionStorage.setItem('company-email', email);
+        navigate('/fornecedor/nova-senha');
+      } else {
+        setIsLoading(false);
+        
+        cookies.set('@IRRF:bearerToken', responseToAuth?.body?.['x-access-token']);
         sessionStorage.setItem('role', responseToAuth?.body?.role);
-      }
-
-      switch(responseToAuth?.body?.role){
-        case 'ADMIN':
-          navigate('/home-admin');
-          break
-        case 'CITY MANAGER':
-          navigate('/home');
-          break
-        case 'MAIN SECRETARY':
-          navigate('/painel-fiscal');
-          break
-        case 'SECRETARY':
-          navigate('/painel-fiscal');
-          break
-        case 'USER':
-          navigate('/home');
-          break
-        default:
-          break
+  
+        switch(responseToAuth?.body?.role){
+          case 'COMPANY':
+            navigate('/fornecedor/home-fornecedor');
+            break
+          default:
+            break
+        }
       }
 
     } catch(error) {
@@ -93,27 +75,27 @@ const Login = () => {
         position: 'top-right',
         isClosable: true,
       });
+      
       setIsLoading(false);
       setIsError(true);
     }
-    
   }
 
   return (
-    <section className={LoginStyle.Container}>
-      <div className={LoginStyle.ImageContainer}>
+    <section className={SupplierStyle.Container}>
+      <div className={SupplierStyle.ImageContainer}>
       </div>
 
-      <div className={LoginStyle.FormContainer}>
-        <div className={LoginStyle.LogoContainer}>
+      <div className={SupplierStyle.FormContainer}>
+        <div className={SupplierStyle.LogoContainer}>
           <img src='./logo-irrf.png' className='w-52'/>
         </div>
-        <div className={LoginStyle.TextContainer}>
-          <h1 className={LoginStyle.TitleContainer}>Bem vindo(a)!</h1>
+        <div className={SupplierStyle.TextContainer}>
+          <h1 className={SupplierStyle.TitleContainer}>Bem vindo(a)!</h1>
           <span className='text-[#75757F]'>Para entrar, coloque as informações inseridas no cadastro.</span>
         </div>
 
-        <div className={LoginStyle.Form}>
+        <div className={SupplierStyle.Form}>
         <Modal isCentered title={'Qual sua função no município?'} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
           <div className='flex flex-col w-auto h-36 justify-around '>
             <div>
@@ -146,4 +128,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default Supplier;

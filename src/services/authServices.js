@@ -91,7 +91,7 @@ const VerifyCompanyAccess = async (params) => {
   }
 }
 
-const UpdatePhraseCompany = async (params) => {
+const updatePhraseCompany = async (params) => {
   try {
     let response = await api.post('/auth/update-password-company', params);
     return response.data;
@@ -101,12 +101,11 @@ const UpdatePhraseCompany = async (params) => {
   }
 }
 
-const LoginCompany = async (params) => {
+const loginCompany = async (params) => {
   try {
     let response = await api.post('/auth/login-company', params);
     return response.data;
   } catch (error) {
-    ValidateSession(error.response.status);
     return error.response.status;
   }
 }
@@ -114,6 +113,6 @@ const LoginCompany = async (params) => {
 export { registerService, loginService, getUfService,
   getCityService, getComputersService, getUserInformations,
   getTokenToRecoverPassword, RecoverPassword, VerifyCompanyAccess,
-  UpdatePhraseCompany, LoginCompany
+  updatePhraseCompany,loginCompany
 }
 

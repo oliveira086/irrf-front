@@ -5,7 +5,7 @@ const ValidateSession = (status) => {
     const cookies = new Cookies();
 
     if(status == 500 || status == 401) {
-      cookies.set('@IRRF:bearerToken', null);
+      cookies.remove('@IRRF:bearerToken')
       sessionStorage.setItem('role', null);
       window.location.href = '/'
     }
@@ -14,4 +14,18 @@ const ValidateSession = (status) => {
   }
 }
 
-export { ValidateSession }
+const ValidateCompanySession = (status) => {
+  try {
+    const cookies = new Cookies();
+
+    if(status == 500 || status == 401) {
+      cookies.remove('@IRRF:bearerToken')
+      sessionStorage.setItem('role', null);
+      window.location.href = '/fornecedor'
+    }
+  } catch(error){
+    throw new Error(error);
+  }
+}
+
+export { ValidateSession, ValidateCompanySession }

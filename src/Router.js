@@ -21,6 +21,10 @@ import FiscalPanel from './pages/FiscalPanel';
 import FiscalDocument from './pages/FiscalDocument';
 import FinancialDocument from './pages/FinancialDocument';
 import Companies from './pages/Companies';
+import Supplier  from './pages/Supplier';
+import SupplierNewPhrase from './pages/Supplier/NewPhrase';
+import SupplierHome from './pages/Supplier/Home';
+import CompanyDocument from './pages/CompanyDocument';
 
 const theme = extendTheme({
   fonts: {
@@ -52,6 +56,10 @@ function Router(){
           <Route path='/extrato-fiscal' exact element={<FiscalDocument />} />
           <Route path='/despacho' exact element={<FinancialDocument />} />
           <Route path='/fornecedores' exact element={<Companies />}/>
+          <Route path='/fornecedor' exact element={<Supplier />} />
+          <Route path='/fornecedor/nova-senha' exact element={<SupplierNewPhrase />} />
+          <Route path='/fornecedor/home-fornecedor' exact element={<SupplierHome />} />
+          <Route path='/extrato-fornecedor' exact element={ <CompanyDocument />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

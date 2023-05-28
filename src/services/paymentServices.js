@@ -1,5 +1,5 @@
 import api from '../config/api';
-import { ValidateSession } from './validateSession';
+import { ValidateSession, ValidateCompanySession } from './validateSession';
 
 const getAllProductsOrServices = async (params) => {
   try {
@@ -27,6 +27,16 @@ const getPayment = async (params) => {
     return response.data
   } catch (error) {
     ValidateSession(error.response.status);
+    return error.response.status;
+  }
+}
+
+const getCompanyPayment = async (params) => {
+  try {
+    let response = await api.post('/payments/get-company-payment-info', params);
+    return response.data
+  } catch (error) {
+    ValidateCompanySession(error.response.status);
     return error.response.status;
   }
 }
@@ -250,5 +260,5 @@ export { getAllProductsOrServices,
   findCompanyByCNPJ, enablePayment, disablePayment, sendEmailToCompany,
   getPaymentReciboInfo, updatePayment, searchPaymentByTaxNote, updatePaymentStatus,
   getAllPaymentsByDate, searchPaymentByCnpj, delelePayment, generateDamService,
-  getComputersByCity
+  getComputersByCity, getCompanyPayment
 }
