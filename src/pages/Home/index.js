@@ -34,13 +34,26 @@ const HomeAdmin = () => {
   }
   
   useEffect(() => {
+    const paymentInserted = new Set();
+    const paymentsArray = [];
     
+
     (async () => await getUserInformations({ currentPage: currentPage }).then(response => {
       setCountPages(response.body.meta.pageCount);
       setCurrentPage(response.body.meta.currentPage);
-      setPaymentsData(response.body.rows);
+
       setUserName(response.body.user_name);
       setCityName(response.body.city_name);
+
+      response.body.rows.map(paymentCallback => {
+        if(paymentInserted.has(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 )) == false) {
+          paymentsArray.push(paymentCallback);
+          paymentInserted.add(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 ));
+        }
+      });
+
+      setPaymentsData(paymentsArray);
+
     }))()
   }, [currentPage]);
 
@@ -96,26 +109,114 @@ const HomeAdmin = () => {
                 </div>
               </div>
             </div>
-            <div className='mt-4 pb-2'>
+            <div className='flex flex-col mt-4 pb-2 h-[40vh] overflow-y-scroll'>
               <span className='text-xl'>Memória de cálculo da retenção</span>
-              <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                <span className='font-semibold'>Base de cálculo da retenção</span>
-                <span>{fromCurrency.format(modalData?.calculation_basis)}</span>
-              </div>
+        
+              {
+                modalData?.type == 'ordinario' ?
+                <>
+                  <span>Imposto de Renda Retido na Fonte</span>
+                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                    <span className='font-semibold'>Base de cálculo da retenção</span>
+                    <span>{fromCurrency.format(modalData?.calculation_basis)}</span>
+                  </div>
+                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                    <span className='font-semibold'>Alíquota do Imposto de Renda</span>
+                    <span>{modalData?.index}%</span>
+                  </div>
 
-              <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                <span className='font-semibold'>Alíquota do Imposto Sobre Serviço de Qualquer Natureza</span>
-                <span>{modalData?.index}%</span>
-              </div>
+                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                    <span className='font-semibold'>Valor do IRRF Retido na Fonte</span>
+                    <span>{fromCurrency.format(modalData?.withheld_tax)}</span>
+                  </div>
 
-              <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                <span className='font-semibold'>Valor do ISS Retido na Fonte</span>
-                <span>{fromCurrency.format(modalData?.withheld_tax)}</span>
-              </div>
+                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                    <span className='font-semibold'>Valor do Saldo de Pagamento</span>
+                    <span>{fromCurrency.format(modalData?.net_of_tax)}</span>
+                  </div>
 
-              <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                <span className='font-semibold'>Valor do Saldo de Pagamento</span>
-                <span>{fromCurrency.format(modalData?.net_of_tax)}</span>
+                  {
+                    modalData?.payment_associate !== null ?
+                    <>
+                      <span>Imposto Sobre Serviço Retido na Fonte</span>
+                      <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                        <span className='font-semibold'>Base de cálculo da retenção</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id.calculation_basis)}</span>
+                      </div>
+                      <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                        <span className='font-semibold'>Alíquota do Imposto Sobre Serviço de Qualquer Natureza</span>
+                        <span>{modalData?.payment_associate_id.index}%</span>
+                      </div>
+
+                      <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                        <span className='font-semibold'>Valor do ISS Retido na Fonte</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id.withheld_tax)}</span>
+                      </div>
+
+                      <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                        <span className='font-semibold'>Valor do Saldo de Pagamento</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id.net_of_tax)}</span>
+                      </div>
+                    </>
+                    :
+                    <></>
+                  }
+
+                </>
+                :
+                <>
+                  <span>Imposto Sobre Serviço Retido na Fonte</span>
+                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                    <span className='font-semibold'>Base de cálculo da retenção</span>
+                    <span>{fromCurrency.format(modalData?.calculation_basis)}</span>
+                  </div>
+                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                    <span className='font-semibold'>Alíquota do Imposto Sobre Serviço de Qualquer Natureza</span>
+                    <span>{modalData?.index}%</span>
+                  </div>
+
+                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                    <span className='font-semibold'>Valor do ISS Retido na Fonte</span>
+                    <span>{fromCurrency.format(modalData?.withheld_tax)}</span>
+                  </div>
+
+                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                    <span className='font-semibold'>Valor do Saldo de Pagamento</span>
+                    <span>{fromCurrency.format(modalData?.net_of_tax)}</span>
+                  </div>
+
+                  {
+                    modalData?.payment_associate !== null ?
+                    <>
+                      <span>Imposto de Renda Retido na Fonte</span>
+                      <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                        <span className='font-semibold'>Base de cálculo da retenção</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id.calculation_basis)}</span>
+                      </div>
+                      <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                        <span className='font-semibold'>Alíquota do Imposto de Renda Retido na Fonte</span>
+                        <span>{modalData?.payment_associate_id.index}%</span>
+                      </div>
+
+                      <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                        <span className='font-semibold'>Valor do IRRF Retido na Fonte</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id.withheld_tax)}</span>
+                      </div>
+
+                      <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                        <span className='font-semibold'>Valor do Saldo de Pagamento</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id.net_of_tax)}</span>
+                      </div>
+                    </>
+                    :
+                    <></>
+                  }
+                  
+                </>
+              }
+              <div className='flex w-full bg-[#F2F5FF] p-2 mt-6 rounded justify-between border-2'>
+                <span className='font-semibold'>Valor Total do Saldo de Pagamento</span>
+                <span>{fromCurrency.format( Number(modalData?.value) - (Number(modalData?.withheld_tax) + Number(modalData?.payment_associate_id?.withheld_tax)))}</span>
               </div>
             </div>
           </div>
