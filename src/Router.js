@@ -25,6 +25,7 @@ import Supplier  from './pages/Supplier';
 import SupplierNewPhrase from './pages/Supplier/NewPhrase';
 import SupplierHome from './pages/Supplier/Home';
 import CompanyDocument from './pages/CompanyDocument';
+import AdminPayments from './pages/AdminPayments';
 
 const theme = extendTheme({
   fonts: {
@@ -60,6 +61,7 @@ function Router(){
           <Route path='/fornecedor/nova-senha' exact element={<SupplierNewPhrase />} />
           <Route path='/fornecedor/home-fornecedor' exact element={<SupplierHome />} />
           <Route path='/extrato-fornecedor' exact element={ <CompanyDocument />} />
+          <Route path='/painel-pagamentos' exact element={<AdminPayments />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

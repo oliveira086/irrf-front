@@ -17,7 +17,7 @@ import { AdminPanelStyle } from './style';
 
 const AdminPanel = () => {
   const [userName, setUserName] = useState('');
-  const [cityName, setCityName] = useState('');
+  const [cityName, setCityName] = useState(''); 
   
   const [citySearch, setCitySearch] = useState('');
 
@@ -80,7 +80,7 @@ const AdminPanel = () => {
                       </div>
 
                       <div className='w-44 mr-2'>
-                        <Button label={'Pagamentos'} onPress={() => {}} />
+                        <Button label={'Pagamentos'} onPress={() => navigate(`/painel-pagamentos?cityId=${rowsCallback.id}`)} />
                       </div>
 
                       <div className='w-44'>
