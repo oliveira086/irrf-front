@@ -57,7 +57,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', width: '100%', heigth: '10px'}}>
                     <div style={{ display: 'flex', width: '98%', justifyContent: 'center', alignItems: 'center', heigth: '10px'}}>
-                      {`Em ${this.props.month_payment?.day} de ${this.props.month_payment.month} de ${this.props.month_payment?.year}, no exercício do poder de polícia administrativa tributária municipal, NOTIFICA-SE vossa senhoria para tomar ciência do(s) Lançamento(s) do Imposto de Renda e do Imposto Sobre Serviço, ambos a serem retidos na fonte.`}
+                      {`Em ${this.props.month_payment.month} de ${this.props.month_payment?.year}, no exercício do poder de polícia administrativa tributária municipal, NOTIFICA-SE vossa senhoria para tomar ciência do(s) Lançamento(s) do Imposto de Renda e do Imposto Sobre Serviço, ambos a serem retidos na fonte.`}
                     </div>
                   </div>
                 </tr>
