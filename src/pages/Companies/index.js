@@ -33,6 +33,7 @@ const Companies = () => {
   const [cnpjSearch, setCnpjSearch] = useState();
   const [enabled, setEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [userType, setUserType] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [countPages, setCountPages] = useState(1);
@@ -241,6 +242,7 @@ const Companies = () => {
       setCityId(response.body.city_id);
       setUserName(response.body.user_name);
       setCityName(response.body.city_name);
+      setUserType(sessionStorage.getItem('role'));
     }))();
   }, []);
 
@@ -272,13 +274,19 @@ const Companies = () => {
             </div>
           </div>
           <div className={CompaniesStyle.TitleButtonContainer}>
-            <Button label='Cadastrar Fornecedor' onPress={() => {
-              toast({
-                title: 'Função ainda não disponível, entre em contato com os auditores para cadastrar novo fornecedor!',
-                status: 'warning',
-                position: 'top-right',
-                isClosable: true,
-              })}} />
+            {userType == 'ADMIN' ?
+              <>
+                <Button label='Cadastrar Fornecedor' onPress={() => {
+                  toast({
+                    title: 'Função ainda não disponível, entre em contato com os auditores para cadastrar novo fornecedor!',
+                    status: 'warning',
+                    position: 'top-right',
+                    isClosable: true,
+                  })}} />
+              </>
+              :
+              <></>
+            }
           </div>
         </div>
 

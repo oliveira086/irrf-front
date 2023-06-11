@@ -5,7 +5,7 @@ import { BiHomeSmile, BiChevronDown } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { TbHeartRateMonitor } from 'react-icons/tb';
 import { MdAttachMoney, MdExitToApp, MdStore } from 'react-icons/md';
-import { HiOutlineUserGroup } from 'react-icons/hi';
+
 import * as chakra from '@chakra-ui/react';
 
 import logo from '../../assets/images/logo-irrf.png'
