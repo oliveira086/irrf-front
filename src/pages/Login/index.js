@@ -96,7 +96,6 @@ const Login = () => {
       setIsLoading(false);
       setIsError(true);
     }
-    
   }
 
   return (

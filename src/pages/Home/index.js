@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import * as chakra from '@chakra-ui/react';
 import { FiEye, FiDownload } from 'react-icons/fi';
+import { AiOutlineSearch } from "react-icons/ai";
 import moment from 'moment/moment';
 import 'moment/locale/pt-br';
 import { Player } from '@lottiefiles/react-lottie-player';
@@ -10,8 +11,11 @@ import Header from '../../components/molecules/Header';
 import Button from '../../components/atoms/Button';
 import Modal from '../../components/atoms/Modal';
 import Pagination from '../../components/molecules/Pagination';
+import Input from '../../components/atoms/Input';
 
 import { getUserInformations } from '../../services/authServices';
+import { getAllCompanies, getCompanyByCnpj } from '../../services/companyServices';
+import { searchPaymentByCnpj } from '../../services/paymentServices';
 
 import { HomeStyle } from './style';
 
@@ -21,6 +25,9 @@ const HomeAdmin = () => {
   const [cityName, setCityName] = useState('');
   const [modalData, setModalData] = useState();
   const [isOpen, setIsOpen] = useState();
+  const [cnpjSearch, setCnpjSearch] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [cityId, setCityId] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [countPages, setCountPages] = useState(1);
@@ -32,6 +39,47 @@ const HomeAdmin = () => {
   function openAndCloseModal () {
     setIsOpen(!isOpen);
   }
+
+  async function searchPayment () {
+    setIsLoading(true);
+    if(cnpjSearch == '') {
+      const paymentInserted = new Set();
+      const paymentsArray = [];
+
+      (async () => await getUserInformations({ currentPage: currentPage, enabled: enabled }).then(response => {
+
+        response.body.rows.map(paymentCallback => {
+          if(paymentInserted.has(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 )) == false) {
+            paymentsArray.push(paymentCallback);
+            paymentInserted.add(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 ));
+          }
+        });
+
+        setPaymentsData(paymentsArray);
+        setCountPages(response.body.meta.pageCount);
+        setIsLoading(false);
+      }))()
+    } else {
+      const paymentInserted = new Set();
+      const paymentsArray = [];
+
+      const removeDotToCnpj = cnpjSearch.replace(/[^\w\s]/gi, '').trim();
+
+      const response =  await searchPaymentByCnpj({ cnpj: removeDotToCnpj, city_id: cityId });
+
+      response.body.rows.map(paymentCallback => {
+        if(paymentInserted.has(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 )) == false) {
+          paymentsArray.push(paymentCallback);
+          paymentInserted.add(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 ));
+        }
+      });
+      
+      setPaymentsData(paymentsArray);
+
+      setCnpjSearch('');
+      setIsLoading(false);
+    }
+  } 
   
   useEffect(() => {
     const paymentInserted = new Set();
@@ -41,6 +89,7 @@ const HomeAdmin = () => {
     (async () => await getUserInformations({ currentPage: currentPage }).then(response => {
       setCountPages(response.body.meta.pageCount);
       setCurrentPage(response.body.meta.currentPage);
+      setCityId(response.body.city_id);
 
       setUserName(response.body.user_name);
       setCityName(response.body.city_name);
@@ -62,7 +111,17 @@ const HomeAdmin = () => {
       <Header userName={userName} cityName={cityName} />
       <div className={HomeStyle.BodyContainer}>
         <div className={HomeStyle.TitleContainer}>
-          <h1>Central de Renteção</h1>
+          <div>
+            <h1 className='font-semibold text-3xl '>Central de Renteção</h1>
+            <div className='w-auto flex items-end mt-2 font-normal'>
+              <div className='w-72 mr-4 font-normal'>
+                <Input label='Pesquisar' placeholder='Pesquisar por CNPJ' value={cnpjSearch} onChange={e => setCnpjSearch(e.target.value)} />
+              </div>
+              <div className='w-46'>
+                <Button label={<AiOutlineSearch />} onPress={searchPayment} isLoading={isLoading} />
+              </div>
+            </div>
+          </div>
           <div className={HomeStyle.TitleButtonContainer}>
             <Button label='Nova Retenção' onPress={() => navigate('/retencao')}/>
           </div>
@@ -76,17 +135,17 @@ const HomeAdmin = () => {
 
                 <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
                   <span className='font-semibold'>Município</span>
-                  <span>{`Prefeitura Municipal de ${modalData?.computer_id_payments.computer_city_id.label} - ${modalData?.computer_id_payments.computer_city_id.city_uf_id.label}`}</span>
+                  <span>{`Prefeitura Municipal de ${modalData?.computer_id_payments?.computer_city_id?.label} - ${modalData?.computer_id_payments?.computer_city_id?.city_uf_id?.label}`}</span>
                 </div>
 
                 <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
                   <span className='font-semibold'>CNPJ</span>
-                  <span>{modalData?.computer_id_payments.computer_city_id.cnpj}</span>
+                  <span>{modalData?.computer_id_payments?.computer_city_id.cnpj}</span>
                 </div>
 
                 <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
                   <span className='font-semibold'>Ordenador de despesa</span>
-                  <span>{modalData?.computer_id_payments.label}</span>
+                  <span>{modalData?.computer_id_payments?.label}</span>
                 </div>
               </div>
 
@@ -141,21 +200,21 @@ const HomeAdmin = () => {
                       <span>Imposto Sobre Serviço Retido na Fonte</span>
                       <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                         <span className='font-semibold'>Base de cálculo da retenção</span>
-                        <span>{fromCurrency.format(modalData?.payment_associate_id.calculation_basis)}</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id?.calculation_basis)}</span>
                       </div>
                       <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                         <span className='font-semibold'>Alíquota do Imposto Sobre Serviço de Qualquer Natureza</span>
-                        <span>{modalData?.payment_associate_id.index}%</span>
+                        <span>{modalData?.payment_associate_id?.index}%</span>
                       </div>
 
                       <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                         <span className='font-semibold'>Valor do ISS Retido na Fonte</span>
-                        <span>{fromCurrency.format(modalData?.payment_associate_id.withheld_tax)}</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id?.withheld_tax)}</span>
                       </div>
 
                       <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                         <span className='font-semibold'>Valor do Saldo de Pagamento</span>
-                        <span>{fromCurrency.format(modalData?.payment_associate_id.net_of_tax)}</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id?.net_of_tax)}</span>
                       </div>
                     </>
                     :
@@ -191,21 +250,21 @@ const HomeAdmin = () => {
                       <span>Imposto de Renda Retido na Fonte</span>
                       <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                         <span className='font-semibold'>Base de cálculo da retenção</span>
-                        <span>{fromCurrency.format(modalData?.payment_associate_id.calculation_basis)}</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id?.calculation_basis)}</span>
                       </div>
                       <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                         <span className='font-semibold'>Alíquota do Imposto de Renda Retido na Fonte</span>
-                        <span>{modalData?.payment_associate_id.index}%</span>
+                        <span>{modalData?.payment_associate_id?.index}%</span>
                       </div>
 
                       <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                         <span className='font-semibold'>Valor do IRRF Retido na Fonte</span>
-                        <span>{fromCurrency.format(modalData?.payment_associate_id.withheld_tax)}</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id?.withheld_tax)}</span>
                       </div>
 
                       <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                         <span className='font-semibold'>Valor do Saldo de Pagamento</span>
-                        <span>{fromCurrency.format(modalData?.payment_associate_id.net_of_tax)}</span>
+                        <span>{fromCurrency.format(modalData?.payment_associate_id?.net_of_tax)}</span>
                       </div>
                     </>
                     :
@@ -216,7 +275,9 @@ const HomeAdmin = () => {
               }
               <div className='flex w-full bg-[#F2F5FF] p-2 mt-6 rounded justify-between border-2'>
                 <span className='font-semibold'>Valor Total do Saldo de Pagamento</span>
-                <span>{fromCurrency.format( Number(modalData?.value) - (Number(modalData?.withheld_tax) + Number(modalData?.payment_associate_id?.withheld_tax)))}</span>
+                <span>{fromCurrency.format(
+                  Number(modalData?.value) - (Number(modalData?.withheld_tax)
+                  + Number(modalData?.payment_associate_id?.withheld_tax ? modalData?.payment_associate_id?.withheld_tax : 0 )))}</span>
               </div>
             </div>
           </div>
