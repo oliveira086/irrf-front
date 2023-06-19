@@ -15,7 +15,7 @@ import Modal from "../../components/atoms/Modal";
 import Pagination from '../../components/molecules/Pagination';
 
 import { getUserInformations } from "../../services/authServices";
-import { getAllPaymentsByDate, searchPaymentByCnpj, enablePayment, updatePaymentStatus } from '../../services/paymentServices';
+import { getAllPaymentsByDate, searchPaymentByCnpjAdmin, enablePayment, updatePaymentStatus } from '../../services/paymentServices';
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { PaymentStyles } from "./style";
@@ -53,7 +53,7 @@ const Payments = () => {
     if(cnpjSearch == '') {
       selectedPrefectureAndGetPayments();
     } else {
-      const response = await searchPaymentByCnpj({ cnpj: cnpjSearch });
+      const response = await searchPaymentByCnpjAdmin({ cnpj: cnpjSearch });
       setRows(response.body);
       setCountPages(response.meta.pageCount);
     }
@@ -136,14 +136,14 @@ const Payments = () => {
               <Input label='Pesquisar' placeholder='Pesquisar por CNPJ' value={cnpjSearch} onChange={e => setCnpjSearch(e.target.value)} />
             </div>
             <div className={PaymentStyles.TitleButtonContainer}>
-              <Button label={<AiOutlineSearch />} onPress={searchPayment} isLoading={rows.length == 0 ? true : false} />
+              <Button label={<AiOutlineSearch />} onPress={searchPayment} isLoading={rows?.length == 0 ? true : false} />
             </div>
           </div>
         </div>
 
         <div className={PaymentStyles.TableContainer}>
 
-          <chakra.Skeleton className="w-full h-[60vh] mt-4" isLoaded={rows.length > 0 ? true : false}>
+          <chakra.Skeleton className="w-full h-[60vh] mt-4" isLoaded={rows?.length > 0 ? true : false}>
             <chakra.Table variant='simple' size='lg'>
               <chakra.Thead>
                 <chakra.Tr>
@@ -158,7 +158,7 @@ const Payments = () => {
               </chakra.Thead>
 
               <chakra.Tbody>
-                {rows.map(rowsCalback => {
+                {rows?.map(rowsCalback => {
                   let rowBgColor;
                   let bgIndicator;
 

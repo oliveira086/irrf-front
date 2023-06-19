@@ -221,6 +221,16 @@ const searchPaymentByCnpj = async (params) => {
   }
 }
 
+const searchPaymentByCnpjAdmin = async (params) => {
+  try {
+    let response = await api.post(`/payments/payment-search-by-cnpj-admin?cnpj=${params.cnpj}`, params);
+    return response.data;
+  } catch (error) {
+    ValidateSession(error.response.status);
+    return error.response.status;
+  }
+}
+
 const delelePayment = async (params) => {
   try {
     let response = await api.post(`/payments/delete-payment`, params);
@@ -260,5 +270,5 @@ export { getAllProductsOrServices,
   findCompanyByCNPJ, enablePayment, disablePayment, sendEmailToCompany,
   getPaymentReciboInfo, updatePayment, searchPaymentByTaxNote, updatePaymentStatus,
   getAllPaymentsByDate, searchPaymentByCnpj, delelePayment, generateDamService,
-  getComputersByCity, getCompanyPayment
+  getComputersByCity, getCompanyPayment, searchPaymentByCnpjAdmin
 }

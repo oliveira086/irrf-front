@@ -19,7 +19,7 @@ axiosInstance.interceptors.request.use(
     const headers = {
       locale: 'pt-br',
       accept: '*/*',
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Authorization": `Bearer ${getToken()}`
     };
