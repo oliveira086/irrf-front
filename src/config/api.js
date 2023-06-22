@@ -10,7 +10,7 @@ function getToken () {
 }
 
 var axiosInstance = axios.create({
-  baseURL: ambient === 'dev' ? 'http://localhost:8082' : 'https://api-dev.cefitem.net',
+  baseURL: ambient === 'dev' ? 'http://localhost:8082' : 'https://api.centralderetencao.com.br',
   "Authorization": `Bearer ${getToken()}`
 });
 
