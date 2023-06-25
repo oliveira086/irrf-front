@@ -42,7 +42,7 @@ const SupplierHome = () => {
 
   function generateDocument (item) {
     sessionStorage.setItem('payment_id', item);
-    navigate('/extrato-fornecedor');
+    navigate('/extrato-fornecedor'); 
   }
 
   useEffect(() => {
@@ -83,7 +83,6 @@ const SupplierHome = () => {
         </div>
 
         <Modal isCentered size={'xl'} title={modalData?.company_name} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
-          {console.log(modalData)}
           {modalData?.type === 'simples' ?
             <>
               <div className='h-auto'>

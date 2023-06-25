@@ -36,6 +36,10 @@ const SupplierNewPhrase = () => {
           position: 'top-right',
           isClosable: true,
         });
+
+        navigate('/fornecedor');
+
+
       } else {
         toast({
           title: 'Houve um erro, tente novamente mais tarde',

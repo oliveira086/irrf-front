@@ -5,7 +5,8 @@ const Cookies = require('universal-cookie').default;
 
 function getToken () {
   const cookies = new Cookies();
-  const bearerToken = cookies.get('@IRRF:bearerToken');
+  let bearerToken = cookies.get('@IRRF:bearerToken');
+
   return bearerToken;
 }
 

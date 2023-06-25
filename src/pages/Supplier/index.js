@@ -42,6 +42,12 @@ const Supplier = () => {
     try {
       setIsLoading(true);
       const responseToAuth = await loginCompany({ email: email, phrase: password });
+      
+
+      if(responseToAuth.body['x-access-token'] !== null || responseToAuth.body['x-access-token'] !== undefined) {
+        cookies.set('@IRRF:bearerToken', responseToAuth.body['x-access-token']);
+        sessionStorage.setItem('role', responseToAuth?.body?.role);
+      }
 
       if(responseToAuth?.message == 'Token inserted') {
         toast({
@@ -55,9 +61,6 @@ const Supplier = () => {
         navigate('/fornecedor/nova-senha');
       } else {
         setIsLoading(false);
-        
-        cookies.set('@IRRF:bearerToken', responseToAuth?.body?.['x-access-token']);
-        sessionStorage.setItem('role', responseToAuth?.body?.role);
   
         switch(responseToAuth?.body?.role){
           case 'COMPANY':
@@ -91,7 +94,7 @@ const Supplier = () => {
           <img src='./logo-irrf.png' className='w-52'/>
         </div>
         <div className={SupplierStyle.TextContainer}>
-          <h1 className={SupplierStyle.TitleContainer}>Bem vindo(a)!</h1>
+          <h1 className={SupplierStyle.TitleContainer}>Bem vindo fornecedor!</h1>
           <span className='text-[#75757F]'>Para entrar, coloque as informações inseridas no cadastro.</span>
         </div>
 
@@ -114,13 +117,13 @@ const Supplier = () => {
             <Input label='Senha' placeholder='Senha' type='password' value={password} isError={isError} onChange={e => setPassword(e.target.value)} />
           </div>
           <div className='flex w-96 justify-end mt-2 mb-8'>
-            <span className='underline text-[#5064B2] cursor-pointer' onClick={() => {navigate('/recuperar-senha')}}>Esqueceu a senha?</span>
+            {/* <span className='underline text-[#5064B2] cursor-pointer' onClick={() => {navigate('/recuperar-senha')}}>Esqueceu a senha?</span> */}
           </div>
           <div className='w-80 h-auto'>
             <Button label={'Entrar'} onPress={() => handleSubmit()} isLoading={isLoading} />
           </div>
           <div className='flex w-96 justify-center mt-4'>
-            <span onClick={() => openAndCloseModal()}>Ainda não tem cadastro? <b className='text-[#5064B2] cursor-pointer' >Cadastre-se</b></span>
+            <span onClick={() => navigate('/fornecedor/token')}>Primeiro Acesso? <b className='text-[#5064B2] cursor-pointer' >Clique aqui</b></span>
           </div>    
         </div>
       </div>

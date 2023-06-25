@@ -1,6 +1,6 @@
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 
-const URL = 'https://api-dev.cefitem.net';
+// const URL = 'https://api-dev.cefitem.net';
 
-export const socket = io(URL);
+// export const socket = io(URL);
   

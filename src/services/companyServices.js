@@ -138,7 +138,7 @@ const companyPanel = async (params) => {
     let response = await api.post(`/company/company-panel?currentPage=${params.currentPage}&pageSize=10`, params);
     return response.data;
   } catch (error) {
-    ValidateCompanySession(error.response.status);
+    // ValidateCompanySession(error.response.status);
   }
 }
 
@@ -147,7 +147,7 @@ const companyInformations = async (params) => {
     let response = await api.post(`/company/company-informations`, params);
     return response.data;
   } catch (error) {
-    ValidateCompanySession(error.response.status);
+    // ValidateCompanySession(error.response.status);
   }
 }
 
