@@ -122,16 +122,16 @@ const PrePayment = () => {
   const [isSimple, setIsSimple] = useState();
   // ===================================
 
-  useEffect(() => {
-    socket.on('/pre-payments/create', (socketResponse) => {
-      if(socketResponse == 'Refresh') {
-        getAllPrePayments().then(response => {
-          setPrePaymentData(response.rows);
-        });
-      }
-    });
-    return function cleanup() {socket.off('/pre-payments/create')}
-  }, [])
+  // useEffect(() => {
+  //   socket.on('/pre-payments/create', (socketResponse) => {
+  //     if(socketResponse == 'Refresh') {
+  //       getAllPrePayments().then(response => {
+  //         setPrePaymentData(response.rows);
+  //       });
+  //     }
+  //   });
+  //   return function cleanup() {socket.off('/pre-payments/create')}
+  // }, [])
   
   useEffect(() => {
     (async () => {
