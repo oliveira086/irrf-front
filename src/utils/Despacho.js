@@ -15,7 +15,7 @@ export class DespachoTemplate extends React.PureComponent {
 
   render() {
     const { text } = this.props;
-    // console.log(this.props.payment_associate);
+    
     let fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
     let cnpjOrCpfFormated;
     if(this.props.cnpj_company.length > 11) {
@@ -248,6 +248,10 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <span style={{fontWeight: 'bold'}}>CNPJ: </span>
                   <span style={{fontWeight: 'semibold'}}>{this.props.computer_cnpj}</span>
+                </tr>
+                <tr>
+                  <span style={{fontWeight: 'bold'}}>Nota Fiscal: </span>
+                  <span style={{fontWeight: 'semibold'}}>{`${this.props.tax_note.split('-')[0]} - ${this.props.tax_note.split('-')[2]}`}</span>
                 </tr>
                 <tr/>
                 <tr/>
