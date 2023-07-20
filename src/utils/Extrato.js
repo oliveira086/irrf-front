@@ -8,8 +8,9 @@ export class TemplateDoubleRecibo extends React.PureComponent {
     this.state = { checked: false };
   }
 
-  handleCheckboxOnChange = () =>
+  handleCheckboxOnChange = () => {
     this.setState({ checked: !this.state.checked });
+  }
 
   setRef = (ref) => (this.canvasEl = ref);
 
@@ -150,8 +151,8 @@ export class TemplateDoubleRecibo extends React.PureComponent {
           </div>
         </>
       );
-
     }
+    
     else if(this.props.payment_type == 'simples' ) {
       return (
         <>
@@ -278,8 +279,6 @@ export class TemplateDoubleRecibo extends React.PureComponent {
         </>
       );
     }
-    
-
   }
 }
 
@@ -293,3 +292,4 @@ export const FunctionalTemplateDoubleRecibo = React.forwardRef((props, ref) => {
   company_object={props.company_object} iss_item={props.iss_item} irrf_code={props.irrf_code} payment_type={props.payment_type} user_secretary={props.user_secretary}
   />;
 });
+ 

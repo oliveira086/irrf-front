@@ -18,21 +18,6 @@ const SelectInput = ({
         value={selectedValue}
         onChange={(value) => setSelectedValue(value)}
         options={options}
-        // theme={(theme) => ({
-        //   ...theme,
-        //   colors: {
-        //     neutral0: '#fff',
-        //     neutral20: '#CED8E2',
-        //     neutral30: '#393939',
-        //     neutral40: '#393939',
-        //     neutral50: '#9CA6BE',
-        //     neutral60: '#393939',
-        //     neutral70: '#494949',
-        //     neutral80: '#393939',
-        //     neutral90: '#333'
-        //   }
-        //   }
-        // )}
       />
     </div>
   );

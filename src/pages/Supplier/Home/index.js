@@ -34,6 +34,7 @@ const SupplierHome = () => {
 
   moment.locale('pt-br');
   const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
+  const toast = chakra.useToast();
   const navigate = useNavigate();
   
   function openAndCloseModal () {
@@ -43,6 +44,15 @@ const SupplierHome = () => {
   function generateDocument (item) {
     sessionStorage.setItem('payment_id', item);
     navigate('/extrato-fornecedor'); 
+  }
+
+  function validatePayment () {
+    toast({
+      title: 'O Extrato de retenção é exclusivo IR Retido na Fonte!',
+      status: 'error',
+      position: 'top-right',
+      isClosable: true,
+    });
   }
 
   useEffect(() => {
@@ -59,7 +69,7 @@ const SupplierHome = () => {
     setIsLoading(false);
 
     (async () => await companyPanel({ currentPage: currentPage }).then(response => {
-      setCountPages(response?.meta?.pageCount);
+      setCountPages(response?.body?.meta?.pageCount);
 
       response.body.rows.map(paymentCallback => {
         if(paymentInserted.has(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 )) == false) {
@@ -325,21 +335,23 @@ const SupplierHome = () => {
                       <chakra.Th>Nota fiscal</chakra.Th>
                       <chakra.Th>Data</chakra.Th>
                       <chakra.Th>Cidade</chakra.Th>
+                      <chakra.Th>Tipo</chakra.Th>
                       <chakra.Th></chakra.Th>
                       <chakra.Th></chakra.Th>
                     </chakra.Tr>
                   </chakra.Thead>
                   <chakra.Tbody>
                     {paymentsData.map(paymentsDataCallback => {
+                      const paymentType = paymentsDataCallback?.type  == 'simples' ? false : true;
                       return (
                         <>
                           <chakra.Tr>
                             <chakra.Td>{paymentsDataCallback.tax_note.split('-')[0]}</chakra.Td>
                             <chakra.Td>{moment(paymentsDataCallback.createdAt).format('DD/MM/YYYY')}</chakra.Td>
                             <chakra.Td>{paymentsDataCallback?.['computer_id_payments.computer_city_id.label']}</chakra.Td>
+                            <chakra.Td>{paymentType ? 'IRRF' : 'ISS'}</chakra.Td>
                             <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => {openAndCloseModal(); setModalData(paymentsDataCallback)}}/></chakra.Td>
-                            <chakra.Td><FiDownload size={28} className='cursor-pointer' onClick={() => {generateDocument(paymentsDataCallback.id)}}/></chakra.Td>
-                            
+                            <chakra.Td><FiDownload size={28} className='cursor-pointer' onClick={() => {paymentType ? generateDocument(paymentsDataCallback.id) : validatePayment()}}/></chakra.Td>
                           </chakra.Tr>
                         </>
                       )

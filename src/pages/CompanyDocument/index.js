@@ -5,7 +5,7 @@ import { Player } from '@lottiefiles/react-lottie-player';
 
 import Button from '../../components/atoms/Button';
 
-import { FunctionalTemplateDoubleRecibo } from '../../utils/ExtratoCompany';
+import { FunctionalTemplateDoubleReciboExtratoCompany } from '../../utils/ExtratoCompany';
 import formatDate from '../../utils/formatDate';
 
 import { getPayment, getCompanyPayment } from '../../services/paymentServices';
@@ -40,16 +40,21 @@ const FiscalDocument = () => {
   const [issItem, setIssItem] = useState('');
   const [irrfCode, setirrfCode] = useState('');
   const [paymentType, setPaymentType] = useState('');
+  const [loaded, setLoaded] = useState(false);
 
   const componentRef = React.useRef();
 
-  const reactToPrintTrigger = React.useCallback(() => {
-    return (
-      <div className={CompanyDocumentStyle.ButtonsContainer}>
-        <Button id="button" label='Imprimir Recibo'/>
-      </div>
-    )
-  }, []);
+  const reactToPrintTrigger = React.useCallback(() => { 
+    if(loaded == false) {
+      return <></>
+    } else {
+      return (
+        <div className={CompanyDocumentStyle.ButtonsContainer}>
+          <Button id="button" label='Imprimir Recibo'/>
+        </div>
+      )
+    }
+  }, [loaded]);
 
   const reactToPrintContent = React.useCallback(() => {
     return componentRef.current;
@@ -114,6 +119,7 @@ const FiscalDocument = () => {
       setIssItem(response.body.iss_item);
       setirrfCode(response.body['products_services_id_payments.code']);
       setPaymentType(response.body.type);
+      setLoaded(true);
     } else {
 
     }
@@ -135,7 +141,7 @@ const FiscalDocument = () => {
           />
         </div>
         <ReactToPrint
-          content={reactToPrintContent}
+          content= {reactToPrintContent}
           documentTitle="Extrato de Retenção"
           removeAfterPrint
           trigger={reactToPrintTrigger}
@@ -145,12 +151,12 @@ const FiscalDocument = () => {
         </div>
 
         <div className='absolute h-26 invisible'>
-          <FunctionalTemplateDoubleRecibo id="template" ref={componentRef} text={text} payment_id={paymentId}
+          <FunctionalTemplateDoubleReciboExtratoCompany id="template" ref={componentRef} text={text} payment_id={paymentId}
             city={municipio} UF={uf} company={company} cnpj_company={CNPJCompany} computer_name={computerName}
             NF_value={totalValue} NF_index={index} NF_tax_value={taxValue} prefecture_cnpj={prefectureCNPJ}
             NF_liquid_value={liquidValue} user_name={userName} registration={registration} computer_cnpj={computerCnpj}
             month_payment={datePayment} tax_note={taxNote} calculate_basis={calculateBasis} payment_associate={paymentAssociateState}
-            company_object={companyObject} iss_item={issItem} irrf_code={irrfCode} payment_type={paymentType} user_secretary={secretary}/>
+            company_object={companyObject} iss_item={issItem} irrf_code={irrfCode} payment_type={paymentType} user_secretary={secretary} />
         </div>
       </div>
     </section>
