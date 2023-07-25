@@ -109,7 +109,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
 
                     <div style={{ display:'flex', flexDirection: 'column', borderRight: '1px solid #000', padding: '10px' }}>
                       <span style={{ fontWeight: 'bold'}}>CÓDIGO DE<br></br>RETENÇÃO</span>
-                      <span>{`${this.props.payment_associate.calculation_basis == null ? '0' : this.props.irrf_code}`}</span>
+                      <span>{`${this.props.irrf_code}`}</span>
                     </div>
 
                     <div style={{ display:'flex', flexDirection: 'column', borderRight: '1px solid #000', padding: '10px' }}>
@@ -119,12 +119,12 @@ export class TemplateDoubleRecibo extends React.PureComponent {
 
                     <div style={{ display:'flex', flexDirection: 'column', borderRight: '1px solid #000', padding: '10px'}}>
                       <span style={{ fontWeight: 'bold'}}>RENDIMENTO R$</span>
-                      <span>{`${fromCurrency.format(this.props.calculate_basis)}`}</span>
+                      <span>{`${fromCurrency.format(this.props.NF_value)}`}</span>
                     </div>
 
                     <div style={{ display:'flex', flexDirection: 'column', borderRight: '1px solid #000', padding: '10px'}}>
                       <span style={{ fontWeight: 'bold'}}>IMPOSTO RETIDO R$</span>
-                      <span>{`${this.props.payment_associate.calculation_basis == null ? '0' : fromCurrency.format(this.props.payment_associate.withheld_tax)}`}</span>
+                      <span>{`${fromCurrency.format(this.props.NF_tax_value)}`}</span>
                     </div>
                   </div>
                 </tr>

@@ -18,7 +18,6 @@ const SupplierRequestToken = () => {
   const [email, setEmail] = useState('');
   const [phrase, setPhrase] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
 
   const handleSubmit = async () => {
 

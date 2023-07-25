@@ -18,7 +18,7 @@ const Header = ({ userName, cityName }) => {
 
   function logout() {
     const cookies = new Cookies();
-    cookies.set('@IRRF:bearerToken', null);
+    cookies.remove('@IRRF:bearerToken');
     sessionStorage.setItem('role', null);
     window.location.href = '/'
   }
