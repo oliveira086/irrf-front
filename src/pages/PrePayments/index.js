@@ -134,6 +134,20 @@ const PrePayment = () => {
   // }, [])
   
   useEffect(() => {
+
+    let arrayWithPrePayments = [];
+
+    function verificarPrePaymentAssociate(id) {
+      let index = arrayWithPrePayments.findIndex(indexCallback => indexCallback.id == id);
+      let indexPrePaymentAssociate = arrayWithPrePayments.findIndex(indexCallback => indexCallback.pre_payment_associate == id);
+
+      if (index < 0 && indexPrePaymentAssociate < 0) {
+        return false;
+      } else {
+        return true;
+      };
+    };
+
     (async () => {
       await getUserInformations({ currentPage: 1 }).then(response => {
         setUserName(response.body.user_name);
@@ -141,7 +155,18 @@ const PrePayment = () => {
       });
 
       await getAllPrePayments().then(response => {
-        setPrePaymentData(response.rows);
+        response.rows.map((prePaymentsCallback) => {
+          if (prePaymentsCallback.pre_payment_associate == null) {
+            arrayWithPrePayments.push(prePaymentsCallback);
+          } else {
+            if (verificarPrePaymentAssociate(prePaymentsCallback.id) == false) {
+              arrayWithPrePayments.push(prePaymentsCallback);
+            };
+          };
+        });
+
+        setPrePaymentData(arrayWithPrePayments);
+
       });
     })();
   }, []);
@@ -319,6 +344,9 @@ const PrePayment = () => {
                       setSelectedValue={(item) => setComputerSelected(item)}
                       options={computerData}
                     />
+                  </div>
+                  <div className='w-60 mr-4'>
+                    <Input label='CNPJ Ordenador' placeholder='CNPJ Ordenador' value={companySelected?.cnpj} />
                   </div>
                 </div>
                 
