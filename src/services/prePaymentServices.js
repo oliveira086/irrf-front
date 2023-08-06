@@ -41,6 +41,16 @@ const confirmPrePayment = async (params) => {
   }
 }
 
+const calculePrePayment = async (params) => {
+  try {
+    let response = await api.post('/pre-payments/pre-payments-calcules', params);
+    return response.data
+  } catch (error) {
+    ValidateSession(error.response.status);
+    throw new Error(error.response.status);
+  }
+}
+
 const createPrePayment = async (params) => {
   try {
     
@@ -56,4 +66,4 @@ const createPrePayment = async (params) => {
   }
 }
 
-export { getAllPrePayments, getPrePaymentById, updatePrePaymentById, confirmPrePayment, createPrePayment}
+export { getAllPrePayments, getPrePaymentById, updatePrePaymentById, confirmPrePayment, createPrePayment, calculePrePayment}
