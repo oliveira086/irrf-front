@@ -157,6 +157,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
 
     try {
       if(aliquot == null || aliquot == undefined) {
+        console.log('Aqui')
         toast({
           title: 'Aliquota não pode está vazia',
           status: 'error',
@@ -164,25 +165,44 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
           isClosable: true,
         });
       } else {
-        const paymentsArray = await HandleSavePrePayment();
+        console.log(computerSelected);
 
-        await calculePrePayment([paymentsArray[0]]).then(response => {
+        if(computerSelected.length <= 0) {
           toast({
-            title: 'Pré pagamento Calculado com sucesso!',
-            status: 'success',
-            position: 'top-right',
-            isClosable: true,
-          });
-
-          navigate(0);
-        }).catch(error => {
-          toast({
-            title: 'Houve um problema ao calcular esse pré pagamento!',
+            title: 'Selecione o Ordenador de despesas',
             status: 'error',
             position: 'top-right',
             isClosable: true,
           });
-        });
+        } else {
+          HandleSavePrePayment().then(async response => {
+            await calculePrePayment([response[0]]).then(response => {
+              toast({
+                title: 'Pré pagamento Calculado com sucesso!',
+                status: 'success',
+                position: 'top-right',
+                isClosable: true,
+              });
+    
+              navigate(0);
+            }).catch(error => {
+              toast({
+                title: 'Houve um problema ao calcular esse pré pagamento!',
+                status: 'error',
+                position: 'top-right',
+                isClosable: true,
+              });
+            });
+  
+          }).catch(error => {
+            toast({
+              title: 'Houve um problema ao salvar esse pré pagamento!',
+              status: 'error',
+              position: 'top-right',
+              isClosable: true
+            });
+          })
+        }
       }
       
     } catch(error) {
