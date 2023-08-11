@@ -156,8 +156,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   const HandleCalculatePrePayment = async () => {
 
     try {
-      if(aliquot == null || aliquot == undefined) {
-        console.log('Aqui')
+      if (aliquot == null || aliquot == undefined) {
         toast({
           title: 'Aliquota não pode está vazia',
           status: 'error',
@@ -165,9 +164,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
           isClosable: true,
         });
       } else {
-        console.log(computerSelected);
-
-        if(computerSelected.length <= 0) {
+        if (computerSelected.length <= 0) {
           toast({
             title: 'Selecione o Ordenador de despesas',
             status: 'error',
@@ -175,16 +172,57 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
             isClosable: true,
           });
         } else {
-          HandleSavePrePayment().then(async response => {
-            await calculePrePayment([response[0]]).then(response => {
+          const paymentsToUpdate = [];
+
+          const object = {
+            company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
+            pre_payment_id: modalData.id,
+            tax_note: taxNote,
+            calculation_basis: parseFloat(convertCurrency(calculateBasis)),
+            computer_id: computerSelected.id,
+            index: parseFloat(aliquot),
+            tax_note_serie: taxNoteSerie,
+            value: parseFloat(convertCurrency(value))
+          };
+
+          paymentsToUpdate.push(object);
+
+          if (modalData.pre_payment_associate == null) {
+            // fluxo de inserção acaba aqui
+          } else {
+            const objectToAssociate = {
+              company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
+              pre_payment_id: modalData.pre_payment_associate,
+              tax_note: taxNote,
+              calculation_basis: parseFloat(convertCurrency(calculateBasisAssociate)),
+              computer_id: computerSelected.id,
+              index: parseFloat(aliquotAssociate),
+              tax_note_serie: taxNoteSerie,
+              value: parseFloat(convertCurrency(valueAssociate))
+            };
+
+            paymentsToUpdate.push(objectToAssociate);
+
+          };
+
+          await Promise.all(paymentsToUpdate.map(async paymentsToUpdateCallback => {
+            await updatePrePaymentById(paymentsToUpdateCallback);
+          }));
+
+          if (paymentsToUpdate[0] == null || paymentsToUpdate[0] == []) {
+            
+          } else {
+            await confirmPrePayment({pre_payment_id: paymentsToUpdate[0]?.pre_payment_id}).then(response => {
               toast({
-                title: 'Pré pagamento Calculado com sucesso!',
+                title: 'Pré pagamento calculado com sucesso!',
                 status: 'success',
                 position: 'top-right',
                 isClosable: true,
               });
-    
+  
               navigate(0);
+              openAndCloseModal();
+  
             }).catch(error => {
               toast({
                 title: 'Houve um problema ao calcular esse pré pagamento!',
@@ -193,28 +231,19 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                 isClosable: true,
               });
             });
-  
-          }).catch(error => {
-            toast({
-              title: 'Houve um problema ao salvar esse pré pagamento!',
-              status: 'error',
-              position: 'top-right',
-              isClosable: true
-            });
-          })
-        }
-      }
+          };
+        };
+      };
       
-    } catch(error) {
+    } catch (error) {
       toast({
         title: 'Houve um problema ao calcular esse pré pagamento!',
         status: 'error',
         position: 'top-right',
         isClosable: true,
       });
-    }
-    
-  }
+    };
+  };
 
   const HandleSavePrePayment = async () => {
     if(aliquot == null || aliquot == undefined) {
