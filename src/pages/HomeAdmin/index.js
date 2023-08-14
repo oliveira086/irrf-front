@@ -49,7 +49,7 @@ const HomeAdmin = () => {
       <Header userName={userName} cityName={cityName} />
       <div className={HomeAdminStyle.BodyContainer}>
         <div className={HomeAdminStyle.TitleContainer}>
-          <h1>Central de Renteção</h1>
+          <h1>Central de Retenção</h1>
           <div className={HomeAdminStyle.TitleButtonContainer}>
             <Button label='Nova Retenção'/>
           </div>

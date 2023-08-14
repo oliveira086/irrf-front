@@ -92,7 +92,7 @@ const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, set
   )
 }
 
-const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelected, computerData, companyData, setCompanyData, setComputerSelected, companySelected }) => {
+const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelected, computerData, companyData, setCompanyData, setComputerSelected, companySelected, setCompanySelected }) => {
   const toast = chakra.useToast();
   const navigate = useNavigate();
 
@@ -151,6 +151,22 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   function openAndCloseModal () {
     setIsOpen(!isOpen);
     setCompanyData([]);
+  }
+
+  function selectedCompanyWithObject(params) {
+    setIsService(params?.value?.is_service);
+    setIsProduct(params?.value?.is_product);
+    setIsSimple(params?.value?.is_simple);
+    setCompanySelected(params);
+
+    // Logica para inserir a aliquota correta
+    if(params?.value?.is_simple == true && modalData?.index == null) {
+      setAliquot('');
+    } else if(params?.value?.is_simple == false && params?.value?.is_service == true) {
+      setAliquot(params?.value?.['iss_companies_id.iss_companies_iss_services_id.value']);
+    } else if(params?.value?.is_product == true && params?.value?.is_service == false) {
+      setAliquot(params?.value?.aliquot);
+    }
   }
 
   const HandleCalculatePrePayment = async () => {
@@ -577,70 +593,10 @@ const PrePayment = () => {
     // =====================================
   }, [modalData]);
 
-  function selectedCompanyWithObject(params) {
-    setIsService(params?.value?.is_service);
-    setIsProduct(params?.value?.is_product);
-    setIsSimple(params?.value?.is_simple);
-    setCompanySelected(params);
-
-    // Logica para inserir a aliquota correta
-    if(params?.value?.is_simple == true && modalData?.index == null) {
-      setAliquot('');
-    } else if(params?.value?.is_simple == false && params?.value?.is_service == true) {
-      setAliquot(params?.value?.['iss_companies_id.iss_companies_iss_services_id.value']);
-    } else if(params?.value?.is_product == true && params?.value?.is_service == false) {
-      setAliquot(params?.value?.aliquot);
-    }
-  }
-
   function openAndCloseModal () {
     setIsOpen(!isOpen);
     setCompanyData([]);
   }
-
-  // const HandleSavePrePayment = async () => {
-
-  //   if(aliquot == null || aliquot == undefined) {
-  //     toast({
-  //       title: 'Aliquota não pode está vazia',
-  //       status: 'error',
-  //       position: 'top-right',
-  //       isClosable: true,
-  //     });
-  //   } else {
-  //     const object = {
-  //       company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
-  //       pre_payment_id: modalData.id,
-  //       tax_note: taxNote,
-  //       calculation_basis: parseFloat(convertCurrency(calculateBasis)),
-  //       computer_id: computerSelected.id,
-  //       index: parseFloat(aliquot),
-  //       tax_note_serie: taxNoteSerie,
-  //       value: parseFloat(convertCurrency(value))
-  //     }
-
-  //     await updatePrePaymentById(object).then(response => {
-  //       toast({
-  //         title: 'Pré pagamento Atualizado!',
-  //         status: 'success',
-  //         position: 'top-right',
-  //         isClosable: true,
-  //       });
-        
-  //       openAndCloseModal();
-  //     }).catch(error => {
-  //       toast({
-  //         title: 'Houve um problema ao atualizar esse pré pagamento!',
-  //         status: 'error',
-  //         position: 'top-right',
-  //         isClosable: true,
-  //       });
-  //     });
-
-  //   }
-
-    
-  // }
 
   return (
     <section className={PrePaymentStyle.Container}>
@@ -661,7 +617,7 @@ const PrePayment = () => {
           computerData={computerData} cnpj={cnpj} taxNote={taxNote} taxNoteSerie={taxNoteSerie} companyData={companyData} value={value}
           calculateBasis={calculateBasis} irrfItemCod={irrfItemCod} issItemCod={issItemCod} aliquot={aliquot} isSimple={isSimple} isService={isService}
           isProduct={isProduct} setCompanyData={setCompanyData} valueAssociate={valueAssociate} calculateBasisAssociate={calculateBasisAssociate}
-          aliquotAssociate={aliquotAssociate} setValue={setValue} setComputerSelected={setComputerSelected} companySelected={companySelected}
+          aliquotAssociate={aliquotAssociate} setValue={setValue} setComputerSelected={setComputerSelected} companySelected={companySelected} setCompanySelected={setCompanySelected}
         />
         {
           prePaymentData.length > 0 ?
