@@ -75,7 +75,7 @@ const FiscalPanel = () => {
       <Header userName={userName} cityName={cityName} />
       <div className={FiscalPanelStyle.BodyContainer}>
         <div className={FiscalPanelStyle.TitleContainer}>
-          <h1>Central de Renteção</h1>
+          <h1>Central de Retenção</h1>
         </div>
 
         <Modal isCentered size={'xl'} title={modalData?.company_name} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>

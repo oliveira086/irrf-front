@@ -89,7 +89,7 @@ const SupplierHome = () => {
       <Header userName={userName} cityName={cityName} />
       <div className={SupplierHomeStyle.BodyContainer}>
         <div className={SupplierHomeStyle.TitleContainer}>
-          <h1>Central de Renteção</h1>
+          <h1>Central de Retenção</h1>
         </div>
 
         <Modal isCentered size={'xl'} title={modalData?.company_name} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>

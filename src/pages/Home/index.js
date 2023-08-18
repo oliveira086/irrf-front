@@ -112,7 +112,7 @@ const HomeAdmin = () => {
       <div className={HomeStyle.BodyContainer}>
         <div className={HomeStyle.TitleContainer}>
           <div>
-            <h1 className='font-semibold text-3xl '>Central de Renteção</h1>
+            <h1 className='font-semibold text-3xl '>Central de Retenção</h1>
             <div className='w-auto flex items-end mt-2 font-normal'>
               <div className='w-72 mr-4 font-normal'>
                 <Input label='Pesquisar' placeholder='Pesquisar por CNPJ' value={cnpjSearch} onChange={e => setCnpjSearch(e.target.value)} />

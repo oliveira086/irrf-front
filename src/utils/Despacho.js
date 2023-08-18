@@ -94,7 +94,7 @@ export class DespachoTemplate extends React.PureComponent {
                   <span style={{fontWeight: 'semibold'}}>{`${fromCurrency.format(this.props.NF_value)}`} </span>
                 </tr>
                 <tr>
-                  <span style={{fontWeight: 'bold'}}>Cod. Receita: </span>
+                  <span style={{fontWeight: 'bold'}}>Código Receita: </span>
                   <span style={{fontWeight: 'semibold'}}>{this.props.irrf_code}</span>
                 </tr>
                 {this.props.payment_associate.id == null ? <></> :
@@ -209,6 +209,25 @@ export class DespachoTemplate extends React.PureComponent {
                     <span>{this.props.registration}</span>
                   </div>
                 </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'left', alignItems: 'start'}}>
+                    <div style={{ width: '60%', heigth: '1px', background: '#000'}}></div><br></br>
+                    <span>Responsabilidade técnica pela elaboração deste documento:</span>
+                    <span>Wlisses Menezes Sociedade Individual de Advocacia. OAB/PE n 1969</span>
+                  </div>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -290,7 +309,7 @@ export class DespachoTemplate extends React.PureComponent {
 
                 {this.props.associate_validation == false ? <></> :
                   <tr>
-                    <span style={{fontWeight: 'bold'}}>Cod. Receita: </span>
+                    <span style={{fontWeight: 'bold'}}>Código Receita: </span>
                     <span style={{fontWeight: 'semibold'}}>{this.props.irrf_code}</span>
                   </tr>
                 }
@@ -400,6 +419,25 @@ export class DespachoTemplate extends React.PureComponent {
                     <div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br></br>
                     <span>{this.props.user_name}</span>
                     <span>{this.props.registration}</span>
+                  </div>
+                </tr>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr/>
+                <tr>
+                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'left', alignItems: 'start'}}>
+                    <div style={{ width: '60%', heigth: '1px', background: '#000'}}></div><br></br>
+                    <span>Responsabilidade técnica pela elaboração deste documento:</span>
+                    <span>Wlisses Menezes Sociedade Individual de Advocacia. OAB/PE n 1969</span>
                   </div>
                 </tr>
               </tbody>

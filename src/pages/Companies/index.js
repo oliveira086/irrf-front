@@ -259,7 +259,7 @@ const Companies = () => {
       <div className={CompaniesStyle.BodyContainer}>
         <div className={CompaniesStyle.TitleContainer}>
           <div>
-            <h1 className='text-3xl font-semibold'>Central de Renteção</h1>
+            <h1 className='text-3xl font-semibold'>Central de Retenção</h1>
             <div className='w-auto flex items-end mt-2'>
               <div className='w-72 mr-4'>
                 <Input label='Pesquisar' placeholder='Pesquisar por CNPJ' value={cnpjSearch} onChange={e => setCnpjSearch(e.target.value)} />
