@@ -90,19 +90,24 @@ const Payments = () => {
   }
 
   async function auditPayment() {
+
     const objetctToAuditPayment = {
       payment_id: modalData.id,
       status: status.label
     };
 
     await enablePayment(objetctToAuditPayment).then(response => {
+
       toast({
         title: 'Pagamento Auditado com sucesso!',
         status: 'success',
         position: 'top-right',
         isClosable: true,
       });
+
       setIsOpen(false);
+      navigate(0);
+
     }).catch(error => {
       toast({
         title: 'Houve um erro ao auditar esse pagamento!',
