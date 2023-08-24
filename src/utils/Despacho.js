@@ -176,7 +176,8 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr/>
                 <tr/>
                 <tr>
-                  <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'center'}}>
+                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
+                    <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br/>
                     <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2023 `} </span>
                   </div>
                 </tr>
@@ -202,13 +203,6 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr/>
                 <tr/>
                 <tr/>
-                <tr>
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
-                    <span>{this.props.user_name}</span>
-                    <span>{this.props.registration}</span>
-                    <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div>
-                  </div>
-                </tr>
                 <tr/>
                 <tr/>
                 <tr/>
@@ -388,7 +382,8 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr/>
                 <tr/>
                 <tr>
-                  <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'center'}}>
+                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
+                    <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br/>
                     <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2023 `} </span>
                   </div>
                 </tr>
@@ -414,13 +409,6 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr/>
                 <tr/>
                 <tr/>
-                <tr>
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
-                    <span>{this.props.user_name}</span>
-                    <span>{this.props.registration}</span>
-                    <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div>
-                  </div>
-                </tr>
                 <tr/>
                 <tr/>
                 <tr/>
