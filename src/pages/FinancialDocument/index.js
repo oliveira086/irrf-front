@@ -149,11 +149,11 @@ const FinancialDocument = () => {
         </div>
 
         <div className='absolute h-26 invisible'>
-        <DespachoTemplate id="template" ref={componentRef} text={text} payment_id={paymentId} payment_type={paymentType}
-        city={municipio} UF={uf} company={company} cnpj_company={CNPJCompany} computer_name={computerName} computer_cnpj={computerCnpj}
-        NF_value={totalValue} NF_index={index} NF_tax_value={taxValue} prefecture_cnpj={prefectureCNPJ} irrf_code={irrfCode}
-        NF_liquid_value={liquidValue} user_name={userName} registration={registration} associate_validation={isPaymentAssociate}
-        month_payment={datePayment} tax_note={taxNote} calculate_basis={calculateBasis} payment_associate={paymentAssociate}/>
+          <DespachoTemplate id="template" ref={componentRef} text={text} payment_id={paymentId} payment_type={paymentType}
+          city={municipio} UF={uf} company={company} cnpj_company={CNPJCompany} computer_name={computerName} computer_cnpj={computerCnpj}
+          NF_value={totalValue} NF_index={index} NF_tax_value={taxValue} prefecture_cnpj={prefectureCNPJ} irrf_code={irrfCode}
+          NF_liquid_value={liquidValue} user_name={userName} registration={registration} associate_validation={isPaymentAssociate}
+          month_payment={datePayment} tax_note={taxNote} calculate_basis={calculateBasis} payment_associate={paymentAssociate}/>
         </div>
       </div>
     </section>

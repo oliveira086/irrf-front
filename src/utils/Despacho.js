@@ -204,9 +204,9 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr/>
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
-                    <div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br></br>
                     <span>{this.props.user_name}</span>
                     <span>{this.props.registration}</span>
+                    <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div>
                   </div>
                 </tr>
                 <tr/>
@@ -416,9 +416,9 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr/>
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
-                    <div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br></br>
                     <span>{this.props.user_name}</span>
                     <span>{this.props.registration}</span>
+                    <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div>
                   </div>
                 </tr>
                 <tr/>
