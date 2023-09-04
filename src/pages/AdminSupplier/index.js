@@ -21,7 +21,7 @@ import Pagination from "../../components/molecules/Pagination";
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { getUserInformations } from "../../services/authServices";
-import { getAllCompaniesAdmin, findCompanyByCNPJ, getCompanyByCnpj } from "../../services/companyServices";
+import { getAllCompaniesAdmin, findCompanyByCNPJ, getCompanyByCnpj, editCompany } from "../../services/companyServices";
 import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices";
 import { registerCompany, uploadReceiptCompany } from "../../services/companyServices";
 
@@ -43,11 +43,13 @@ const AdminSupplier = () => {
   const [RegisterSupplierIsOpen, setRegisterSupplierIsOpen] = useState(false);
   const [productAndServices, setProductAndServices] = useState([]);
   const [productAndServicesSelected, setProductAndServicesSelected ] = useState();
+  const [editSupplierIsOpen, setEditSupplierIsOpen] = useState(false);
 
   const [issItems, setIssItems] = useState([]);
   const [issItemSelected, setIssItemSelected] = useState();
 
   const [companyName, setCompanyName] = useState('');
+  const [companyId, setCompanyId] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [objectToContract, setObjectToContract] = useState('');
@@ -126,6 +128,46 @@ const AdminSupplier = () => {
       setIssItems(response.body);
     });
 
+  }
+
+  async function openAndCloseEditSupplier(data) {
+    
+    setCnpj(data?.cnpj);
+    setCompanyName(data?.label);
+    setEmail(data?.email);
+    setPhone(data?.phone);
+    setObjectToContract(data?.object);
+    setAddress(data?.address);
+    setCep(data?.cep);
+    setState(data?.uf);
+    setCity(data?.city);
+    setDistrict(data?.district);
+    setNumber(data?.number);
+    setComplement(data?.complement);
+    setUf(data?.uf);
+
+    setIsProduct(data?.is_product);
+    setIsService(data?.is_service);
+    setIsSimple(data?.is_simple);
+    setIsSimei(data?.is_simei);
+    setIsExemptIR(data?.is_exempt_irrf);
+    setIsExemptISS(data?.is_exempt_iss);
+    setIsImmuneIR(data?.immune_irrf);
+    setIsImmuneIss(data?.immune_iss);
+    setCompanyId(data?.id);
+
+    getAllProducts().then(response => {
+      setProductAndServices(response.body);
+    });
+
+    getAllServices().then(response => {
+      setIssItems(response.body);
+    });
+
+    setProductAndServicesSelected({ label: data?.['products_services_id_company.label'], value: data?.['products_services_id'] });
+    setIssItemSelected({ label: data?.['iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label'], value: data?.['iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.id']})
+    
+    setEditSupplierIsOpen(!editSupplierIsOpen);
   }
 
   function handleUploadFile(files) {
@@ -222,6 +264,55 @@ const AdminSupplier = () => {
     })
 
   }
+
+  async function updateCompany () {
+
+    const objectToEditCompany = {
+      "id": companyId,
+      "city_id": query.get("cityId"),
+      "products_services_id": productAndServicesSelected?.value,
+      "label": companyName,
+      "cnpj": cnpj,
+      "email": email,
+      "object": objectToContract,
+      "phone": phone,
+      "address": address,
+      "district": district,
+      "complement": complement,
+      "cep": cep,
+      "number": number,
+      "city": city,
+      "uf": uf,
+      "is_simple": isSimple,
+      "is_simei": isSimei,
+      "is_product": isProduct,
+      "is_service": isService,
+      "is_exempt_irrf": isExemptIR,
+      "is_exempt_iss": isExemptISS,
+      "is_immune_irrf": isImmuneIR || 0,
+      "is_immune_iss": isImmuneIss || 0,
+      "iss_item": issItemSelected?.value || issItemSelected?.id
+    }
+
+    editCompany(objectToEditCompany).then(response => {
+      toast({
+        title: 'Empresa editada com sucesso!',
+        status: 'success',
+        position: 'top-right',
+        isClosable: true,
+      });
+
+      navigate(0);
+    }).catch(error => {
+      toast({
+        title: 'Erro ao editar empresa!',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    });
+  }
+
 
   async function searchAndFilterCompany() {
     setIsLoading(true);
@@ -325,7 +416,7 @@ const AdminSupplier = () => {
                       <chakra.Td>{rowsCallback.email}</chakra.Td>
                       <chakra.Td>{<chakra.Switch className='mr-4' size='md' isChecked={rowsCallback.enabled} />}</chakra.Td>
                       <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => openAndCloseModal(rowsCallback)}/></chakra.Td>
-                      <chakra.Td><TbEdit size={28}/></chakra.Td>
+                      <chakra.Td><TbEdit size={28} className='cursor-pointer' onClick={() => openAndCloseEditSupplier(rowsCallback)}/></chakra.Td>
                     </chakra.Tr>
                   )
                 })}
@@ -593,6 +684,149 @@ const AdminSupplier = () => {
 
               <div className='w-56'>
                 <Button label='Salvar' onPress={registerCompanyFunction}/>
+              </div>
+              
+            </div>
+          </div>
+        </Modal>
+
+        <Modal isCentered size={'xl'} title={'Editar Fornecedor'} isOpen={editSupplierIsOpen} modalOpenAndClose={openAndCloseEditSupplier} >
+          <div className='w-full h-[60vh] overflow-y-scroll pl-2'>
+            <div className={AdminSupplierStyle.ModalContentRow}>
+              <span className='text-xl font-semibold'>Dados da Empresa</span>
+            </div>
+            
+            <div className='flex justify-between mb-2'>
+              <div className='w-5/12 mr-2'>
+                <Input label='CNPJ' placeholder='CNPJ' value={cnpj} onChange={e => setCnpj(e.target.value)} />
+              </div>
+
+              <div className='w-5/12'>
+                <Input label='Email' placeholder='Nome Fantasia ou Razão Social' value={email} onChange={e => setEmail(e.target.value)} />
+              </div>
+              
+            </div>
+            <div className='flex justify-between mb-2'>
+              <div className='w-5/12'>
+                <Input label='Nome' placeholder='Nome Fantasia ou Razão Social' value={companyName} onChange={e => setCompanyName(e.target.value)} />
+              </div>
+
+              <div className='w-5/12'>
+                <Input label='Telefone' placeholder='Telefone' value={phone} onChange={e => setPhone(e.target.value)} />
+              </div>
+            </div>
+
+            <div>
+              <Select placeholder={'Produto / Serviço'} options={productAndServices} setSelectedValue={setProductAndServicesSelected} selectedValue={productAndServicesSelected} />       
+            </div>
+            
+            {isService ?
+              <div>
+                <Select placeholder={'Item ISS'} options={issItems} setSelectedValue={setIssItemSelected} selectedValue={issItemSelected} />
+              </div>
+              :
+              <></>
+            }
+
+            <div className='mb-2'>
+              <Input label='Objeto do contrato' placeholder='Objeto do contrato' value={objectToContract} onChange={e => setObjectToContract(e.target.value)} />
+            </div>
+
+            <div>
+              <span className='text-xl mt-2'>Localização</span>
+            </div>
+
+            <div className='flex justify-between mb-2'>
+              <div className='w-5/12'>
+                <Input label='Estado' placeholder='Estado' value={state} onChange={e => setState(e.target.value)} />
+              </div>
+
+              <div className='w-5/12'>
+                <Input label='Cidade' placeholder='Cidade' value={city} onChange={e => setCity(e.target.value)} />
+              </div>
+            </div>
+
+            <div className='flex justify-between mb-2'>
+              <div className='w-5/12'>
+                <Input label='CEP' placeholder='CEP' value={cep} onChange={e => setCep(e.target.value)} />
+              </div>
+
+              <div className='w-5/12'>
+                <Input label='Rua' placeholder='Rua' value={address} onChange={e => setAddress(e.target.value)} />
+              </div>
+            </div>
+
+            <div className='flex justify-between mb-2'>
+              <div className='w-72'>
+                <Input label='Bairro' placeholder='Bairro' value={district} onChange={e => setDistrict(e.target.value)} />
+              </div>
+
+              <div className='w-96'>
+                <Input label='Cidade' placeholder='Rua' value={city} onChange={e => setCity(e.target.value)} />
+              </div>
+
+              <div className='w-72'>
+                <Input label='Número' placeholder='Número' value={number} onChange={e => setNumber(e.target.value)} />
+              </div>
+            </div>
+            
+            <div className='mb-2'>
+              <Input label='Complemento' placeholder='Complemento' value={complement} onChange={e => setComplement(e.target.value)} />
+            </div>
+
+            <div>
+              <span className='text-xl'>Informações Complementares</span>
+            </div>
+
+            <div className='mb-4'>
+              <div>
+                <chakra.Switch isChecked={isService} onChange={(e) => {setIsService(!isService)}} />
+                <span className='ml-2'>Fornece Serviço</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isProduct} onChange={(e) => {setIsProduct(!isProduct)}} />
+                <span className='ml-2'>Fornece Produto</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isSimple} onChange={(e) => {setIsSimple(!isSimple)}} />
+                <span className='ml-2'>Optante pelo simples</span>
+              </div>
+
+              <div>
+                <chakra.Switch  isChecked={isSimei} onChange={(e) => {setIsSimei(!isSimei)}} />
+                <span className='ml-2'>Simei</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isExemptISS} onChange={(e) => {setIsExemptISS(!isExemptISS)}} />
+                <span className='ml-2'>Isento ISS</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isExemptIR} onChange={(e) => {setIsExemptIR(!isExemptIR)}} />
+                <span className='ml-2'>Isento IRRF</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isImmuneIss} onChange={(e) => {setIsImmuneIss(!isImmuneIss)}} />
+                <span className='ml-2'>Imune ISS</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={isImmuneIR} onChange={(e) => {setIsImmuneIR(!isImmuneIR)}} />
+                <span className='ml-2'>Imune IRRF</span>
+              </div>
+            </div>
+
+            <div className='flex pl-20 pr-20 justify-between mt-6 mb-6'>
+              <div className='w-56'>
+                <Button label='Cancelar' type='second' onPress={openAndCloseRegisterSupplier}/>
+              </div>
+
+              <div className='w-56'>
+                <Button label='Salvar' onPress={updateCompany}/>
               </div>
               
             </div>
