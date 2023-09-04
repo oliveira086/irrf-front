@@ -21,7 +21,7 @@ import Pagination from "../../components/molecules/Pagination";
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { getUserInformations } from "../../services/authServices";
-import { getAllCompaniesAdmin, findCompanyByCNPJ, getCompanyByCnpj, editCompany } from "../../services/companyServices";
+import { getAllCompaniesAdmin, findCompanyByCNPJ, getCompanyByCnpj, editCompany, setCompanyAudited, disableCompany } from "../../services/companyServices";
 import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices";
 import { registerCompany, uploadReceiptCompany } from "../../services/companyServices";
 
@@ -270,7 +270,7 @@ const AdminSupplier = () => {
     const objectToEditCompany = {
       "id": companyId,
       "city_id": query.get("cityId"),
-      "products_services_id": productAndServicesSelected?.value,
+      "products_services_id": productAndServicesSelected?.value || productAndServicesSelected?.id,
       "label": companyName,
       "cnpj": cnpj,
       "email": email,
@@ -330,6 +330,46 @@ const AdminSupplier = () => {
       const response = await getCompanyByCnpj({ cnpj: removeDotToCnpj, city_id: query.get("cityId") });
       setRows(response.body);
       setIsLoading(false);
+    }
+  }
+
+  async function enableCompany(enabled, id) {
+
+    if(enabled) {
+      await disableCompany({ company_id: id }).then(response => {
+        toast({
+          title: 'Empresa desauditada com sucesso!',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
+      }).catch(error => {
+        toast({
+          title: 'Erro ao desauditar empresa!',
+          status: 'error',
+          position: 'top-right',
+          isClosable: true,
+        });
+      });
+
+    } else {
+      await setCompanyAudited({ company_id: id }).then(response => {
+        toast({
+          title: 'Empresa auditada com sucesso!',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
+
+        navigate(0);
+      }).catch(error => {
+        toast({
+          title: 'Erro ao auditar empresa!',
+          status: 'error',
+          position: 'top-right',
+          isClosable: true,
+        });
+      });
     }
   }
 
@@ -414,7 +454,7 @@ const AdminSupplier = () => {
                       <chakra.Td>{rowsCallback.label}</chakra.Td>
                       <chakra.Td>{formatCpfOrCnpj(rowsCallback.cnpj)}</chakra.Td>
                       <chakra.Td>{rowsCallback.email}</chakra.Td>
-                      <chakra.Td>{<chakra.Switch className='mr-4' size='md' isChecked={rowsCallback.enabled} />}</chakra.Td>
+                      <chakra.Td>{<chakra.Switch className='mr-4' size='md' isChecked={rowsCallback.enabled} onChange={() => enableCompany(rowsCallback.enabled, rowsCallback.id)} />}</chakra.Td>
                       <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => openAndCloseModal(rowsCallback)}/></chakra.Td>
                       <chakra.Td><TbEdit size={28} className='cursor-pointer' onClick={() => openAndCloseEditSupplier(rowsCallback)}/></chakra.Td>
                     </chakra.Tr>
@@ -822,7 +862,7 @@ const AdminSupplier = () => {
 
             <div className='flex pl-20 pr-20 justify-between mt-6 mb-6'>
               <div className='w-56'>
-                <Button label='Cancelar' type='second' onPress={openAndCloseRegisterSupplier}/>
+                <Button label='Cancelar' type='second' onPress={openAndCloseEditSupplier}/>
               </div>
 
               <div className='w-56'>
