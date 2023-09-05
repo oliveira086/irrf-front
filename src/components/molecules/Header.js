@@ -46,7 +46,7 @@ const Header = ({ userName, cityName }) => {
             </button>
           </div>
         )
-        break
+        
       case 'CITY MANAGER':
         return (
           <div className='flex'>
@@ -60,8 +60,7 @@ const Header = ({ userName, cityName }) => {
             </button>
           </div>
         )
-        break
-      case 'MAIN SECRETARY':
+      case 'SECRETARY':
         return (
           <div className='flex'>
             <button onClick={() => navigate('/painel-fiscal') } className={uri.indexOf('/painel-fiscal') > -1 ? style.ButtonSelected : style.Button}>
@@ -71,6 +70,27 @@ const Header = ({ userName, cityName }) => {
           </div>
         )
         break
+      case 'OPERADOR':
+        return (
+          <div className='flex'>
+            <button onClick={() => navigate('/home') } className={uri.indexOf('home') > -1 ? style.ButtonSelected : style.Button}>
+              <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Home</span>
+            </button>
+            <button onClick={() => navigate('/pre-pagamentos') } className={uri.indexOf('pre-pagamento') > -1 ? style.ButtonSelected : style.Button}>
+              <BsImageFill color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Pré Pagamentos</span>
+            </button>
+            <button onClick={() => navigate('/painel-administrativo') } className={uri.indexOf('/painel') > -1 ? style.ButtonSelected : style.Button}> 
+              <TbHeartRateMonitor color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Painel Administrativo</span>
+            </button>
+            <button  onClick={() => navigate('/pagamentos') } className={uri.indexOf('/pagamentos') > -1 ? style.ButtonSelected : style.Button} >
+              <MdAttachMoney color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Pagamentos</span>
+            </button>
+          </div>
+        )
         
       default:
         return (
@@ -78,6 +98,10 @@ const Header = ({ userName, cityName }) => {
             <button className={style.Button}>
               <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Home</span>
+            </button>
+            <button onClick={() => navigate('/fornecedores') } className={uri.indexOf('fornecedores') > -1 ? style.ButtonSelected : style.Button}>
+              <MdStore color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Fornecedores</span>
             </button>
           </div>
         )

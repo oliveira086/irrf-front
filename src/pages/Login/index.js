@@ -28,16 +28,16 @@ const Login = () => {
         case 'ADMIN':
           navigate('/home-admin');
           break
-        case 'SECRETARY':
-          navigate('/painel-fiscal');
-          break
-        case 'MAIN SECRETARY':
-          navigate('/painel-fiscal');
-          break
         case 'CITY MANAGER':
           navigate('/home');
           break
         case 'USER':
+          navigate('/home');
+          break
+        case 'SECRETARY':
+          navigate('/painel-fiscal');
+          break
+        case 'OPERADOR':
           navigate('/home');
           break
       }
@@ -80,6 +80,9 @@ const Login = () => {
           navigate('/painel-fiscal');
           break
         case 'USER':
+          navigate('/home');
+          break
+        case 'OPERADOR':
           navigate('/home');
           break
         default:

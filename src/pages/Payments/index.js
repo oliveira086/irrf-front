@@ -5,7 +5,7 @@ import moment from "moment";
 import Zoom from 'react-medium-image-zoom'
 
 import { AiOutlineSearch, AiOutlineCloseCircle, AiOutlineCheckCircle } from "react-icons/ai";
-import { FiEye, FiX } from "react-icons/fi";
+import { FiEye, FiX, FiEdit } from "react-icons/fi";
 
 import Header from "../../components/molecules/Header";
 import Button from "../../components/atoms/Button";
@@ -13,9 +13,10 @@ import Input from "../../components/atoms/Input";
 import Select from "../../components/atoms/Select";
 import Modal from "../../components/atoms/Modal";
 import Pagination from '../../components/molecules/Pagination';
+import MoneyInput from '../../components/atoms/MoneyInput';
 
 import { getUserInformations } from "../../services/authServices";
-import { getAllPaymentsByDate, searchPaymentByCnpjAdmin, enablePayment, updatePaymentStatus } from '../../services/paymentServices';
+import { getAllPaymentsByDate, searchPaymentByCnpjAdmin, enablePayment, updatePaymentStatus, getPayment } from '../../services/paymentServices';
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { PaymentStyles } from "./style";
@@ -33,9 +34,35 @@ const Payments = () => {
   
   const [currentPage, setCurrentPage] = useState(1);
   const [countPages, setCountPages] = useState();
+  const [useType, setUserType] = useState();
+  const [modalData, setModalData] = useState();
+
+  // Estado para Formulario no Modal ===
+  const [cnpj, setCnpj] = useState();
+  const [value, setValue] = useState(`${modalData?.value}`);
+  const [calculateBasis, setCalculateBasis] = useState(`${modalData?.calculation_basis}`);
+  const [aliquot, setAliquot] = useState(`${modalData?.index}`);
+  const [taxNote, setTaxNote] = useState(`${modalData?.tax_note}`);
+  const [taxNoteSerie, setTaxNoteSerie] = useState(`${modalData?.tax_note_serie}`);
+  const [computerSelected, setComputerSelected] = useState();
+  const [paymentType, setPaymentType] = useState('');
+  // ===================================
+  // Estado para Formulario de pagamento associado no Modal ===
+  const [valueAssociate, setValueAssociate] = useState(`${modalData?.['pre_payment_associate_id.value']}`);
+  const [calculateBasisAssociate, setCalculateBasisAssociate] = useState(`${modalData?.['pre_payment_associate_id.calculation_basis']}`);
+  const [aliquotAssociate, setAliquotAssociate] = useState(`${modalData?.['pre_payment_associate_id.index']}`);
+  const [issItemCod, setIssItemCod] = useState('');
+  const [irrfItemCod, setIrrfItemCode] = useState('');
+  // ===================================
+  // Informações sobre o fornecedor
+  const [isService, setIsService] = useState();
+  const [isProduct, setIsProduct] = useState();
+  const [isSimple, setIsSimple] = useState();
+  // ===================================.
 
   const [isOpen, setIsOpen] = useState(false);
-  const [modalData, setModalData] = useState();
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  
   const [status, setStatus] = useState();
   const imagem = modalData?.tax_note_link;
   const statusOptions = [
@@ -46,7 +73,6 @@ const Payments = () => {
   const navigate = useNavigate();
   const toast = chakra.useToast();
   const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
-
 
   async function searchPayment () {
     setRows([]);
@@ -82,6 +108,32 @@ const Payments = () => {
       setModalData(data);
       setStatus({ label: data?.status });
       setIsOpen(!isOpen);
+    }
+  }
+
+  async function openAndCloseEditModal(data) {
+    setIsEditOpen(!isEditOpen);
+    setModalData(data);
+
+    if(isEditOpen == false) {
+
+      getPayment({ payment_id: data?.id }).then(response => {
+        setCnpj(response?.body?.cnpj);
+        setTaxNote(response?.body?.tax_note.split('-')[0]);
+        setTaxNoteSerie(response?.body?.tax_note_serie);
+        setComputerSelected({ label: response?.body?.['computer_id_payments.label'], value: response?.body?.['computer_id_payments.id'], cnpj: response?.body?.['computer_id_payments.cnpj']});
+  
+        setValue(response?.body?.value);
+        setAliquot(response?.body?.index);
+        setCalculateBasis(response?.body?.calculation_basis);
+        setIssItemCod(response?.body?.iss_item.split('–')[0]);
+        setIrrfItemCode(response?.body?.['products_services_id_payments.code']);
+        setPaymentType(response?.body?.type);
+
+        setIsService(response?.body?.['company_id_payments.is_service']);
+        setIsProduct(response?.body?.['company_id_payments.is_product']);
+        setIsSimple(response?.body?.['company_id_payments.is_simple']);
+      });
     }
   }
 
@@ -124,6 +176,7 @@ const Payments = () => {
       await getUserInformations({ currentPage: currentPage }).then(response => {
         setUserName(response.body.user_name);
         setCityName(response.body.city_name);
+        setUserType(sessionStorage.getItem('role'));
       });
 
       await selectedPrefectureAndGetPayments();
@@ -159,6 +212,8 @@ const Payments = () => {
                   <chakra.Th>UF</chakra.Th>
                   <chakra.Th>Município</chakra.Th>
                   <chakra.Th>Nota Fiscal</chakra.Th>
+                  <chakra.Th></chakra.Th>
+                  <chakra.Th></chakra.Th>
                 </chakra.Tr>
               </chakra.Thead>
 
@@ -197,6 +252,7 @@ const Payments = () => {
                       <chakra.Td>{rowsCalback?.['city_id_payments.label']}</chakra.Td>
                       <chakra.Td>{rowsCalback.tax_note.split('-')[0]}</chakra.Td>
                       <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => openAndCloseModal(rowsCalback)}/></chakra.Td>
+                      {useType == 'ADMIN' ?  <chakra.Td><FiEdit size={28} className='cursor-pointer' onClick={() => openAndCloseEditModal(rowsCalback)}/></chakra.Td>: '' }
                     </chakra.Tr>
                   )
                 })}
@@ -384,6 +440,13 @@ const Payments = () => {
                             </div>
                           </div>
 
+                          <div className='flex w-full mt-2'>
+                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                              {modalData?.['company_id_payments.is_simei'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                              <span className='font-semibold ml-2'>Simei</span>
+                            </div>
+                          </div>
+
                           {modalData?.['company_id_payments.receipt_link'] != null ?
                             <div className="w-72 mt-4">
                               <Button label="Baixar Objeto de contratação" onPress={() => openDocumentInNewTab(modalData?.['company_id_payments.receipt_link'])}/>
@@ -399,6 +462,138 @@ const Payments = () => {
               </div>
             </div>
           </Modal>
+          
+          <Modal isCentered size={'xl'} title={'Editar Pagamento'} isOpen={isEditOpen} modalOpenAndClose={openAndCloseEditModal}>
+            <div className={PaymentStyles.ModalBodyContainer}>
+              <div className={PaymentStyles.ImageModalContainer}>
+                {imagem?.indexOf('.pdf') == -1 ?
+                  <div className={`w-full h-[36vh]`}>
+                    <Zoom>
+                      <img src={modalData?.tax_note_link} className='w-full h-[56vh] pb-2' />
+                    </Zoom>
+                  </div>
+                  :
+                  <div className={`w-full h-[36vh]`}>
+                    <embed src={modalData?.tax_note_link} className={`w-full h-[56vh] pb-2`}></embed>
+                  </div>
+                }
+              </div>
+
+              <div className={PaymentStyles.ContentModalContainer}>
+                <form className='h-auto'>
+                  <div className={PaymentStyles.RowContainer}>
+                    <div className='w-96'>
+                      <Select placeholder={'Ordenador de despesa'}
+                        selectedValue={computerSelected}
+                        setSelectedValue={(item) => setComputerSelected(item)}
+                      />
+                    </div>
+                    <div className='w-60 ml-4'>
+                      <Input label='CNPJ Ordenador' placeholder='CNPJ Ordenador' value={computerSelected?.cnpj} />
+                    </div>
+                  </div>
+                  
+                  <div className={PaymentStyles.RowContainer}>
+                    <div className='w-60 mr-4'>
+                      <Input label='CNPJ Fornecedor' placeholder='CNPJ' value={cnpj} onChange={e => setCnpj(e.target.value)} />
+                    </div>
+
+                    <div className='w-40'>
+                      <Input label='Nota fiscal' placeholder='Nota fiscal' value={taxNote} onChange={e => setTaxNote(e.target.value)}  />
+                    </div>
+
+                    <div className='w-52 ml-4'>
+                      <Input label='Serie' placeholder='Serie' value={taxNoteSerie} onChange={e => setTaxNoteSerie(e.target.value)}/>
+                    </div>
+                  </div>
+                      
+                  <div className={PaymentStyles.RowContainer}>
+                    <div>
+                      <span className='mb-2 font-semibold'>{modalData?.type == 'simples' ? 'ISS' : 'IRRF'}</span>
+                      <div className='flex p-2 w-auto border border-[#999] rounded-lg'>
+                        <div className='w-44 mr-4'>
+                          <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={value} onChange={e => setValue(e.target.value)} />
+                        </div>
+
+                        <div className='w-44 mr-4'>
+                          <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={calculateBasis} onChange={e => setCalculateBasis(e.target.value)} />
+                        </div>
+
+                        <div className='w-24 mr-4'>
+                          <Input label={paymentType == 'simples' ? 'Item' : 'Código'} placeholder='' value={paymentType == 'simples' ? issItemCod : irrfItemCod} onChange={e => setAliquot(e.target.value)}/>
+                        </div>
+
+                        <div className='w-36'>
+                          <Input label='Aliquota' placeholder='Aliquota' value={aliquot} onChange={e => setAliquot(e.target.value)}/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  { modalData?.pre_payment_associate == null ?
+                    <></>
+                    :
+                    <>
+                      <div className={PaymentStyles.RowContainer}>
+                        <div>
+                          <span className='mb-2 font-semibold'>{modalData?.['pre_payment_associate_id.type'] == 'simples' ? 'ISS' : 'IRRF'}</span>
+                          <div className='flex p-2 w-auto border border-[#999] rounded-lg'>
+                            <div className='w-44 mr-4'>
+                              <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={valueAssociate} onChange={e => setValueAssociate(e.target.value)} />
+                            </div>
+
+                            <div className='w-44 mr-4'>
+                              <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={calculateBasisAssociate} onChange={e => setCalculateBasisAssociate(e.target.value)} />
+                            </div>
+
+                            <div className='w-24 mr-4'>
+                              <Input label={modalData?.['pre_payment_associate_id.type'] == 'simples' ? 'Item' : 'Código'} placeholder='' value={modalData?.['pre_payment_associate_id.type'] == 'simples' ? issItemCod : irrfItemCod} onChange={e => setAliquotAssociate(e.target.value)}/>
+                            </div>
+
+                            <div className='w-36'>
+                              <Input label='Aliquota' placeholder='Aliquota' value={aliquotAssociate} onChange={e => setAliquotAssociate(e.target.value)}/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  }
+                      
+                  <div className='flex flex-col w-full h-auto mt-2'>
+                    <span className='text-2xl font-semibold'>Informações do Fornecedor</span>
+                    <div className='w-full h-auto'>
+                      <span className='font-semibold'>Objeto do contrato: </span>
+                      <span>{modalData?.['company_id_pre_payments.object']}</span>
+                    </div>
+                    <div className='flex w-full mt-2'>
+                      <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
+                        {isSimple == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                        <span className='font-semibold ml-2'>Simples</span>
+                      </div>
+                      <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
+                        {isService == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                        <span className='font-semibold ml-2'>Fornece Serviços</span>
+                      </div>
+                      <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                        {isProduct == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                        <span className='font-semibold ml-2'>Fornece Produtos</span>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+                <div className='flex mt-8 h-auto'>
+                  <div className='w-56 mr-10'>
+                    <Button label='Salvar' type='second' onPress={() =>{}}/>
+                  </div>
+                  <div className='w-56'>
+                    <Button label='Calcular' onPress={() =>{}} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Modal>
+
         </div>
         <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} pages={countPages} />
       </div>
