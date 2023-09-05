@@ -9,7 +9,7 @@ const RegisterConfirm = () => {
   return (
     <section className={RegisterConfirmStyle.Container}>
       <div className={RegisterConfirmStyle.ImageContainer}>
-        <img src='./confirmation.png' />
+        <img src='confirmation.png' />
       </div>
       <div className='flex flex-col items-center mt-16'>
         <span className='text-2xl mb-8'>Cadastro realizado com sucesso!</span>
