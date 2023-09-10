@@ -261,6 +261,16 @@ const getComputersByCity = async (params) => {
   }
 }
 
+const editPayment = async (params) => {
+  try {
+    let response = await api.post(`/payments/edit`, params);
+    return response.data;
+  } catch (error) {
+    ValidateSession(error.response.status);
+    return error.response.status;
+  }
+}
+
 
 export { getAllProductsOrServices,
   savePayment, getPayment, getComputers,
@@ -270,5 +280,5 @@ export { getAllProductsOrServices,
   findCompanyByCNPJ, enablePayment, disablePayment, sendEmailToCompany,
   getPaymentReciboInfo, updatePayment, searchPaymentByTaxNote, updatePaymentStatus,
   getAllPaymentsByDate, searchPaymentByCnpj, delelePayment, generateDamService,
-  getComputersByCity, getCompanyPayment, searchPaymentByCnpjAdmin
+  getComputersByCity, getCompanyPayment, searchPaymentByCnpjAdmin, editPayment
 }

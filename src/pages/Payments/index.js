@@ -15,13 +15,14 @@ import Modal from "../../components/atoms/Modal";
 import Pagination from '../../components/molecules/Pagination';
 import MoneyInput from '../../components/atoms/MoneyInput';
 
-import { getUserInformations } from "../../services/authServices";
-import { getAllPaymentsByDate, searchPaymentByCnpjAdmin, enablePayment, updatePaymentStatus, getPayment } from '../../services/paymentServices';
+import { getUserInformations, getComputersService } from "../../services/authServices";
+import { getAllPaymentsByDate, searchPaymentByCnpjAdmin, enablePayment, updatePaymentStatus, getPayment, editPayment } from '../../services/paymentServices';
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
+import convertCurrency from '../../utils/convertCurrency';
 
 import { PaymentStyles } from "./style";
-const Payments = () => {
 
+const Payments = () => {
   const [userName, setUserName] = useState('');
   const [cityName, setCityName] = useState('');
 
@@ -38,6 +39,7 @@ const Payments = () => {
   const [modalData, setModalData] = useState();
 
   // Estado para Formulario no Modal ===
+  const [companyId, setCompanyId] = useState();
   const [cnpj, setCnpj] = useState();
   const [value, setValue] = useState(`${modalData?.value}`);
   const [calculateBasis, setCalculateBasis] = useState(`${modalData?.calculation_basis}`);
@@ -45,9 +47,12 @@ const Payments = () => {
   const [taxNote, setTaxNote] = useState(`${modalData?.tax_note}`);
   const [taxNoteSerie, setTaxNoteSerie] = useState(`${modalData?.tax_note_serie}`);
   const [computerSelected, setComputerSelected] = useState();
+  const [computerOptions, setComputerOptions] = useState();
   const [paymentType, setPaymentType] = useState('');
   // ===================================
   // Estado para Formulario de pagamento associado no Modal ===
+  const [paymentId, setPaymentId] = useState();
+  const [paymentAssociateId, setPaymentAssociateId] = useState();
   const [valueAssociate, setValueAssociate] = useState(`${modalData?.['pre_payment_associate_id.value']}`);
   const [calculateBasisAssociate, setCalculateBasisAssociate] = useState(`${modalData?.['pre_payment_associate_id.calculation_basis']}`);
   const [aliquotAssociate, setAliquotAssociate] = useState(`${modalData?.['pre_payment_associate_id.index']}`);
@@ -116,8 +121,15 @@ const Payments = () => {
     setModalData(data);
 
     if(isEditOpen == false) {
+      
+      getPayment({ payment_id: data?.id }).then(async response => {
 
-      getPayment({ payment_id: data?.id }).then(response => {
+        let responseToGetComputers = await getComputersService({ city_id: response?.body?.city_id });
+        setComputerOptions(responseToGetComputers.body);
+
+        setPaymentId(data?.id);
+        setCompanyId(response?.body?.id);
+        setPaymentType(response?.body?.type);
         setCnpj(response?.body?.cnpj);
         setTaxNote(response?.body?.tax_note.split('-')[0]);
         setTaxNoteSerie(response?.body?.tax_note_serie);
@@ -126,10 +138,15 @@ const Payments = () => {
         setValue(response?.body?.value);
         setAliquot(response?.body?.index);
         setCalculateBasis(response?.body?.calculation_basis);
-        setIssItemCod(response?.body?.iss_item.split('–')[0]);
+        setIssItemCod(response?.body?.iss_item?.split('–')[0]);
         setIrrfItemCode(response?.body?.['products_services_id_payments.code']);
-        setPaymentType(response?.body?.type);
 
+        setPaymentAssociateId(response?.body?.payment_associate);
+
+        setValueAssociate(response?.body?.['payment_associate_id.value']);
+        setCalculateBasisAssociate(response?.body?.['payment_associate_id.calculation_basis']);
+        setAliquotAssociate(response?.body?.['payment_associate_id.index']);
+        
         setIsService(response?.body?.['company_id_payments.is_service']);
         setIsProduct(response?.body?.['company_id_payments.is_product']);
         setIsSimple(response?.body?.['company_id_payments.is_simple']);
@@ -168,6 +185,45 @@ const Payments = () => {
         isClosable: true,
       });
     });
+  }
+
+  async function handlerEditPayment () {
+
+    const object = {
+      payment_associate_id: paymentAssociateId,
+      payment_id: paymentId,
+      company_id: companyId,
+      tax_note: taxNote,
+      calculation_basis: parseFloat(convertCurrency(calculateBasis)),
+      computer_id: computerSelected.value || computerSelected.id,
+      index: parseFloat(aliquot),
+      tax_note_serie: taxNoteSerie,
+      value: parseFloat(convertCurrency(value)),
+      calculation_basis_associate: parseFloat(convertCurrency(calculateBasisAssociate || '')),
+      value_associate: parseFloat(convertCurrency(valueAssociate || '')),
+      aliquot_associate: parseFloat(aliquotAssociate)
+    }
+
+    await editPayment(object).then(responseToEditPayment => {
+      
+      toast({
+        title: 'Pagamento editado com sucesso!',
+        status: 'success',
+        position: 'top-right',
+        isClosable: true,
+      });
+
+      navigate(0);
+
+    }).catch(error => {
+      console.log(error);
+      toast({
+        title: 'Houve um erro ao editar esse pagamento!',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    })
   }
 
   useEffect(() => {
@@ -241,7 +297,6 @@ const Payments = () => {
                       break
                   }
                   
-
                   return (
                     <chakra.Tr className={rowBgColor}>
                       <chakra.Td><div className={bgIndicator}></div></chakra.Td>
@@ -486,6 +541,7 @@ const Payments = () => {
                       <Select placeholder={'Ordenador de despesa'}
                         selectedValue={computerSelected}
                         setSelectedValue={(item) => setComputerSelected(item)}
+                        options={computerOptions}
                       />
                     </div>
                     <div className='w-60 ml-4'>
@@ -520,7 +576,7 @@ const Payments = () => {
                         </div>
 
                         <div className='w-24 mr-4'>
-                          <Input label={paymentType == 'simples' ? 'Item' : 'Código'} placeholder='' value={paymentType == 'simples' ? issItemCod : irrfItemCod} onChange={e => setAliquot(e.target.value)}/>
+                          <Input label={paymentType == 'simples' ? 'Item' : 'Código'} placeholder='' value={paymentType == 'simples' ? issItemCod : irrfItemCod} />
                         </div>
 
                         <div className='w-36'>
@@ -530,13 +586,13 @@ const Payments = () => {
                     </div>
                   </div>
 
-                  { modalData?.pre_payment_associate == null ?
+                  { paymentAssociateId == null ?
                     <></>
                     :
                     <>
                       <div className={PaymentStyles.RowContainer}>
                         <div>
-                          <span className='mb-2 font-semibold'>{modalData?.['pre_payment_associate_id.type'] == 'simples' ? 'ISS' : 'IRRF'}</span>
+                          <span className='mb-2 font-semibold'>{paymentType == 'simples' ? 'IRRF' : 'ISS'}</span>
                           <div className='flex p-2 w-auto border border-[#999] rounded-lg'>
                             <div className='w-44 mr-4'>
                               <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={valueAssociate} onChange={e => setValueAssociate(e.target.value)} />
@@ -547,7 +603,7 @@ const Payments = () => {
                             </div>
 
                             <div className='w-24 mr-4'>
-                              <Input label={modalData?.['pre_payment_associate_id.type'] == 'simples' ? 'Item' : 'Código'} placeholder='' value={modalData?.['pre_payment_associate_id.type'] == 'simples' ? issItemCod : irrfItemCod} onChange={e => setAliquotAssociate(e.target.value)}/>
+                              <Input label={paymentType == 'simples' ? 'Item' : 'Código'} placeholder='' value={paymentType == 'simples' ? irrfItemCod : issItemCod } />
                             </div>
 
                             <div className='w-36'>
@@ -582,12 +638,9 @@ const Payments = () => {
                   </div>
                 </form>
 
-                <div className='flex mt-8 h-auto'>
-                  <div className='w-56 mr-10'>
-                    <Button label='Salvar' type='second' onPress={() =>{}}/>
-                  </div>
+                <div className='flex justify-end mt-8 h-auto'>
                   <div className='w-56'>
-                    <Button label='Calcular' onPress={() =>{}} />
+                    <Button label='Salvar' type='Primary' onPress={handlerEditPayment}/>
                   </div>
                 </div>
               </div>
