@@ -54,7 +54,7 @@ const calculePrePayment = async (params) => {
 const createPrePayment = async (params) => {
   try {
     
-    let response = await api.post(`/pre-payments/create?phone=${params.phone}&taxNote=${params.taxNote}&cnpj=${params.cnpj}`, params.body, { 
+    let response = await api.post(`/pre-payments/create?phone=${params.phone}&taxNote=${params.taxNote}&cnpj=${params.cnpj}&company_id=${params.company_id}`, params.body, { 
       headers: {"Content-Type": 'multipart/form-data'}
     });
 

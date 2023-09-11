@@ -43,7 +43,7 @@ const Holding = () => {
         const form = new FormData();
         form.append('file', fileUpload);
 
-        await createPrePayment({ phone: phone, taxNote: `${taxNote}-${taxNoteSerie}`, cnpj: company.cnpj, body: form }).then(responseToCreatePrePayment => {
+        await createPrePayment({ phone: phone, taxNote: `${taxNote}-${taxNoteSerie}`, cnpj: company.cnpj, company_id: company.id, body: form }).then(responseToCreatePrePayment => {
           
           toast({
             title: 'Pre pagamento Salvo!',
