@@ -9,6 +9,7 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import Header from '../../../components/molecules/Header';
 import Button from '../../../components/atoms/Button';
 import Modal from '../../../components/atoms/Modal';
+import Input from '../../../components/atoms/Input';
 import Pagination from '../../../components/molecules/Pagination';
 
 import { formatCpfOrCnpj } from '../../../utils/formatCpfAndCnpj'
@@ -57,9 +58,7 @@ const SupplierHome = () => {
 
   useEffect(() => {
     (async () => await companyInformations({ currentPage: 1 }).then(response => {
-      let companyName = `${response?.body?.company_name}`.split(' ');
-
-      setUserName(`${companyName[0]} ${companyName[companyName.length -1]}`);
+      setUserName(response?.body?.company_name);
     }))()
   }, []);
 
@@ -90,7 +89,10 @@ const SupplierHome = () => {
       <div className={SupplierHomeStyle.BodyContainer}>
         <div className={SupplierHomeStyle.TitleContainer}>
           <h1>Central de Retenção</h1>
-        </div>
+          <div className={SupplierHomeStyle.TitleButtonContainer}>
+            <Button label='Nova Solicitação de Pagamento' onPress={() => navigate('/fornecedor/retencao')}/>
+          </div>
+        </div> 
 
         <Modal isCentered size={'xl'} title={modalData?.company_name} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
           {modalData?.type === 'simples' ?

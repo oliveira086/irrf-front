@@ -27,6 +27,7 @@ import SupplierHome from './pages/Supplier/Home';
 import CompanyDocument from './pages/CompanyDocument';
 import AdminPayments from './pages/AdminPayments';
 import SupplierRequestToken from './pages/Supplier/RequestToken';
+import SupplierHolding from './pages/Supplier/Holding';
 
 const theme = extendTheme({
   fonts: {
@@ -62,6 +63,7 @@ function Router(){
           <Route path='/fornecedor/nova-senha' exact element={<SupplierNewPhrase />} />
           <Route path='/fornecedor/home-fornecedor' exact element={<SupplierHome />} />
           <Route path='/fornecedor/token' exact element={ <SupplierRequestToken />} />
+          <Route path='/fornecedor/retencao' exact element={<SupplierHolding />} />
           <Route path='/extrato-fornecedor' exact element={ <CompanyDocument />} />
           <Route path='/painel-pagamentos' exact element={<AdminPayments />} />
         </Routes>

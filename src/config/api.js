@@ -1,5 +1,5 @@
 const axios = require('axios');
-const ambient = 'prod';
+const ambient = 'dev';
 
 const Cookies = require('universal-cookie').default;
 

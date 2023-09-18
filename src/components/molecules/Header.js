@@ -13,6 +13,7 @@ import logo from '../../assets/images/logo-irrf.png'
 const Header = ({ userName, cityName }) => {
   const uri = window.location.pathname;
   const navigate = useNavigate();
+  const replaceUserName = userName.split(' ');
 
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -91,11 +92,20 @@ const Header = ({ userName, cityName }) => {
             </button>
           </div>
         )
+      case 'COMPANY':
+        return (
+          <div className='flex'>
+            <button className={style.Button} onClick={() => navigate('/fornecedor') }>
+              <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Home</span>
+            </button>
+          </div>
+        )
         
       default:
         return (
           <div className='flex'>
-            <button className={style.Button}>
+            <button className={style.Button} onClick={() => navigate('/home') }>
               <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Home</span>
             </button>
@@ -121,7 +131,7 @@ const Header = ({ userName, cityName }) => {
       <chakra.Skeleton className={style.UserContainer} isLoaded={userName.length > 0 ? true : false}>
         <div className={style.UserContainer}>
           <div className={style.UserTextContainer}>
-            <span className="text-xl font-semibold">{userName}</span>
+            <span className="text-xl font-semibold">{`${replaceUserName[0]} ${replaceUserName[replaceUserName.length -1]} `}</span>
             <span>{cityName}</span>
           </div>
           <div className={style.UserAvatarContainer}>
