@@ -151,8 +151,17 @@ const companyInformations = async (params) => {
   }
 }
 
+const getCompanyCities = async (params) => {
+  try {
+    let response = await api.post(`/company/get-cities`, params);
+    return response.data;
+  } catch (error) {
+    // ValidateCompanySession(error.response.status);
+  }
+}
+
 export { createCompany, registerCompany, getAllCompanies, getCompanyByCnpj,
   getCompanyByProductServices, uploadReceiptCompany, getCompanyById,
   editCompany, getAllCompaniesAdmin, disableCompany, setCompanyAudited,
-  findCompanyByCNPJ, verifyCompany, companyPanel, companyInformations
+  findCompanyByCNPJ, verifyCompany, companyPanel, companyInformations, getCompanyCities
 }

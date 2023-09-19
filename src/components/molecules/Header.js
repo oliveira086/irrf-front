@@ -95,7 +95,7 @@ const Header = ({ userName, cityName }) => {
       case 'COMPANY':
         return (
           <div className='flex'>
-            <button className={style.Button} onClick={() => navigate('/fornecedor') }>
+            <button className={style.Button} onClick={() => navigate('/fornecedor/home-fornecedor') }>
               <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Home</span>
             </button>

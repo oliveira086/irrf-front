@@ -374,7 +374,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
 
             { companyData.length > 1 ?
               <div className={PrePaymentStyle.RowContainer}>
-                <div className='w-full pr-16'>
+                <div className='w-full pr-8'>
                   <Select placeholder={'Objeto'}
                     selectedValue={companySelected}
                     setSelectedValue={(item) => selectedCompanyWithObject(item)}
