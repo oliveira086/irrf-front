@@ -23,7 +23,6 @@ export class TemplateDoubleRecibo extends React.PureComponent {
     }
 
     if(this.props.payment_type == 'ordinario') {
-
       return (
         <>
           <div className="relativeCSS">
@@ -138,9 +137,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                      <span style={{ fontWeight: 'bold'}}>4. INFORMAÇÕES COMPLEMENTARES</span>
                     </div>
                   </div>
-
                   <div style={{ display: 'flex', border: '1px solid #000', marginRight: '32px', width: '700px', height: '300px'}}>
-                    
                   </div>
                 </tr>
 
@@ -150,7 +147,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
         </>
       );
     }
-    
+  
     else if(this.props.payment_type == 'simples' ) {
       return (
         <>
@@ -197,7 +194,6 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                 <div style={{ width: '100%', heigth: '20px'}}>
                   <span style={{visibility: 'hidden'}}>teste</span>
                 </div>
-
 
                 <tr>
                   <div style={{ display: 'flex', width: '100%', heigth: '10px'}}>
@@ -247,12 +243,12 @@ export class TemplateDoubleRecibo extends React.PureComponent {
 
                     <div style={{ display:'flex', flexDirection: 'column', borderRight: '1px solid #000', padding: '10px'}}>
                       <span style={{ fontWeight: 'bold'}}>RENDIMENTO R$</span>
-                      <span>{`${fromCurrency.format(this.props.calculate_basis)}`}</span>
+                      <span>{`${fromCurrency.format(this.props.payment_associate?.calculation_basis)}`}</span>
                     </div>
 
                     <div style={{ display:'flex', flexDirection: 'column', borderRight: '1px solid #000', padding: '10px'}}>
                       <span style={{ fontWeight: 'bold'}}>IMPOSTO RETIDO R$</span>
-                      <span>{`${this.props.payment_associate.calculation_basis == null ? '0' : fromCurrency.format(this.props.payment_associate.withheld_tax)}`}</span>
+                      <span>{`${this.props.payment_associate.calculation_basis == null ? '0' : fromCurrency.format(this.props.payment_associate?.withheld_tax)}`}</span>
                     </div>
                   </div>
                 </tr>
@@ -266,9 +262,7 @@ export class TemplateDoubleRecibo extends React.PureComponent {
                      <span style={{ fontWeight: 'bold'}}>4. INFORMAÇÕES COMPLEMENTARES</span>
                     </div>
                   </div>
-
                   <div style={{ display: 'flex', border: '1px solid #000', marginRight: '32px', width: '700px', height: '300px'}}>
-                    
                   </div>
                 </tr>
 

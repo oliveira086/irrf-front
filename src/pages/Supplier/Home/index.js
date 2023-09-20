@@ -344,7 +344,9 @@ const SupplierHome = () => {
                   </chakra.Thead>
                   <chakra.Tbody>
                     {paymentsData.map(paymentsDataCallback => {
-                      const paymentType = paymentsDataCallback?.type  == 'simples' ? false : true;
+                      
+                      const paymentType = paymentsDataCallback?.type  == 'simples'
+                      && paymentsDataCallback?.['payment_associate_id.type'] == null ? false : true;
                       return (
                         <>
                           <chakra.Tr>
