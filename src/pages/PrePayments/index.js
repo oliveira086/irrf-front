@@ -16,7 +16,6 @@ import MoneyInput from '../../components/atoms/MoneyInput';
 import Select from '../../components/atoms/Select';
 import Modal from '../../components/atoms/Modal';
 
-
 import { getUserInformations } from '../../services/authServices';
 import { getAllPrePayments, updatePrePaymentById, confirmPrePayment, calculePrePayment } from '../../services/prePaymentServices';
 import { getComputersByCity } from "../../services/paymentServices";
@@ -400,7 +399,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                   </div>
 
                   <div className='w-44 mr-4'>
-                    <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={calculateBasis} onChange={e => setCalculateBasis(e.target.value)} />
+                    <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={modalData?.type == 'simples' ? calculateBasis : value } onChange={e => setCalculateBasis(e.target.value)} />
                   </div>
 
                   <div className='w-24 mr-4'>
@@ -427,7 +426,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                       </div>
 
                       <div className='w-44 mr-4'>
-                        <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={calculateBasisAssociate} onChange={e => setCalculateBasisAssociate(e.target.value)} />
+                        <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={modalData?.['pre_payment_associate_id.type'] == 'simples' ? calculateBasisAssociate : valueAssociate} onChange={e => setCalculateBasisAssociate(e.target.value)} />
                       </div>
 
                       <div className='w-24 mr-4'>
