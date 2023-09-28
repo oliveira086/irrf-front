@@ -115,6 +115,8 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   const [isService, setIsService] = useState();
   const [isProduct, setIsProduct] = useState();
   const [isSimple, setIsSimple] = useState();
+  const [nonIncidence, setNonIncidence] = useState();
+  const [isSimei, setIsSimei] = useState();
   // ===================================
   
   useEffect(() => {
@@ -133,6 +135,9 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
     setIsService(modalData?.['company_id_pre_payments.is_service']);
     setIsProduct(modalData?.['company_id_pre_payments.is_product']);
     setIsSimple(modalData?.['company_id_pre_payments.is_simple']);
+    setNonIncidence(modalData?.['company_id_pre_payments.non_incidence']);
+    setIsSimei(modalData?.['company_id_pre_payments.is_simei']);
+
     setIssItemCod(`${modalData?.['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label']}`.split('–')[0]);
     setIrrfItemCode(modalData?.['company_id_pre_payments.products_services_id_company.code']);
   
@@ -453,9 +458,19 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                   {isService == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                   <span className='font-semibold ml-2'>Fornece Serviços</span>
                 </div>
-                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
                   {isProduct == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                   <span className='font-semibold ml-2'>Fornece Produtos</span>
+                </div>
+                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                  {nonIncidence == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                  <span className='font-semibold ml-2'>Não Incidente</span>
+                </div>
+              </div>
+              <div className='flex w-full mt-2'>
+                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                  {isSimei == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                  <span className='font-semibold ml-2'>Simei</span>
                 </div>
               </div>
             </div>

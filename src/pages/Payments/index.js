@@ -441,6 +441,7 @@ const Payments = () => {
                         </div>
                       </div>
                     </chakra.TabPanel>
+
                     <chakra.TabPanel>
                       <div className={PaymentStyles.PaymentContentContainer}>
                         <div className='flex flex-col items-start'>
@@ -496,9 +497,13 @@ const Payments = () => {
                           </div>
 
                           <div className='flex w-full mt-2'>
-                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
                               {modalData?.['company_id_payments.is_simei'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                               <span className='font-semibold ml-2'>Simei</span>
+                            </div>
+                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                              {modalData?.['company_id_payments.non_incidence'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+                              <span className='font-semibold ml-2'>Não Incidente</span>
                             </div>
                           </div>
 

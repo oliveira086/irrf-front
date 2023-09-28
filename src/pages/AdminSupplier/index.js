@@ -70,6 +70,7 @@ const AdminSupplier = () => {
   const [isExemptISS, setIsExemptISS] = useState(false);
   const [isImmuneIss, setIsImmuneIss] = useState(false);
   const [isImmuneIR, setIsImmuneIR] = useState(false);
+  const [nonIncidence, setNonIncidence] = useState(false);
 
   const [fileUpload, setFileUpload] = useState();
 
@@ -155,6 +156,7 @@ const AdminSupplier = () => {
     setIsImmuneIR(data?.immune_irrf);
     setIsImmuneIss(data?.immune_iss);
     setCompanyId(data?.id);
+    setNonIncidence(data?.non_incidence);
 
     getAllProducts().then(response => {
       setProductAndServices(response.body);
@@ -222,7 +224,8 @@ const AdminSupplier = () => {
       "is_exempt_iss": isExemptISS,
       "is_immune_irrf": isImmuneIR,
       "is_immune_iss": isImmuneIss,
-      "iss_services_id": issItemSelected?.id
+      "iss_services_id": issItemSelected?.id,
+      "non_incidence": nonIncidence
     }
 
     await registerCompany(objectToSaveCompany).then(async responseToRegisterCompany => {
@@ -291,7 +294,8 @@ const AdminSupplier = () => {
       "is_exempt_iss": isExemptISS,
       "is_immune_irrf": isImmuneIR || 0,
       "is_immune_iss": isImmuneIss || 0,
-      "iss_item": issItemSelected?.value || issItemSelected?.id
+      "iss_item": issItemSelected?.value || issItemSelected?.id,
+      "non_incidence": nonIncidence
     }
 
     editCompany(objectToEditCompany).then(response => {
@@ -704,6 +708,11 @@ const AdminSupplier = () => {
                 <chakra.Switch isChecked={isImmuneIR} onChange={(e) => {setIsImmuneIR(!isImmuneIR)}} />
                 <span className='ml-2'>Imune IRRF</span>
               </div>
+
+              <div>
+                <chakra.Switch isChecked={nonIncidence} onChange={(e) => {setNonIncidence(!nonIncidence)}} />
+                <span className='ml-2'>Não Incidente</span>
+              </div>
             </div>
 
             <div className='flex flex-col h-auto min-h-[10vh]'>
@@ -857,6 +866,11 @@ const AdminSupplier = () => {
               <div>
                 <chakra.Switch isChecked={isImmuneIR} onChange={(e) => {setIsImmuneIR(!isImmuneIR)}} />
                 <span className='ml-2'>Imune IRRF</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={nonIncidence} onChange={(e) => {setNonIncidence(!nonIncidence)}} />
+                <span className='ml-2'>Não Incidente</span>
               </div>
             </div>
 
