@@ -198,7 +198,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
             company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
             pre_payment_id: modalData.id,
             tax_note: taxNote,
-            calculation_basis: parseFloat(convertCurrency(calculateBasis)),
+            calculation_basis: parseFloat(modalData?.['pre_payment_associate_id.type'] == "simples" ? convertCurrency(calculateBasis) : parseFloat(convertCurrency(value)) ),
             computer_id: computerSelected.id,
             index: parseFloat(aliquot),
             tax_note_serie: taxNoteSerie,
@@ -256,6 +256,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
       };
       
     } catch (error) {
+      console.log(error);
       toast({
         title: 'Houve um problema ao calcular esse pré pagamento!',
         status: 'error',

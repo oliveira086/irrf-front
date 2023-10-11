@@ -18,7 +18,7 @@ import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { getUserInformations } from '../../services/authServices';
 import { getAllCompanies, getCompanyByCnpj, findCompanyByCNPJ } from '../../services/companyServices';
-import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices";
+import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices"; 
 
 import { CompaniesStyle } from './style';
 
@@ -98,7 +98,7 @@ const Companies = () => {
       }))()
     } else {
       const removeDotToCnpj = cnpjSearch.replace(/[^\w\s]/gi, '').trim();
-      const response =  await getCompanyByCnpj({ cnpj: removeDotToCnpj, city_id: cityId });
+      const response =  await getCompanyByCnpj({ cnpj: removeDotToCnpj, city_id: query.get("cityId") });
       setCompanyData(response.body);
       setCnpjSearch('');
       setIsLoading(false);
@@ -116,7 +116,7 @@ const Companies = () => {
   }
 
   async function searchCompanyByCnpj() {
-    await findCompanyByCNPJ({ cnpj: cnpj, city_id: cityId }).then(response => {
+    await findCompanyByCNPJ({ cnpj: cnpj, city_id: query.get("cityId") }).then(response => {
       setCompanyName(response.body?.razao_social);
       setCep(response.body?.cep);
       setDistrict(response.body?.bairro);
@@ -164,7 +164,7 @@ const Companies = () => {
   async function registerCompanyFunction () {
 
     const objectToSaveCompany = {
-      "city_id": cityId,
+      "city_id": query.get("cityId"),
       "products_services_id": productAndServicesSelected?.id,
       "label": companyName,
       "cnpj": cnpj,
@@ -247,7 +247,7 @@ const Companies = () => {
   }, []);
 
   useEffect(() => {
-    (async () => await getAllCompanies({ currentPage: currentPage, enabled: enabled }).then(response => {
+    (async () => await getAllCompanies({ currentPage: currentPage, enabled: enabled, cityId: query.get("cityId") }).then(response => {
       setCompanyData(response.body.rows);
       setCountPages(response.body.meta.pageCount);
     }))()

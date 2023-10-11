@@ -84,7 +84,7 @@ const AdminPanel = () => {
                       </div>
 
                       <div className='w-44'>
-                        <Button label={'Ordenadores'} onPress={() => {}} />
+                        <Button label={'Ordenadores'} onPress={() => navigate(`/fornecedores?cityId=${rowsCallback.id}`) } />
                       </div>
                     </div>
                   </div>
