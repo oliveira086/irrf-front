@@ -47,7 +47,7 @@ const Soliciations = () => {
           <h1 className='text-3xl font-semibold'>Solicitações de pagamento</h1>
         </div>
 
-        <div className='w-full h-auto'>
+        <div className='flex w-full h-auto justify-center'>
           {
             paymentSolicitations.length > 0 ? 
             <div className={SolicitationsStyle.TableContainer}>
@@ -90,7 +90,7 @@ const Soliciations = () => {
               
             </div>
             :
-            <div className='flex flex-col w-5/12 h-full items-center justify-center'>
+            <div className='flex flex-col w-5/12 h-full items-center justify-center mt-32'>
               <Player
                 src='https://assets8.lottiefiles.com/private_files/lf30_fn9xcfqg.json'
                 className="player"

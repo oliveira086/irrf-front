@@ -90,7 +90,7 @@ const SupplierHome = () => {
         <div className={SupplierHomeStyle.TitleContainer}>
           <h1>Central de Retenção</h1>
           <div className={SupplierHomeStyle.TitleButtonContainer}>
-            <Button label='Nova Solicitação de Pagamento' onPress={() => navigate('/fornecedor/retencao')}/>
+            <Button label='Nova Solicitação de Pagamento' onPress={() => navigate('/fornecedor/solicitacao')}/>
           </div>
         </div> 
 
