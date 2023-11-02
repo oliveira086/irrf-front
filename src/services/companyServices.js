@@ -147,7 +147,7 @@ const companyInformations = async (params) => {
     let response = await api.post(`/company/company-informations`, params);
     return response.data;
   } catch (error) {
-    // ValidateCompanySession(error.response.status);
+    ValidateCompanySession(error.response.status);
   }
 }
 
@@ -156,12 +156,40 @@ const getCompanyCities = async (params) => {
     let response = await api.post(`/company/get-cities`, params);
     return response.data;
   } catch (error) {
-    // ValidateCompanySession(error.response.status);
+    ValidateCompanySession(error.response.status);
+  }
+}
+
+const companyPaymentSolicitation = async (params) => {
+  try {
+    let response = await api.post(`/company/payment-solicitation`, params);
+    return response.data;
+  } catch (error) {
+    ValidateCompanySession(error.response.status);
+  }
+}
+
+const companyPaymentSolicitationFiles = async (params) => {
+  try {
+    let response = await api.post(`/company/payment-solicitation/upload-files?id=${params.id}&type=${params.type}`, params.body);
+    return response.data;
+  } catch (error) {
+    ValidateCompanySession(error.response.status);
+  }
+}
+
+const getAllPaymentSolicitations = async (params) => {
+  try {
+    let response = await api.post(`/company/payment-solicitation/get-all?currentPage=${params.currentPage}&pageSize=10`, params);
+    return response.data;
+  } catch (error) {
+    ValidateCompanySession(error.response.status);
   }
 }
 
 export { createCompany, registerCompany, getAllCompanies, getCompanyByCnpj,
   getCompanyByProductServices, uploadReceiptCompany, getCompanyById,
   editCompany, getAllCompaniesAdmin, disableCompany, setCompanyAudited,
-  findCompanyByCNPJ, verifyCompany, companyPanel, companyInformations, getCompanyCities
+  findCompanyByCNPJ, verifyCompany, companyPanel, companyInformations, getCompanyCities,
+  companyPaymentSolicitation, companyPaymentSolicitationFiles, getAllPaymentSolicitations
 }

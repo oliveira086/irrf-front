@@ -4,7 +4,9 @@ import Cookies from "universal-cookie";
 import { BiHomeSmile, BiChevronDown } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { TbHeartRateMonitor } from 'react-icons/tb';
+import { HiOutlineDocumentArrowUp } from 'react-icons/hi2';
 import { MdAttachMoney, MdExitToApp, MdStore } from 'react-icons/md';
+
 
 import * as chakra from '@chakra-ui/react';
 
@@ -95,9 +97,19 @@ const Header = ({ userName, cityName }) => {
       case 'COMPANY':
         return (
           <div className='flex'>
-            <button className={style.Button} onClick={() => navigate('/fornecedor/home-fornecedor') }>
+            <button onClick={() => navigate('/fornecedor/home-fornecedor')} className={uri.indexOf('fornecedor/home-fornecedor') > -1 ? style.ButtonSelected : style.Button }>
               <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Home</span>
+            </button>
+
+            <button onClick={() => navigate('/fornecedor/solicitacoes')} className={uri.indexOf('fornecedor/solicitacoes') > -1 ? style.ButtonSelected : style.Button } >
+              <HiOutlineDocumentArrowUp color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Solicitações</span>
+            </button>
+
+            <button onClick={() => navigate('/fornecedor/home-fornecedor')} className={uri.indexOf('fornecedor/pagamentos') > -1 ? style.ButtonSelected : style.Button }>
+              <MdAttachMoney color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Pagamentos</span>
             </button>
           </div>
         )
