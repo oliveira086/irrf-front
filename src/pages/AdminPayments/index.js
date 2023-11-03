@@ -25,7 +25,7 @@ import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { getUserInformations } from "../../services/authServices";
 import { getAllCitiesRegisted } from "../../services/adminServices";
-import { getGrossBalanceByCityAndDate, getAllPaymentsByDate, searchPaymentByCnpj } from "../../services/paymentServices";
+import { getGrossBalanceByCityAndDate, getAllPaymentsByDate, searchPaymentByCnpj, getAllPaymentsByCityAndDate } from "../../services/paymentServices";
 
 import { AdminPaymentSyle } from './style';
 
@@ -46,8 +46,12 @@ const AdminPayment = () => {
   const [grossValue, setGrossValue] = useState('');
   const [netOfTaxValue, setNetOfTaxValue] = useState('');
 
+  const [exportInitialDate, setExportInitialDate] = useState('');
+  const [exportEndDate, setExportEndDate] = useState('');
+
   const [citySearch, setCitySearch] = useState('');
   const imagem = modalData?.tax_note_link;
+  const [modalExport, setModalExport] = useState(false);
 
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
@@ -84,13 +88,12 @@ const AdminPayment = () => {
     (async () => {
       await getUserInformations({ currentPage: 1 }).then(response => {
         setUserName(response.body.user_name);
-        setCityName(response.body.city_name);
       });
 
       await getGrossBalanceByCityAndDate({
         initial_date: initialDate == undefined ? moment().subtract(atualDay, 'days').format('yyyy/MM/DD') : initialDate,
         final_date: finalDate == undefined ? moment().format('yyyy/MM/DD') : finalDate,
-        city_id: query.get("cityId"),
+        city_id: query.get("cityId")
       }).then(response => {
         setGrossValue(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(response.body.totalValue));
         setNetOfTaxValue(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(response.body.totalWithheldTaxSum));
@@ -100,12 +103,13 @@ const AdminPayment = () => {
   }, []);
 
   async function initialSearch () {
-    await getAllPaymentsByDate({
+    await getAllPaymentsByCityAndDate({
       initial_date: initialDate == undefined ? moment().subtract(atualDay, 'days').format('yyyy/MM/DD') : initialDate,
       final_date: finalDate == undefined ? moment().format('yyyy/MM/DD') : finalDate,
       city_id: query.get("cityId"),
       pageCount: currentPage
     }).then(response => {
+      setCityName(response.city.label);
       setRows(response.rows);
       setIsLoading(false);
       setCountPages(response.meta.pageCount);
@@ -137,7 +141,11 @@ const AdminPayment = () => {
                 <Button label={<AiOutlineSearch />} onPress={() => searchPayment()} isLoading={isLoading} />
               </div>
             </div>
+            <div className='w-56'>
+              <Button label='Exportar pagamentos' onPress={() => setModalExport(true)}/>
+            </div>
           </div>
+
         </div>
 
         <div className='flex flex-col w-full h-auto rounded-md bg-[#F2F5FF] mt-8 p-4'>
@@ -391,7 +399,26 @@ const AdminPayment = () => {
                 </chakra.Tabs>
               </div>
             </div>
-          </Modal>
+        </Modal>
+
+        <Modal isCentered size={'md'} title={'Exportar Pagamentos'} isOpen={modalExport} modalOpenAndClose={() => setModalExport(!modalExport)}>
+          <div className='flex flex-col w-full h-auto'>
+            <div className='flex w-full gap-4'>
+              <div className='w-full'>
+                <Input label={'De'} placeholder={'DD/MM/YYYY'} value={exportInitialDate} onChange={(e) => setExportInitialDate(e.target.value)} />
+              </div>
+              <div className='w-full'>
+                <Input label={'Até'} placeholder={'DD/MM/YYYY'} value={exportEndDate} onChange={(e) => setExportEndDate(e.target.value)} />
+              </div>
+            </div>
+
+            <div className='w-full mt-6'>
+              <div>
+                <Button label='Exportar' />
+              </div>
+            </div>
+          </div>
+        </Modal>
 
         <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} pages={countPages} />
 

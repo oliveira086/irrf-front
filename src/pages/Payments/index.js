@@ -216,7 +216,6 @@ const Payments = () => {
       navigate(0);
 
     }).catch(error => {
-      console.log(error);
       toast({
         title: 'Houve um erro ao editar esse pagamento!',
         status: 'error',
@@ -447,7 +446,7 @@ const Payments = () => {
                         <div className='flex flex-col items-start'>
                           <span className='font-semibold text-lg'>Dados do Fornecedor</span>
                           <div className='flex'>
-                            <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                            <div className='flex flex-col w-72 p-2 bg-[#F2F5FF] items-start rounded mr-2 text-left'>
                               <span className='font-semibold'>Nome</span>
                               <span>{modalData?.['company_id_payments.label']}</span>
                             </div>
@@ -460,6 +459,12 @@ const Payments = () => {
                             <div className='flex flex-col w-[30.5vw] p-2 bg-[#F2F5FF] items-start rounded mr-2'>
                               <span className='font-semibold'>Objeto do contrato</span>
                               <span>{modalData?.['company_id_payments.object']}</span>
+                            </div>
+                          </div>
+                          <div className='flex mt-2'>
+                            <div className='flex flex-col w-[30.5vw] p-2 bg-[#F2F5FF] items-start rounded mr-2 text-left'>
+                              <span className='font-semibold'>Item ISS</span>
+                              <span>{modalData?.['company_id_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label']}</span>
                             </div>
                           </div>
                           <div className='flex w-full mt-2'>
