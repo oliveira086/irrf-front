@@ -25,7 +25,6 @@ const AdminPanel = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-
     (async () => {
       await getUserInformations({ currentPage: 1 }).then(response => {
         setUserName(response.body.user_name);
@@ -35,8 +34,7 @@ const AdminPanel = () => {
       await getAllCitiesRegisted().then(response => {
         setRows(response.body);
       })
-    })()
-
+    })();
   }, []);
 
   return (
