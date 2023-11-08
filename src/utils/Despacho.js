@@ -8,7 +8,6 @@ export class DespachoTemplate extends React.PureComponent {
     this.state = { checked: false };
   }
 
-
   handleCheckboxOnChange = () =>
     this.setState({ checked: !this.state.checked });
 
