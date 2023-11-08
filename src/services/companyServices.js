@@ -166,6 +166,7 @@ const companyPaymentSolicitation = async (params) => {
     return response.data;
   } catch (error) {
     ValidateCompanySession(error.response.status);
+    throw error.response.status;
   }
 }
 

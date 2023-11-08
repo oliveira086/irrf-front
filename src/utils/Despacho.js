@@ -1,4 +1,5 @@
 import * as React from "react";
+import LogoEscritorio from '../assets/images/logo-escritorio.jpeg'
 
 export class DespachoTemplate extends React.PureComponent {
   constructor(props) {
@@ -32,7 +33,10 @@ export class DespachoTemplate extends React.PureComponent {
             </style>
             <div className="flash" />
             <table className="testClass" style={{marginLeft: '60px', marginTop: '60px'}}>
-              <thead style={{display:'flex', flexDirection: 'column', alingItems: 'flex-start', justifyContent: 'center'}}>
+              <div>
+                <img src={LogoEscritorio} style={{ width: '300px'}} />
+              </div>
+              <thead style={{ display:'flex', flexDirection: 'column', alingItems: 'flex-start', justifyContent: 'center', marginTop: '16px'}}>
                 <div style={{ display: 'flex', width: '100%', heigth: '10px', justifyContent: 'flex-start'}}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', width: '200px', heigth: '10px'}}>{`DESPACHO Nº: ${this.props.payment_id}`}</div>
                 </div>
@@ -218,8 +222,10 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'left', alignItems: 'start'}}>
                     <div style={{ width: '60%', heigth: '1px', background: '#000'}}></div><br></br>
-                    <span>Responsabilidade técnica pela elaboração deste documento:</span>
-                    <span>Wlisses Menezes Sociedade Individual de Advocacia. OAB/PE n 1969</span>
+                    <span>Responsabilidade técnica pela elaboração deste documento:</span><br/>
+                    <span>Wlisses Menezes Sociedade Individual de Advocacia. OAB/PE Nº 1969</span>
+                    <span>Rua coelho Rodrigues, Nº 696, Centro Araripina PE - CEP: 56.280-000</span>
+                    <span>WhatsApp: 0800 591 5366</span>
                   </div>
                 </tr>
               </tbody>

@@ -96,9 +96,10 @@ const SupplierHolding = () => {
       }
 
       if(sigleTon === 0 && validate == true) {
+
         const objectToSend = {
           "cnpj": cnpj,
-          "company_id": companyObjectSelected?.value,
+          "company_id": companyObjectSelected?.value || company.value,
           "computer_id": computer?.id,
           "city_id": citySelected?.value,
           "tax_note": taxNote,
@@ -119,10 +120,10 @@ const SupplierHolding = () => {
         formToCertificates.append('file', certidoesUpload);
         formToOtherDocuments.append('file', otherDocumentUpload);
 
-        await companyPaymentSolicitation(objectToSend).then(async resposeToPaymentSolicitation => {
-          await companyPaymentSolicitationFiles({ id: resposeToPaymentSolicitation.body.id, type: 'taxNote', body: formToTaxNote });
-          await companyPaymentSolicitationFiles({ id: resposeToPaymentSolicitation.body.id, type: 'certificates', body: formToCertificates });
-          await companyPaymentSolicitationFiles({ id: resposeToPaymentSolicitation.body.id, type: 'other', body: formToOtherDocuments });
+        companyPaymentSolicitation(objectToSend).then(async resposeToPaymentSolicitation => {
+          await companyPaymentSolicitationFiles({ id: resposeToPaymentSolicitation.body?.id, type: 'taxNote', body: formToTaxNote });
+          await companyPaymentSolicitationFiles({ id: resposeToPaymentSolicitation.body?.id, type: 'certificates', body: formToCertificates });
+          await companyPaymentSolicitationFiles({ id: resposeToPaymentSolicitation.body?.id, type: 'other', body: formToOtherDocuments });
 
           toast({
             title: 'Solicitação criada com sucesso!',
@@ -133,13 +134,26 @@ const SupplierHolding = () => {
 
           navigate(-1);
 
-        }).catch(err => {
-          toast({
-            title: 'Erro ao realizar a solicitação!',
-            status: 'error',
-            position: 'top-right',
-            isClosable: true
-          });
+        }).catch(error => {
+
+          if(error == 405) {
+            toast({
+              title: 'Sua empresa não está auditada nessa cidade! Entre em contato com o suporte',
+              status: 'error',
+              position: 'top-right',
+              isClosable: true
+            });
+
+            navigate(-1);
+          } else {
+            toast({
+              title: 'Erro ao realizar a solicitação!',
+              status: 'error',
+              position: 'top-right',
+              isClosable: true
+            });
+          }
+         
         })
 
       } else {
