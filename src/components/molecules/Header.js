@@ -125,6 +125,10 @@ const Header = ({ userName, cityName }) => {
               <MdStore color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Fornecedores</span>
             </button>
+            <button onClick={() => navigate('/solicitacoes-pagamento')} className={uri.indexOf('solicitacoes-pagamento') > -1 ? style.ButtonSelected : style.Button } >
+              <HiOutlineDocumentArrowUp color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Solicitações</span>
+            </button>
           </div>
         )
         break
