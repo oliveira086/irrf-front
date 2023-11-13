@@ -215,11 +215,39 @@ const acceptPaymentSolicitation = async (params) => {
   }
 }
 
+const getPaymentSolicitationInformations = async (params) => {
+  try {
+    let response = await api.post(`/company/payment-solicitation/get`, params);
+    return response.data;
+  } catch (error) {
+    ValidateCompanySession(error.response.status);
+  }
+}
+
+const updatePaymentSolicitationFiles = async (params) => {
+  try {
+    let response = await api.post(`/company/payment-solicitation/upload-files?id=${params.id}&type=${params.type}`, params.body);
+    return response.data;
+  } catch (error) {
+    ValidateCompanySession(error.response.status);
+  }
+}
+
+const updatePaymentSolicitation = async (params) => {
+  try {
+    let response = await api.post(`/company/payment-solicitation/update`, params);
+    return response.data;
+  } catch (error) {
+    ValidateCompanySession(error.response.status);
+  }
+}
+
 
 export { createCompany, registerCompany, getAllCompanies, getCompanyByCnpj,
   getCompanyByProductServices, uploadReceiptCompany, getCompanyById,
   editCompany, getAllCompaniesAdmin, disableCompany, setCompanyAudited,
   findCompanyByCNPJ, verifyCompany, companyPanel, companyInformations, getCompanyCities,
   companyPaymentSolicitation, companyPaymentSolicitationFiles, getAllPaymentSolicitations,
-  getAllPaymentSolicitationByCity, rejectPaymentSolicitation, acceptPaymentSolicitation
+  getAllPaymentSolicitationByCity, rejectPaymentSolicitation, acceptPaymentSolicitation,
+  getPaymentSolicitationInformations, updatePaymentSolicitationFiles, updatePaymentSolicitation
 }

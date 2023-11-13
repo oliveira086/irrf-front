@@ -19,6 +19,7 @@ import { companyInformations, getCompanyCities, getCompanyByCnpj, getAllPaymentS
 import { SolicitationsStyle } from './style';
 
 const Soliciations = () => {
+  const navigate = useNavigate();
   const [userName, setUserName] = useState('');
   const [cityName, setCityName] = useState('');
   const [cnpj, setCNPJ] = useState('');
@@ -54,6 +55,9 @@ const Soliciations = () => {
       <div className={SolicitationsStyle.BodyContainer}>
         <div className={SolicitationsStyle.TitleContainer}>
           <h1 className='text-3xl font-semibold'>Solicitações de pagamento</h1>
+          <div className={SolicitationsStyle.TitleButtonContainer}>
+            <Button label='Nova Solicitação de Pagamento' onPress={() => navigate('/fornecedor/solicitacao')}/>
+          </div>
         </div>
 
         <div className='flex w-full h-auto justify-center'>
@@ -84,7 +88,7 @@ const Soliciations = () => {
                               <chakra.Td>{paymentSolicitationsCallback?.['city_id_payments_solicitations.label']}</chakra.Td>
                               <chakra.Td>{paymentSolicitationsCallback?.status}</chakra.Td>
                               <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => openModalAndSetData(paymentSolicitationsCallback)} /></chakra.Td>
-                              <chakra.Td><FiEdit size={28} className='cursor-pointer' /></chakra.Td>
+                              <chakra.Td><FiEdit size={28} className='cursor-pointer' onClick={() => navigate(`/fornecedor/editar-solicitacao?id=${paymentSolicitationsCallback.id}`)} /></chakra.Td>
                             </chakra.Tr>
                           </>
                         )
@@ -99,9 +103,8 @@ const Soliciations = () => {
               <Modal isCentered size={'xl'} title={`Solicitação de pagamento - ${modalViewData?.['city_id_payments_solicitations.label']}`} isOpen={showModalView} modalOpenAndClose={() => setShowModalView(!showModalView)}>
                 <div className="pb-8">
                   <div className='flex'>
-                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-8'>
                       <span className='font-semibold'>Nome da Empresa</span>
-                      {console.log(modalViewData)}
                       <span>{modalViewData?.['company_id_payments_solicitations.label']}</span>
                     </div>
                     <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded'>
@@ -111,7 +114,7 @@ const Soliciations = () => {
                   </div>
 
                   <div className='flex mt-4'>
-                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-8'>
                       <span className='font-semibold'>Número da Nota fiscal</span>
                       <span>{modalViewData?.tax_note.split('-')[0]}</span>
                     </div>
@@ -122,7 +125,7 @@ const Soliciations = () => {
                   </div>
 
                   <div className='flex mt-4'>
-                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-8'>
                       <span className='font-semibold'>Valor</span>
                       <span>{fromCurrency.format(modalViewData?.value)}</span>
                     </div>
@@ -133,7 +136,7 @@ const Soliciations = () => {
                   </div>
 
                   <div className='flex mt-4'>
-                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-8'>
                       <span className='font-semibold'>Entidade Pagadora</span>
                       <span>{modalViewData?.['computer_id_payments_solicitations.label']}</span>
                     </div>
@@ -144,7 +147,7 @@ const Soliciations = () => {
                   </div>
 
                   <div className='flex mt-4'>
-                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                    <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-8'>
                       <span className='font-semibold'>Responsável pela solicitação</span>
                       <span>{modalViewData?.responsible}</span>
                     </div>
@@ -155,13 +158,20 @@ const Soliciations = () => {
                   </div>
 
                   <div className='flex mt-4'>
+                    <div className='flex flex-col w-4/5 p-2 bg-[#F2F5FF] items-start rounded mr-8'>
+                      <span className='font-semibold'>Comentário</span>
+                      <span>{modalViewData?.comment}</span>
+                    </div>
+                  </div>
+
+                  <div className='flex mt-4'>
                     <div className='flex w-60 h-12 bg-[#f2f5ff] border-dashed border-2
-                    border-[#2F4ECC] rounded-lg items-center justify-center mr-2 cursor-pointer' onClick={() => window.open(modalViewData?.tax_note_link, 'Download')} >
+                    border-[#2F4ECC] rounded-lg items-center justify-center mr-8 cursor-pointer' onClick={() => window.open(modalViewData?.tax_note_link, 'Download')} >
                       <span className='font-semibold'>Baixar Nota fiscal</span>
                     </div>
 
                     <div className='flex w-60 h-12 bg-[#f2f5ff] border-dashed border-2
-                    border-[#2F4ECC] rounded-lg items-center justify-center mr-2 cursor-pointer' onClick={() => window.open(modalViewData?.certificates_link, 'Download')}>
+                    border-[#2F4ECC] rounded-lg items-center justify-center mr-8 cursor-pointer' onClick={() => window.open(modalViewData?.certificates_link, 'Download')}>
                       <span className='font-semibold'>Baixar Certidões</span>
                     </div>
                     
