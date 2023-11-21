@@ -24,6 +24,7 @@ import { getUserInformations } from "../../services/authServices";
 import { getAllCompaniesAdmin, findCompanyByCNPJ, getCompanyByCnpj, editCompany, setCompanyAudited, disableCompany } from "../../services/companyServices";
 import { getAllProducts, getAllServices } from "../../services/servicesAndProductServices";
 import { registerCompany, uploadReceiptCompany } from "../../services/companyServices";
+import { getAllReinfCodes } from "../../services/reinfServices";
 
 
 import { AdminSupplierStyle } from './style';
@@ -47,6 +48,8 @@ const AdminSupplier = () => {
 
   const [issItems, setIssItems] = useState([]);
   const [issItemSelected, setIssItemSelected] = useState();
+  const [reinfCodes, setReinfCodes] = useState();
+  const [reinfCodeSelected, setReinfCodeSelected] = useState();
 
   const [companyName, setCompanyName] = useState('');
   const [companyId, setCompanyId] = useState('');
@@ -160,6 +163,17 @@ const AdminSupplier = () => {
 
     getAllProducts().then(response => {
       setProductAndServices(response.body);
+    });
+    
+    getAllReinfCodes().then(async response => {
+
+      const reinfArray = [];
+
+      await response.body.map(reinfCallback => {
+        reinfArray.push({ label: `${reinfCallback.code} - ${reinfCallback.label}`, value: reinfCallback.id })
+      });
+
+      setReinfCodes(reinfArray);
     });
 
     getAllServices().then(response => {
@@ -316,7 +330,6 @@ const AdminSupplier = () => {
       });
     });
   }
-
 
   async function searchAndFilterCompany() {
     setIsLoading(true);
@@ -609,6 +622,10 @@ const AdminSupplier = () => {
             <div>
               <Select placeholder={'Produto / Serviço'} options={productAndServices} setSelectedValue={setProductAndServicesSelected} selectedValue={productAndServicesSelected} />       
             </div>
+
+            <div>
+              <Select placeholder={'Reinf Código'} options={reinfCodes} setSelectedValue={reinfCodeSelected} selectedValue={setReinfCodeSelected} />       
+            </div>
             
             {productAndServicesSelected?.product_or_service == false ?
               <div>
@@ -767,6 +784,10 @@ const AdminSupplier = () => {
 
             <div>
               <Select placeholder={'Produto / Serviço'} options={productAndServices} setSelectedValue={setProductAndServicesSelected} selectedValue={productAndServicesSelected} />       
+            </div>
+
+            <div>
+              <Select placeholder={'Reinf Código'} options={reinfCodes} setSelectedValue={reinfCodeSelected} selectedValue={setReinfCodeSelected} />       
             </div>
             
             {isService ?

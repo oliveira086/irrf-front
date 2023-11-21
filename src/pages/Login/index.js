@@ -66,6 +66,7 @@ const Login = () => {
         sessionStorage.setItem('role', responseToAuth?.body?.role);
       }
 
+
       switch(responseToAuth?.body?.role){
         case 'ADMIN':
           navigate('/home-admin');
@@ -116,16 +117,17 @@ const Login = () => {
         </div>
 
         <div className={LoginStyle.Form}>
-        <Modal isCentered title={'Qual sua função no município?'} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
-          <div className='flex flex-col w-auto h-36 justify-around '>
-            <div>
-              <Button label={'Financeiro'} onPress={() => {navigate('/cadastro-financeiro')}} /> 
+          <Modal isCentered title={'Qual sua função no município?'} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
+            <div className='flex flex-col w-auto h-36 justify-around '>
+              <div>
+                <Button label={'Financeiro'} onPress={() => {navigate('/cadastro-financeiro')}} /> 
+              </div>
+              <div>
+                <Button label={'Tributário'} onPress={() => {navigate('/cadastro-fiscal')}}/>
+              </div>
             </div>
-            <div>
-              <Button label={'Tributário'} onPress={() => {navigate('/cadastro-fiscal')}}/>
-            </div>
-          </div>
-        </Modal>
+          </Modal>
+
           <div className='w-96 h-auto mb-4'>
             <Input label='E-mail' placeholder='Email' value={email} isError={isError} onChange={e => setEmail(e.target.value)} />
           </div>

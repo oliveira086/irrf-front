@@ -73,7 +73,7 @@ const searchCompanyByCNPJ = async (params) => {
 
 const getSecretaryPayments = async (params) => {
   try {
-    let response = await api.post(`/user/secretary-panel?currentPage=${params.currentPage}&pageSize=9`);
+    let response = await api.post(`/user/secretary-panel?currentPage=${params.currentPage}&pageSize=9`, params);
     return response.data
   } catch (error) {
     ValidateSession(error.response.status);
@@ -87,7 +87,7 @@ const confirmPaymentService = async (params) => {
     return response.data
   } catch (error) {
     ValidateSession(error.response.status);
-    return error.response.status;
+    throw (error.response.status);
   }
 }
 

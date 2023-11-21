@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import * as chakra from '@chakra-ui/react';
 import { FiEye, FiDownload } from 'react-icons/fi';
+import { AiOutlineSearch } from "react-icons/ai";
 import moment from 'moment/moment';
 import 'moment/locale/pt-br';
 import { Player } from '@lottiefiles/react-lottie-player';
 
 import Header from '../../components/molecules/Header';
+import Input from '../../components/atoms/Input';
 import Button from '../../components/atoms/Button';
 import Modal from '../../components/atoms/Modal';
 import Pagination from '../../components/molecules/Pagination';
@@ -14,7 +16,7 @@ import Pagination from '../../components/molecules/Pagination';
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj'
 
 import { getUserInformations } from '../../services/authServices';
-import { getSecretaryPayments } from '../../services/paymentServices';
+import { getSecretaryPayments, confirmPaymentService } from '../../services/paymentServices';
 
 import { FiscalPanelStyle } from './style';
 
@@ -22,6 +24,9 @@ const FiscalPanel = () => {
   const [paymentsData, setPaymentsData] = useState([]);
   const [userName, setUserName] = useState('');
   const [cityName, setCityName] = useState('');
+  const [initDate, setInitDate] = useState(moment().subtract(30, 'days').format('DD/MM/YYYY'));
+  const [endDate, setEndDate] = useState(moment().format('DD/MM/YYYY'));
+  const [password, setPassword] = useState('');
 
   const [modalData, setModalData] = useState();
   const [isOpen, setIsOpen] = useState();
@@ -34,6 +39,7 @@ const FiscalPanel = () => {
   moment.locale('pt-br');
   const fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
   const navigate = useNavigate();
+  const toast = chakra.useToast();
   
   function openAndCloseModal () {
     setIsOpen(!isOpen);
@@ -52,23 +58,66 @@ const FiscalPanel = () => {
   }, []);
 
   useEffect(() => {
-    const paymentInserted = new Set();
-    const paymentsArray = [];
     setIsLoading(false);
 
-    (async () => await getSecretaryPayments({ currentPage: currentPage }).then(response => {
+    (async () => await getSecretaryPayments(
+      {
+      initDate: moment(initDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+      endDate: moment(endDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+      currentPage: currentPage == 0 ? 1 : currentPage
+      }
+    ).then(response => {
       setCountPages(response.meta.pageCount);
-      response.rows.map(paymentCallback => {
-        if(paymentInserted.has(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 )) == false) {
-          paymentsArray.push(paymentCallback);
-          paymentInserted.add(`${paymentCallback.tax_note}`.substring(0, paymentCallback.tax_note.length -1 ));
-        }
-      });
-      setPaymentsData(paymentsArray);
-      
+      setPaymentsData(response.rows);
     }))()
     setIsLoading(true);
   }, [currentPage]);
+
+  const getPayments = async () => {
+    setCurrentPage(currentPage - 1);
+  }
+
+  const confirmPayment = async () => {
+
+    if(password == '') {
+      toast({
+        title: 'Digite sua senha de acesso!',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    } else {
+      await confirmPaymentService({ payment_id: modalData.id, phrase: password }).then(response => {
+
+        toast({
+          title: 'Pagamento Confirmado!',
+          status: 'error',
+          position: 'top-right',
+          isClosable: true,
+        });
+
+        navigate(1);
+      }).catch(error => {
+        if(error == 412) {
+          toast({
+            title: 'A senha informada está incorreta!',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: 'Houve um problema na confirmação desse pagamento!',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true,
+          });
+        }
+        console.log(error);
+      });
+    }
+    
+  }
 
   return (
     <section className={FiscalPanelStyle.Container}>
@@ -77,237 +126,87 @@ const FiscalPanel = () => {
         <div className={FiscalPanelStyle.TitleContainer}>
           <h1>Central de Retenção</h1>
         </div>
-
+        <div className='flex w-full mt-4 mb-4 items-end'>
+          <div className='w-56 mr-6'>
+            <Input label='Data Inicial' placeholder='DD/MM/YYYY' value={initDate} onChange={(e) => setInitDate(e.target.value)} />
+          </div>
+          <div className='w-56 mr-6'>
+            <Input label='Data Final' placeholder='DD/MM/YYYY' value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          </div>
+          <div>
+            <Button label={  <AiOutlineSearch />} onPress={() => getPayments()} />
+          </div>
+        </div>
+        
         <Modal isCentered size={'xl'} title={modalData?.company_name} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
-          {modalData?.type === 'simples' ?
-            <>
-              <div className='h-auto'>
-                <div className='flex justify-between'>
-                  <div className='w-96 h-full'>
-                    <span className='text-xl'>Dados do Pagador</span>
+          <>
+            <div className='h-auto'>
+              <div className='flex justify-between'>
+                <div className='w-96 h-full'>
+                  <span className='text-xl'>Dados do Pagador</span>
 
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>Município</span>
-                      <span>{`Prefeitura Municipal de ${modalData?.['computer_id_payments.computer_city_id.label']} - ${modalData?.['computer_id_payments.computer_city_id.city_uf_id.label']}`}</span>
-                    </div>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>CNPJ</span>
-                      <span>{modalData?.['computer_id_payments.computer_city_id.cnpj']}</span>
-                    </div>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>Ordenador de despesa</span>
-                      <span>{modalData?.['computer_id_payments.label']}</span>
-                    </div>
+                  <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
+                    <span className='font-semibold'>Município</span>
+                    <span>{`Prefeitura Municipal de ${modalData?.['computer_id_payments.computer_city_id.label']} - ${modalData?.['computer_id_payments.computer_city_id.city_uf_id.label']}`}</span>
                   </div>
 
-                  <div className='w-96 h-full'>
-                    <span className='text-xl'>Dados do Fornecedor</span>
+                  <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
+                    <span className='font-semibold'>CNPJ</span>
+                    <span>{modalData?.['computer_id_payments.computer_city_id.cnpj']}</span>
+                  </div>
 
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>Nome / Razão social</span>
-                      <span>{modalData?.company_name}</span>
-                    </div>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>CNPJ</span>
-                      <span>{formatCpfOrCnpj(modalData?.cnpj)}</span>
-                    </div>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>Competência</span>
-                      <span>{moment(modalData?.createdAt).format('LL') }</span>
-                    </div>
+                  <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
+                    <span className='font-semibold'>Ordenador de despesa</span>
+                    <span>{modalData?.['computer_id_payments.label']}</span>
                   </div>
                 </div>
-                <div className='flex flex-col h-96 mt-4 pb-2 overflow-y-scroll'>
-                  <span className='text-xl'>Memória de cálculo da retenção</span>
-                  <div>
-                    <span className='font-semibold'>Imposto Sobre Serviço Retido na fonte</span>
-                    <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                      <span className='font-semibold'>Base de cálculo da retenção</span>
-                      <span>{fromCurrency.format(modalData?.calculation_basis)}</span>
-                    </div>
 
-                    <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                      <span className='font-semibold'>Alíquota do Imposto Sobre Serviço de Qualquer Natureza</span>
-                      <span>{modalData?.index}%</span>
-                    </div>
+                <div className='w-96 h-full'>
+                  <span className='text-xl'>Dados do Fornecedor</span>
 
-                    <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                      <span className='font-semibold'>Item</span>
-                      <span>{modalData?.['company_id_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label']?.split(' ')[0]}</span>
-                    </div>
-
-                    <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                      <span className='font-semibold'>Valor do ISS Retido na Fonte</span>
-                      <span>{fromCurrency.format(modalData?.withheld_tax)}</span>
-                    </div>
-
-                    <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                      <span className='font-semibold'>Valor do Saldo de Pagamento</span>
-                      <span>{fromCurrency.format(modalData?.net_of_tax)}</span>
-                    </div>
+                  <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
+                    <span className='font-semibold'>Nome / Razão social</span>
+                    <span>{modalData?.company_name}</span>
                   </div>
-                  {modalData?.payment_associate == null ?
-                    <></>
-                    :
-                    <>
-                      <div className='mt-4'>
-                        <span className='font-semibold'>Imposto de Renda Retido na fonte</span>
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Base de cálculo da retenção</span>
-                          <span>{fromCurrency.format(modalData?.['payment_associate_id.calculation_basis'])}</span>
-                        </div>
 
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Alíquota do Imposto de Renda Retido na Fonte</span>
-                          <span>{modalData?.['payment_associate_id.index']}%</span>
-                        </div>
+                  <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
+                    <span className='font-semibold'>CNPJ</span>
+                    <span>{formatCpfOrCnpj(modalData?.cnpj)}</span>
+                  </div>
 
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Código da Receita</span>
-                          <span>{modalData?.['company_id_payments.products_services_id_company.code']}</span>
-                        </div>
-
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Valor do IR Retido na Fonte</span>
-                          <span>{fromCurrency.format(modalData?.['payment_associate_id.withheld_tax'])}</span>
-                        </div>
-
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Valor do Saldo de Pagamento</span>
-                          <span>{fromCurrency.format(modalData?.['payment_associate_id.net_of_tax'])}</span>
-                        </div>
-
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-8 rounded justify-between'>
-                          <span className='font-semibold'>Valor total do Saldo de Pagamento</span>
-                          <span>{fromCurrency.format( Number(modalData?.value) - (Number(modalData?.withheld_tax) + Number(modalData?.['payment_associate_id.withheld_tax'])))}</span>
-                        </div>
-                      </div>
-                    </>
-                  }
-                  
+                  <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
+                    <span className='font-semibold'>Competência</span>
+                    <span>{moment(modalData?.createdAt).format('LL') }</span>
+                  </div>
                 </div>
               </div>
-            </>
-            :
-            <>
-              <div className='h-auto'>
-                <div className='flex justify-between'>
-                  <div className='w-96 h-full'>
-                    <span className='text-xl'>Dados do Pagador</span>
 
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>Município</span>
-                      <span>{`Prefeitura Municipal de ${modalData?.['computer_id_payments.computer_city_id.label']} - ${modalData?.['computer_id_payments.computer_city_id.city_uf_id.label']}`}</span>
-                    </div>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>CNPJ</span>
-                      <span>{modalData?.['computer_id_payments.computer_city_id.cnpj']}</span>
-                    </div>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>Ordenador de despesa</span>
-                      <span>{modalData?.['computer_id_payments.label']}</span>
-                    </div>
-                  </div>
-
-                  <div className='w-96 h-full'>
-                    <span className='text-xl'>Dados do Fornecedor</span>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>Nome / Razão social</span>
-                      <span>{modalData?.company_name}</span>
-                    </div>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>CNPJ</span>
-                      <span>{formatCpfOrCnpj(modalData?.cnpj)}</span>
-                    </div>
-
-                    <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                      <span className='font-semibold'>Competência</span>
-                      <span>{moment(modalData?.createdAt).format('LL') }</span>
-                    </div>
-                  </div>
-                </div>
-                <div className='flex flex-col h-96 mt-4 pb-2 overflow-y-scroll'>
-                  <span className='text-xl'>Memória de cálculo da retenção</span>
-                  <span className='font-semibold'>Imposto de Renda Retido na fonte</span>
-                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                    <span className='font-semibold'>Base de cálculo da retenção</span>
-                    <span>{fromCurrency.format(modalData?.calculation_basis)}</span>
-                  </div>
-
-                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                    <span className='font-semibold'>Alíquota do Imposto de Renda</span>
-                    <span>{modalData?.index}%</span>
-                  </div>
-
-                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                    <span className='font-semibold'>Código da Receita</span>
-                    <span>{modalData?.['company_id_payments.products_services_id_company.code']}</span>
-                  </div>
-
-                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                    <span className='font-semibold'>Valor do IRRF Retido na Fonte</span>
-                    <span>{fromCurrency.format(modalData?.withheld_tax)}</span>
-                  </div>
-
-                  <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                    <span className='font-semibold'>Valor do Saldo de Pagamento</span>
-                    <span>{fromCurrency.format(modalData?.net_of_tax)}</span>
-                  </div>
-
-                  {modalData?.payment_associate == null ?
-                    <>
-                      
-                    </>
-                    :
-                    <>
-                      <div>
-                        <span className='font-semibold'>Imposto Sobre Serviço Retido na fonte</span>
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Base de cálculo da retenção</span>
-                          <span>{fromCurrency.format(modalData?.['payment_associate_id.calculation_basis'])}</span>
-                        </div>
-
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Alíquota do Imposto Sobre Serviço de Qualquer Natureza</span>
-                          <span>{modalData?.['payment_associate_id.index']}%</span>
-                        </div>
-
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Item</span>
-                          <span>{modalData?.['company_id_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label'].split(' ')[0]}</span>
-                        </div>
-
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Valor do ISS Retido na Fonte</span>
-                          <span>{fromCurrency.format(modalData?.['payment_associate_id.withheld_tax'])}</span>
-                        </div>
-
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
-                          <span className='font-semibold'>Valor do Saldo de Pagamento</span>
-                          <span>{fromCurrency.format(modalData?.['payment_associate_id.net_of_tax'])}</span>
-                        </div>
-
-                        <div className='flex w-full bg-[#F2F5FF] p-2 mt-8 rounded justify-between'>
-                          <span className='font-semibold'>Valor total do Saldo de Pagamento</span>
-                          <span>{fromCurrency.format( Number(modalData?.value) - (Number(modalData?.withheld_tax) + Number(modalData?.['payment_associate_id.withheld_tax'])))}</span>
-                        </div>
-                      </div>
-                    </>
-                  }
-
-
+              <div className='flex flex-col h-64 mt-4'>
+                <span className='text-xl'>Memória de cálculo da retenção</span>
+                <span className='font-semibold'>Imposto de Renda Retido na fonte</span>
+                <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
+                  <span className='font-semibold'>Valor da nota</span>
+                  <span>{fromCurrency.format(modalData?.value)}</span>
                 </div>
               </div>
-            </>
-          }
+
+              <div className='flex w-full justify-end pb-6'>
+                <div className='w-96 mr-4'></div>
+                <div className='w-96'>
+                  <Input label='Digite sua senha' placeholder='Senha' type={'password'} value={password} onChange={(e) => setPassword(e.target.value)} />
+                </div>
+              </div>
+              <div className='flex w-full justify-end pb-6'>
+                <div className='w-96 mr-4'>
+                  <Button label='Cancelar' type="second" onPress={() => setIsOpen(!isOpen)}  />
+                </div>
+                <div className='w-96'>
+                  <Button label='Confirmar Pagamento' onPress={() => confirmPayment()} />
+                </div>
+              </div>
+
+            </div>
+          </>
         </Modal>
 
         {
