@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import * as chakra from '@chakra-ui/react';
-import { AiOutlineSearch, AiOutlineCloseCircle, AiOutlineCheckCircle } from 'react-icons/ai'
+import { AiOutlineSearch, AiOutlineCloseCircle, AiOutlineCheckCircle, AiFillDelete } from 'react-icons/ai'
 import moment from 'moment/moment';
 import { Player } from '@lottiefiles/react-lottie-player';
 import Zoom from 'react-medium-image-zoom'
@@ -22,7 +22,7 @@ import { getComputersByCity } from "../../services/paymentServices";
 import { verifyCompany } from "../../services/companyServices";
 
 import convertCurrency from '../../utils/convertCurrency';
-import { socket } from '../../utils/socket'
+import { socket } from '../../utils/socket';
 
 import { PrePaymentStyle } from './style';
 
@@ -63,28 +63,33 @@ const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, set
         <embed src={img} className={`w-28 h-28 mr-10`}></embed>
       }
         <div className={PrePaymentStyle.InfoItemContainer}>
-          <div className='flex justify-around'>
-            <div className='w-1/3 flex flex-col'>
+
+          <div className='w-96 flex flex-col justify-around'>
+            <div className='flex flex-col'>
               <span className='font-semibold text-[#142566]'>Cidade</span>
               <span>{city}</span>
             </div>
 
-            <div className='w-1/3 flex flex-col'>
+            <div className='flex flex-col'>
               <span className='font-semibold text-[#142566]'>Data</span>
               <span>{date}</span>
             </div>
           </div>
 
-          <div className='flex justify-around mt-2'>
-            <div className='w-1/3 flex flex-col'>
+          <div className='w-96 flex flex-col justify-around mt-2'>
+            <div className='flex flex-col'>
               <span className='font-semibold text-[#142566]'>Estado</span>
               <span>{state}</span>
             </div>
 
-            <div className='w-1/3 flex flex-col'>
+            <div className='flex flex-col'>
               <span className='font-semibold text-[#142566]'>Nota Fiscal</span>
               <span>{tax_note}</span>
             </div>
+          </div>
+
+          <div className='flex w-56 items-center justify-end'>
+            <Button type='second' label='Deletar' />
           </div>
         </div>
     </div>
@@ -116,6 +121,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   const [isSimple, setIsSimple] = useState();
   const [nonIncidence, setNonIncidence] = useState();
   const [isSimei, setIsSimei] = useState();
+  const [comment, setComment] = useState('');
   // ===================================
   
   useEffect(() => {
@@ -349,7 +355,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
         </div>
 
         <div className={PrePaymentStyle.ContentModalContainer}>
-          <form className='h-auto'>
+          <form className=' border border-dashed rounded p-2 h-auto '>
             <div className={PrePaymentStyle.RowContainer}>
               <div className='w-96'>
                 <Select placeholder={'Ordenador de despesa'}
@@ -379,7 +385,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
 
             { companyData.length > 1 ?
               <div className={PrePaymentStyle.RowContainer}>
-                <div className='w-full pr-8'>
+                <div className='w-full'>
                   <Select placeholder={'Objeto'}
                     selectedValue={companySelected}
                     setSelectedValue={(item) => selectedCompanyWithObject(item)}
@@ -394,16 +400,16 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
             <div className={PrePaymentStyle.RowContainer}>
               <div>
                 <span className='mb-2 font-semibold'>{modalData?.type == 'simples' ? 'ISS' : 'IRRF'}</span>
-                <div className='flex p-2 w-auto border border-[#999] rounded-lg'>
-                  <div className='w-44 mr-4'>
+                <div className='flex p-2 w-auto border rounded-lg'>
+                  <div className='w-44 mr-3'>
                     <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={value} onChange={e => setValue(e.target.value)} />
                   </div>
 
-                  <div className='w-44 mr-4'>
+                  <div className='w-44 mr-3'>
                     <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={modalData?.type == 'simples' ? calculateBasis : value } onChange={e => setCalculateBasis(e.target.value)} />
                   </div>
 
-                  <div className='w-24 mr-4'>
+                  <div className='w-24 mr-3'>
                     <Input label={modalData?.type == 'simples' ? 'Item' : 'Código'} placeholder='' value={modalData?.type == 'simples' ? issItemCod : irrfItemCod} onChange={e => setAliquot(e.target.value)}/>
                   </div>
 
@@ -443,36 +449,40 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
               </>
             }
                 
-            <div className='flex flex-col w-full h-auto mt-2'>
+            <div className='flex flex-col w-full h-auto mt-2 border border-dashed rounded p-2'>
               <span className='text-2xl font-semibold'>Informações do Fornecedor</span>
               <div className='w-full h-auto'>
                 <span className='font-semibold'>Objeto do contrato: </span>
                 <span>{modalData?.['company_id_pre_payments.object']}</span>
               </div>
-              <div className='flex w-full mt-2'>
-                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
+              
+              <div className='flex flex-wrap w-full mt-2 justify-between'>
+                <div className='flex w-36 h-10 bg-[#ededed] rounded items-center justify-center mt-2'>
                   {isSimple == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                   <span className='font-semibold ml-2'>Simples</span>
                 </div>
-                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
+                <div className='flex w-56 h-10 bg-[#ededed] rounded items-center justify-center mt-2'>
                   {isService == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                   <span className='font-semibold ml-2'>Fornece Serviços</span>
                 </div>
-                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
+                <div className='flex w-56 h-10 bg-[#ededed] rounded items-center justify-center mt-2'>
                   {isProduct == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                   <span className='font-semibold ml-2'>Fornece Produtos</span>
                 </div>
-                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                <div className='flex w-56 h-10 bg-[#ededed] rounded items-center justify-center mt-2'>
                   {nonIncidence == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                   <span className='font-semibold ml-2'>Não Incidente</span>
                 </div>
-              </div>
-              <div className='flex w-full mt-2'>
-                <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
+                <div className='flex w-56 h-10 bg-[#ededed] rounded items-center justify-center mt-2'>
                   {isSimei == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
                   <span className='font-semibold ml-2'>Simei</span>
                 </div>
               </div>
+            </div>
+
+            <div className='w-full h-auto mt-4'>
+              <span className='font-semibold'>Motivo para indeferimento</span>
+              <chakra.Textarea className="h-full mt-2" placeholder='Adicione um comentário que ajude a resolver o problema' value={comment} onChange={e => setComment(e.target.value)} />
             </div>
           </form>
 

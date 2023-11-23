@@ -183,6 +183,8 @@ const AdminSupplier = () => {
     setProductAndServicesSelected({ label: data?.['products_services_id_company.label'], value: data?.['products_services_id'] });
     setIssItemSelected({ label: data?.['iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label'], value: data?.['iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.id']})
     
+    setReinfCodeSelected({ label: `${data?.['reinf_code_company.code']} - ${data?.['reinf_code_company.label']}`, value: data?.['reinf_code_company.id']})
+
     setEditSupplierIsOpen(!editSupplierIsOpen);
   }
 
@@ -222,6 +224,7 @@ const AdminSupplier = () => {
       "email": email,
       "object": objectToContract,
       "phone": phone,
+      "reinf_code_id": reinfCodeSelected?.value,
       "aliquot": productAndServicesSelected?.['index_values_id_products.value'],
       "address": address,
       "district": district,
@@ -292,6 +295,7 @@ const AdminSupplier = () => {
       "cnpj": cnpj,
       "email": email,
       "object": objectToContract,
+      "reinf_code_id": reinfCodeSelected?.value,
       "phone": phone,
       "address": address,
       "district": district,
@@ -787,7 +791,7 @@ const AdminSupplier = () => {
             </div>
 
             <div>
-              <Select placeholder={'Reinf Código'} options={reinfCodes} setSelectedValue={reinfCodeSelected} selectedValue={setReinfCodeSelected} />       
+              <Select placeholder={'Reinf Código'} options={reinfCodes} setSelectedValue={setReinfCodeSelected} selectedValue={reinfCodeSelected} />       
             </div>
             
             {isService ?

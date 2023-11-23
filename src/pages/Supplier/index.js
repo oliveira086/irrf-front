@@ -91,7 +91,7 @@ const Supplier = () => {
 
       <div className={SupplierStyle.FormContainer}>
         <div className={SupplierStyle.LogoContainer}>
-          <img src='./logo-irrf.png' className='w-52'/>
+          <img src='./logo-irrf.png' className='w-56'/>
         </div>
         <div className={SupplierStyle.TextContainer}>
           <h1 className={SupplierStyle.TitleContainer}>Bem vindo fornecedor!</h1>

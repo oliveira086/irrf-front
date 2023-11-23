@@ -6,7 +6,7 @@ const Modal = ({ title, isOpen, modalOpenAndClose, children, isCentered, size = 
     <>
       <chakra.Modal closeOnOverlayClick={false} size={size} isOpen={isOpen} onClose={modalOpenAndClose} isCentered={isCentered}>
         <chakra.ModalOverlay />
-        <chakra.ModalContent maxH={size === 'xl' ? '760px': '400px'} maxW={size === 'xl' ? "1050px": '600px'}>
+        <chakra.ModalContent maxH={size === 'xl' ? 'auto': '400px'} maxW={size === 'xl' ? "1050px": '600px'}>
           <chakra.ModalHeader>{title}</chakra.ModalHeader>
           <chakra.ModalCloseButton />
           <chakra.ModalBody className='w-auto'>
