@@ -136,7 +136,7 @@ const FiscalPanel = () => {
           <div>
             <Button label={  <AiOutlineSearch />} onPress={() => getPayments()} />
           </div>
-        </div>
+        </div> 
         
         <Modal isCentered size={'xl'} title={modalData?.company_name} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
           <>

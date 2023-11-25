@@ -1,4 +1,5 @@
 import * as React from "react";
+
 export class TemplateDoubleRecibo extends React.PureComponent {
   constructor(props) {
     super(props);
