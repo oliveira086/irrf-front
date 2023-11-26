@@ -11,7 +11,7 @@ const Input = ({ label, placeholder, isError, value, onChange, type, ref, icon, 
   switch(type) {
     case 'password':
       return (
-        <div>
+        <div className='flex flex-col'>
           <span className='mb-2 font-semibold'>{label}</span>
           <chakra.InputGroup>
             <chakra.Input

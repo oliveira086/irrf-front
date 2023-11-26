@@ -27,6 +27,7 @@ const FiscalPanel = () => {
   const [initDate, setInitDate] = useState(moment().subtract(30, 'days').format('DD/MM/YYYY'));
   const [endDate, setEndDate] = useState(moment().format('DD/MM/YYYY'));
   const [password, setPassword] = useState('');
+  const [efetiveDate, setEfetiveDate] = useState(moment().format('DD/MM/YYYY'));
 
   const [modalData, setModalData] = useState();
   const [isOpen, setIsOpen] = useState();
@@ -87,7 +88,7 @@ const FiscalPanel = () => {
         isClosable: true,
       });
     } else {
-      await confirmPaymentService({ payment_id: modalData.id, phrase: password }).then(response => {
+      await confirmPaymentService({ payment_id: modalData.id, phrase: password, date: efetiveDate }).then(response => {
 
         toast({
           title: 'Pagamento Confirmado!',
@@ -190,8 +191,11 @@ const FiscalPanel = () => {
                 </div>
               </div>
 
-              <div className='flex w-full justify-end pb-6'>
-                <div className='w-96 mr-4'></div>
+              <div className='flex w-full justify-end items-end pb-6 gap-x-4'>
+
+                <div className='w-96'>
+                  <Input label='Digite a data do efetivo pagamento' placeholder='2023/01/01'  value={efetiveDate} onChange={(e) => setEfetiveDate(e.target.value)} />
+                </div>
                 <div className='w-96'>
                   <Input label='Digite sua senha' placeholder='Senha' type={'password'} value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>

@@ -11,4 +11,14 @@ const getAllReinfCodes = async (params) => {
   }
 }
 
-export { getAllReinfCodes }
+const get4020Informations = async (params) => {
+  try {
+    let response = await api.post('/reinf/get-r4020-payment', params);
+    return response.data
+  } catch (error) {
+    ValidateSession(error.response.status);
+    return error.response.status;
+  }
+}
+
+export { getAllReinfCodes, get4020Informations }
