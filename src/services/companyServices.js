@@ -135,7 +135,7 @@ const verifyCompany = async (params) => {
 
 const companyPanel = async (params) => {
   try {
-    let response = await api.post(`/company/company-panel?currentPage=${params.currentPage}&pageSize=10`, params);
+    let response = await api.post(`/company/company-panel?currentPage=${params.currentPage}&pageSize=9`, params);
     return response.data;
   } catch (error) {
     // ValidateCompanySession(error.response.status);
@@ -226,7 +226,7 @@ const getPaymentSolicitationInformations = async (params) => {
 
 const updatePaymentSolicitationFiles = async (params) => {
   try {
-    let response = await api.post(`/company/payment-solicitation/upload-files?id=${params.id}&type=${params.type}`, params.body);
+    let response = await api.post(`/company/payment-solicitation/update-files?id=${params.id}&type=${params.type}`, params.body);
     return response.data;
   } catch (error) {
     ValidateCompanySession(error.response.status);

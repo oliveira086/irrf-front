@@ -107,7 +107,7 @@ const Header = ({ userName, cityName }) => {
               <span className="mt-2 ">Solicitações</span>
             </button>
 
-            <button onClick={() => navigate('/fornecedor/home-fornecedor')} className={uri.indexOf('fornecedor/pagamentos') > -1 ? style.ButtonSelected : style.Button }>
+            <button onClick={() => navigate('/fornecedor/pagamentos')} className={uri.indexOf('fornecedor/pagamentos') > -1 ? style.ButtonSelected : style.Button }>
               <MdAttachMoney color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Pagamentos</span>
             </button>
