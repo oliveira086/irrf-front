@@ -152,8 +152,8 @@ const FiscalPanel = () => {
                   </div>
 
                   <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
-                    <span className='font-semibold'>CNPJ</span>
-                    <span>{modalData?.['computer_id_payments.computer_city_id.cnpj']}</span>
+                    <span className='font-semibold'>CNPJ do Ordenador</span>
+                    <span>{modalData?.['computer_id_payments.cnpj']}</span>
                   </div>
 
                   <div className='flex flex-col w-full h-auto rounded bg-[#F2F5FF] p-2 mt-2'>
@@ -224,18 +224,21 @@ const FiscalPanel = () => {
                       <chakra.Th>Nota fiscal</chakra.Th>
                       <chakra.Th>Data</chakra.Th>
                       <chakra.Th>Empresa</chakra.Th>
+                      <chakra.Th>Ordenador</chakra.Th>
                       <chakra.Th></chakra.Th>
                       <chakra.Th></chakra.Th>
                     </chakra.Tr>
                   </chakra.Thead>
                   <chakra.Tbody>
                     {paymentsData.map(paymentsDataCallback => {
+                      console.log(paymentsDataCallback);
                       return (
                         <>
                           <chakra.Tr>
                             <chakra.Td>{paymentsDataCallback.tax_note.split('-')[0]}</chakra.Td>
                             <chakra.Td>{moment(paymentsDataCallback.createdAt).format('DD/MM/YYYY')}</chakra.Td>
                             <chakra.Td>{paymentsDataCallback.company_name}</chakra.Td>
+                            <chakra.Td>{paymentsDataCallback?.['computer_id_payments.label']}</chakra.Td>
                             <chakra.Td><FiEye size={28} className='cursor-pointer' onClick={() => {openAndCloseModal(); setModalData(paymentsDataCallback)}}/></chakra.Td>
                             <chakra.Td><FiDownload size={28} className='cursor-pointer' onClick={() => {generateDocument(paymentsDataCallback.id)}}/></chakra.Td>
                             
