@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.3d398d7d.css",
-    "main.js": "/static/js/main.d5963f8b.js",
+    "main.css": "/static/css/main.a7757e46.css",
+    "main.js": "/static/js/main.635ad1ad.js",
     "static/js/787.5a814a1e.chunk.js": "/static/js/787.5a814a1e.chunk.js",
     "static/media/login-image-optional.jpg": "/static/media/login-image-optional.d7e4cc972eeaaaebd83c.jpg",
     "static/media/logo-irrf.png": "/static/media/logo-irrf.af16c65d2f0306efc7d8.png",
     "index.html": "/index.html",
-    "main.3d398d7d.css.map": "/static/css/main.3d398d7d.css.map",
-    "main.d5963f8b.js.map": "/static/js/main.d5963f8b.js.map",
+    "main.a7757e46.css.map": "/static/css/main.a7757e46.css.map",
+    "main.635ad1ad.js.map": "/static/js/main.635ad1ad.js.map",
     "787.5a814a1e.chunk.js.map": "/static/js/787.5a814a1e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3d398d7d.css",
-    "static/js/main.d5963f8b.js"
+    "static/css/main.a7757e46.css",
+    "static/js/main.635ad1ad.js"
   ]
 }

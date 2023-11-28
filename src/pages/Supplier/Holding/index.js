@@ -85,6 +85,9 @@ const SupplierHolding = () => {
           position: 'top-right',
           isClosable: true
         });
+
+        setSingleton(0);
+        setIsLoading(false);
       } else if(fileUpload == undefined || fileUpload == null) {
         validate = false;
         toast({
@@ -93,6 +96,9 @@ const SupplierHolding = () => {
           position: 'top-right',
           isClosable: true
         });
+
+        setSingleton(0);
+        setIsLoading(false);
       }
 
       if(sigleTon === 0 && validate == true) {

@@ -31,6 +31,7 @@ import SupplierHolding from './pages/Supplier/Holding';
 import Soliciations from './pages/Supplier/Solicitations';
 import PaymentSoliciations from './pages/PaymentSolicitations';
 import EditPaymentSolicitation from './pages/Supplier/EditSolicitiation';
+import SupplierPayments from './pages/Supplier/Payments';
 
 const theme = extendTheme({
   fonts: {
@@ -69,6 +70,7 @@ function Router(){
           <Route path='/fornecedor/solicitacao' exact element={<SupplierHolding />} />
           <Route path='/fornecedor/editar-solicitacao' exact element={<EditPaymentSolicitation />} />
           <Route path='/fornecedor/solicitacoes' exact element={<Soliciations />} />
+          <Route path='/fornecedor/pagamentos' exact element={<SupplierPayments />} />
           <Route path='/extrato-fornecedor' exact element={ <CompanyDocument />} />
           <Route path='/painel-pagamentos' exact element={<AdminPayments />} />
           <Route path='/solicitacoes-pagamento' exact element={<PaymentSoliciations />} />

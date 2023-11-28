@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as chakra from '@chakra-ui/react';
 import moment from "moment";
+import { Player } from '@lottiefiles/react-lottie-player';
 import Zoom from 'react-medium-image-zoom'
 
 import { AiOutlineSearch, AiOutlineCloseCircle, AiOutlineCheckCircle } from "react-icons/ai";
@@ -17,6 +18,7 @@ import MoneyInput from '../../components/atoms/MoneyInput';
 
 import { getUserInformations, getComputersService } from "../../services/authServices";
 import { getAllPaymentsByDate, searchPaymentByCnpjAdmin, enablePayment, updatePaymentStatus, getPayment, editPayment } from '../../services/paymentServices';
+import { get4020Informations } from '../../services/reinfServices';
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 import convertCurrency from '../../utils/convertCurrency';
 
@@ -67,6 +69,10 @@ const Payments = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+
+  // Informações sobre o envio do reinf
+  const [reinfData, setReinfData] = useState();
+  // ===================================
   
   const [status, setStatus] = useState();
   const imagem = modalData?.tax_note_link;
@@ -103,16 +109,27 @@ const Payments = () => {
     setCountPages(response.meta.pageCount);
   }
 
+  async function get4020Function(paymentId) {
+    const responseToget4020Informations = await get4020Informations({ payment_id: paymentId });
+    setReinfData(JSON.stringify(responseToget4020Informations.body));
+  }
+
   async function openAndCloseModal(data) {
+
     if(isOpen == true) {
       await updatePaymentStatus({ status: status.label, payment_id: modalData.id }).then(response => {
         navigate(0);
       })
       setIsOpen(!isOpen);
     } else {
+
       setModalData(data);
+      await get4020Function(data?.id);
+
       setStatus({ label: data?.status });
       setIsOpen(!isOpen);
+
+
     }
   }
 
@@ -335,6 +352,7 @@ const Payments = () => {
                   <chakra.TabList>
                     <chakra.Tab>Pagamento</chakra.Tab>
                     <chakra.Tab>Fornecedor</chakra.Tab>
+                    <chakra.Tab>REINF</chakra.Tab>
                   </chakra.TabList>
 
                   <chakra.TabPanels>
@@ -522,6 +540,80 @@ const Payments = () => {
                         </div>
                       </div>
                     </chakra.TabPanel>
+
+                    <chakra.TabPanel>
+
+                      {
+                        reinfData ?
+                        <>
+                          <div className='h-[54vh]'>
+                            <div className='flex flex-col items-start'>
+                              <span className='font-semibold text-lg'>Status</span>
+                              <div className='flex'>
+                                <div className='flex flex-col w-80 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                                  <span className='font-semibold'>Status Envio</span>
+                                  <span>{JSON.parse(reinfData).status_envio.mensagem}</span>
+                                </div>
+                                <div className='flex flex-col w-80 p-2 bg-[#F2F5FF] items-start rounded'>
+                                  <span className='font-semibold'>Status consulta</span>
+                                  <span>{JSON.parse(reinfData).status_consulta.mensagem}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className='flex flex-col items-start mt-4'>
+                              <span className='font-semibold text-lg'>Informações Entrega</span>
+                              <div className='flex'>
+                                <div className='flex flex-col w-80 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                                  <span className='font-semibold'>Recibo</span>
+                                  <span>{JSON.parse(reinfData).json_retorno[0].recibo}</span>
+                                </div>
+                                <div className='flex flex-col w-80 p-2 bg-[#F2F5FF] items-start rounded'>
+                                  <span className='font-semibold'>Protocolo</span>
+                                  <span>{JSON.parse(reinfData).json_retorno[0].protocoloEntrega}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className='flex flex-col items-start mt-4'>
+                              <span className='font-semibold text-lg'>Valores processados</span>
+                              <div className='flex'>
+                                <div className='flex flex-col w-56 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                                  <span className='font-semibold'>Valo Base</span>
+                                  <span>{fromCurrency.format(JSON.parse(reinfData).json_retorno[0].R9005.totApurMen[0].vlrBaseCRMen.replace(',', '.'))}</span>
+                                </div>
+                                <div className='flex flex-col w-44 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
+                                  <span className='font-semibold'>Valor IRRF</span>
+                                  <span>{fromCurrency.format(JSON.parse(reinfData).json_retorno[0].R9005.totApurMen[0].totApurTribMen[0].vlrCRMenInf.replace(',', '.'))}</span>
+                                </div>
+                                <div className='flex flex-col w-56 p-2 bg-[#F2F5FF] items-start rounded'>
+                                  <span className='font-semibold'>Natureza do rendimento</span>
+                                  <span>{JSON.parse(reinfData).json_retorno[0].R9005.totApurMen[0].natRend}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                        :
+                        <>
+                          <div className='h-[54vh]'>
+                            <div>
+                              <div className="w-64 mt-8 mb-8">
+                                <Player
+                                  src='https://assets8.lottiefiles.com/private_files/lf30_fn9xcfqg.json'
+                                  className="player"
+                                  loop
+                                  autoplay
+                                />
+                              </div>
+                              <span>Pagamento ainda não enviado para a receita ou não encontrado</span>
+                            </div>
+                          </div>
+                        </>
+                      }
+                      
+                    </chakra.TabPanel>
+
                   </chakra.TabPanels>
                 </chakra.Tabs>
               </div>

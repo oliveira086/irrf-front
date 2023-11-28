@@ -74,6 +74,7 @@ const AdminSupplier = () => {
   const [isImmuneIss, setIsImmuneIss] = useState(false);
   const [isImmuneIR, setIsImmuneIR] = useState(false);
   const [nonIncidence, setNonIncidence] = useState(false);
+  const [exemptImmuneReinf, setExemptImmuneReinf] = useState(false);
 
   const [fileUpload, setFileUpload] = useState();
 
@@ -160,6 +161,7 @@ const AdminSupplier = () => {
     setIsImmuneIss(data?.immune_iss);
     setCompanyId(data?.id);
     setNonIncidence(data?.non_incidence);
+    setExemptImmuneReinf(data?.is_exempt_immune_reinf)
 
     getAllProducts().then(response => {
       setProductAndServices(response.body);
@@ -242,7 +244,8 @@ const AdminSupplier = () => {
       "is_immune_irrf": isImmuneIR,
       "is_immune_iss": isImmuneIss,
       "iss_services_id": issItemSelected?.id,
-      "non_incidence": nonIncidence
+      "non_incidence": nonIncidence,
+      "is_exempt_immune_reinf": exemptImmuneReinf
     }
 
     await registerCompany(objectToSaveCompany).then(async responseToRegisterCompany => {
@@ -313,7 +316,8 @@ const AdminSupplier = () => {
       "is_immune_irrf": isImmuneIR || 0,
       "is_immune_iss": isImmuneIss || 0,
       "iss_item": issItemSelected?.value || issItemSelected?.id,
-      "non_incidence": nonIncidence
+      "non_incidence": nonIncidence,
+      "is_exempt_immune_reinf": exemptImmuneReinf
     }
 
     editCompany(objectToEditCompany).then(response => {
@@ -586,6 +590,11 @@ const AdminSupplier = () => {
 									{modalData?.non_incidence == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
 									<span className='font-semibold ml-4'>Não Incidente</span>
 								</div>
+
+                <div className='flex w-56 p-2 bg-[#ededed] rounded items-center justify-center mt-2'>
+									{modalData?.is_exempt_immune_reinf  == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+									<span className='font-semibold ml-4'>Imune / Isento Reinf</span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -733,6 +742,11 @@ const AdminSupplier = () => {
               <div>
                 <chakra.Switch isChecked={nonIncidence} onChange={(e) => {setNonIncidence(!nonIncidence)}} />
                 <span className='ml-2'>Não Incidente</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={exemptImmuneReinf} onChange={(e) => {setExemptImmuneReinf(!exemptImmuneReinf)}} />
+                <span className='ml-2'>Imune / Isento Reinf</span>
               </div>
             </div>
 
@@ -897,6 +911,12 @@ const AdminSupplier = () => {
                 <chakra.Switch isChecked={nonIncidence} onChange={(e) => {setNonIncidence(!nonIncidence)}} />
                 <span className='ml-2'>Não Incidente</span>
               </div>
+
+              <div>
+                <chakra.Switch isChecked={exemptImmuneReinf} onChange={(e) => {setExemptImmuneReinf(!exemptImmuneReinf)}} />
+                <span className='ml-2'>Imune / Isento Reinf</span>
+              </div>
+              
             </div>
 
             <div className='flex pl-20 pr-20 justify-between mt-6 mb-6'>
