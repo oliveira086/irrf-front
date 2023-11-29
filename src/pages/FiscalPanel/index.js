@@ -92,7 +92,7 @@ const FiscalPanel = () => {
 
         toast({
           title: 'Pagamento Confirmado!',
-          status: 'error',
+          status: 'success',
           position: 'top-right',
           isClosable: true,
         });
@@ -106,7 +106,15 @@ const FiscalPanel = () => {
             position: 'top-right',
             isClosable: true,
           });
-        } else {
+        } else  if(error == 403) {
+          toast({
+            title: 'O ordenador não está habilitado a informar pagamentos',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true,
+          });
+        } 
+        else {
           toast({
             title: 'Houve um problema na confirmação desse pagamento!',
             status: 'error',
