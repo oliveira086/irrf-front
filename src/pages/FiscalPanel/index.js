@@ -192,7 +192,7 @@ const FiscalPanel = () => {
 
               <div className='flex flex-col h-64 mt-4'>
                 <span className='text-xl'>Memória de cálculo da retenção</span>
-                <span className='font-semibold'>Imposto de Renda Retido na fonte</span>
+                <span className='font-semibold'>{modalData?.type == 'ordinario' ? 'Imposto de Renda Retido na fonte': 'Imposto sobre Serviço Retido na fonte'}</span>
                 <div className='flex w-full bg-[#F2F5FF] p-2 mt-2 rounded justify-between'>
                   <span className='font-semibold'>Valor da nota</span>
                   <span>{fromCurrency.format(modalData?.value)}</span>

@@ -86,6 +86,9 @@ const Login = () => {
         case 'OPERADOR':
           navigate('/home');
           break
+        case 'CONTADOR':
+          navigate('/home-contador');
+          break
         default:
           break
       }

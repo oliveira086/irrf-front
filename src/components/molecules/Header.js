@@ -63,6 +63,7 @@ const Header = ({ userName, cityName }) => {
             </button>
           </div>
         )
+
       case 'SECRETARY':
         return (
           <div className='flex'>
@@ -72,7 +73,7 @@ const Header = ({ userName, cityName }) => {
             </button>
           </div>
         )
-        break
+
       case 'OPERADOR':
         return (
           <div className='flex'>
@@ -94,6 +95,7 @@ const Header = ({ userName, cityName }) => {
             </button>
           </div>
         )
+
       case 'COMPANY':
         return (
           <div className='flex'>
@@ -110,6 +112,16 @@ const Header = ({ userName, cityName }) => {
             <button onClick={() => navigate('/fornecedor/pagamentos')} className={uri.indexOf('fornecedor/pagamentos') > -1 ? style.ButtonSelected : style.Button }>
               <MdAttachMoney color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Pagamentos</span>
+            </button>
+          </div>
+        )
+
+      case 'CONTADOR':
+        return (
+          <div className='flex'>
+            <button onClick={() => navigate('/home-contador') } className={uri.indexOf('home-contador') > -1 ? style.ButtonSelected : style.Button}>
+              <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Home</span>
             </button>
           </div>
         )
