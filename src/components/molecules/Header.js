@@ -71,6 +71,12 @@ const Header = ({ userName, cityName }) => {
               <BiHomeSmile color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Home</span>
             </button>
+
+            <button  onClick={() => navigate('/pagamentos-fiscal') } className={uri.indexOf('/pagamentos-fiscal') > -1 ? style.ButtonSelected : style.Button} >
+              <MdAttachMoney color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
+              <span className="mt-2 ">Pagamentos</span>
+            </button>
+
           </div>
         )
 

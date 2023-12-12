@@ -71,9 +71,9 @@ const AdminPayment = () => {
       setCurrentPage(1);
       await initialSearch();
     } else {
-      const response = await searchPaymentByCnpj({ cnpj: cnpjSearch });
-      setRows(response.body);
-      setCountPages(response.meta.pageCount);
+      const response = await searchPaymentByCnpj({ cnpj: cnpjSearch, city_id: query.get("cityId") });
+      setRows(response.body.rows);
+      setCountPages(response.body.meta.pageCount);
       setIsLoading(false);
     }
   }

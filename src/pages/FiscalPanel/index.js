@@ -226,7 +226,7 @@ const FiscalPanel = () => {
           <div className={FiscalPanelStyle.TableContainer}>
             <chakra.Skeleton className="w-full h-auto" isLoaded={isLoading}>
               <chakra.TableContainer>
-                <chakra.Table variant='simple' size='lg'>
+                <chakra.Table variant='simple' size='lg' >
                   <chakra.Thead>
                     <chakra.Tr>
                       <chakra.Th>Nota fiscal</chakra.Th>
@@ -239,7 +239,6 @@ const FiscalPanel = () => {
                   </chakra.Thead>
                   <chakra.Tbody>
                     {paymentsData.map(paymentsDataCallback => {
-                      console.log(paymentsDataCallback);
                       return (
                         <>
                           <chakra.Tr>
