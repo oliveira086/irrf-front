@@ -26,6 +26,7 @@ const FiscalPanel = () => {
   const [cityName, setCityName] = useState('');
   const [initDate, setInitDate] = useState(moment().subtract(30, 'days').format('DD/MM/YYYY'));
   const [endDate, setEndDate] = useState(moment().format('DD/MM/YYYY'));
+  const [cnpj, setCnpj] = useState('');
   const [password, setPassword] = useState('');
   const [efetiveDate, setEfetiveDate] = useState(moment().format('DD/MM/YYYY'));
 
@@ -51,6 +52,30 @@ const FiscalPanel = () => {
     navigate('/extrato-fiscal');
   }
 
+  function processPaymentData (paymentData) {
+
+    const paymentsArray = [];
+    const setIdBanned = new Set();
+
+    paymentData.map(paymentDataCallback => {
+
+      if(paymentDataCallback?.payment_associate == null) {
+        paymentsArray.push(paymentDataCallback);
+        return
+      } else {
+
+        if(setIdBanned.has(paymentDataCallback.id)) {
+          return
+        } else {
+          setIdBanned.add(paymentDataCallback.payment_associate);
+          paymentsArray.push(paymentDataCallback)
+        }
+      }
+    })
+
+    setPaymentsData(paymentsArray);
+  }
+
   useEffect(() => {
     (async () => await getUserInformations({ currentPage: 1 }).then(response => {
       setUserName(response.body.user_name);
@@ -65,11 +90,13 @@ const FiscalPanel = () => {
       {
       initDate: moment(initDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
       endDate: moment(endDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-      currentPage: currentPage == 0 ? 1 : currentPage
+      currentPage: currentPage == 0 ? 1 : currentPage,
+      cnpj: cnpj
       }
     ).then(response => {
+      processPaymentData(response.rows)
       setCountPages(response.meta.pageCount);
-      setPaymentsData(response.rows);
+      
     }))()
     setIsLoading(true);
   }, [currentPage]);
@@ -88,7 +115,7 @@ const FiscalPanel = () => {
         isClosable: true,
       });
     } else {
-      await confirmPaymentService({ payment_id: modalData.id, phrase: password, date: efetiveDate }).then(response => {
+      await confirmPaymentService({ payment_id: modalData.id, phrase: password, date: efetiveDate }).then(async response => {
 
         toast({
           title: 'Pagamento Confirmado!',
@@ -97,7 +124,9 @@ const FiscalPanel = () => {
           isClosable: true,
         });
 
-        navigate(1);
+        setIsOpen(false);
+        await getPayments();
+
       }).catch(error => {
         if(error == 412) {
           toast({
@@ -141,6 +170,9 @@ const FiscalPanel = () => {
           </div>
           <div className='w-56 mr-6'>
             <Input label='Data Final' placeholder='DD/MM/YYYY' value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          </div>
+          <div className='w-56 mr-6'>
+            <Input label='CNPJ' placeholder='CNPJ' value={cnpj} onChange={(e) => setCnpj(e.target.value)} />
           </div>
           <div>
             <Button label={  <AiOutlineSearch />} onPress={() => getPayments()} />
