@@ -236,15 +236,15 @@ const FiscalPayments = () => {
                             <div className='flex flex-col'>
                               <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mb-2'>
                                 <span className='font-semibold'>Município</span>
-                                <span>{modalData?.['city_id_payments.label']}</span>
+                                <span>{modalData?.['city_id_payments.label'] || modalData?.city_id_payments.label }</span>
                               </div>
                               <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mb-2'>
                                 <span className='font-semibold'>CNPJ</span>
-                                <span>{modalData?.['computer_id_payments.cnpj']}</span>
+                                <span>{modalData?.['computer_id_payments.cnpj'] || modalData?.city_id_payments.cnpj}</span>
                               </div>
                               <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded'>
                                 <span className='font-semibold'>Ordenador de despesa</span>
-                                <span className='text-left'>{modalData?.['computer_id_payments.label']}</span>
+                                <span className='text-left'>{modalData?.['computer_id_payments.label'] || modalData?.computer_id_payments.label}</span>
                               </div>
                             </div>
                           </div>
@@ -253,7 +253,7 @@ const FiscalPayments = () => {
                             <div className='flex flex-col'>
                               <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mb-2 text-left'>
                                 <span className='font-semibold'>Nome/Razão social</span>
-                                <span>{modalData?.['company_id_payments.label']}</span>
+                                <span>{modalData?.['company_id_payments.label'] || modalData?.company_id_payments.label}</span>
                               </div>
                               <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mb-2'>
                                 <span className='font-semibold'>CNPJ</span>
@@ -304,60 +304,19 @@ const FiscalPayments = () => {
                           <div className='flex'>
                             <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
                               <span className='font-semibold'>Nome</span>
-                              <span>{modalData?.['company_id_payments.label']}</span>
+                              <span>{modalData?.['company_id_payments.label'] || modalData?.company_id_payments.label}</span>
                             </div>
                             <div className='flex flex-col w-96 p-2 bg-[#F2F5FF] items-start rounded'>
                               <span className='font-semibold'>CNPJ</span>
-                              <span>{formatCpfOrCnpj(modalData?.['company_id_payments.cnpj'])}</span>
+                              <span>{formatCpfOrCnpj(modalData?.['company_id_payments.cnpj'] || modalData?.company_id_payments.cnpj)}</span>
                             </div>
                           </div>
                           <div className='flex mt-2'>
                             <div className='flex flex-col w-[40.5vw] p-2 bg-[#F2F5FF] items-start rounded mr-2'>
                               <span className='font-semibold'>Objeto do contrato</span>
-                              <span>{modalData?.['company_id_payments.object']}</span>
+                              <span>{modalData?.['company_id_payments.object'] || modalData?.company_id_payments.object}</span>
                             </div>
                           </div>
-                          <div className='flex w-full mt-2'>
-                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
-                              {modalData?.['company_id_payments.is_simple'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
-                              <span className='font-semibold ml-2'>Simples</span>
-                            </div>
-                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
-                              {modalData?.['company_id_payments.is_service'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
-                              <span className='font-semibold ml-2'>Fornece Serviços</span>
-                            </div>
-                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
-                              {modalData?.['company_id_payments.is_product'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
-                              <span className='font-semibold ml-2'>Fornece Produtos</span>
-                            </div>
-                          </div>
-
-                          <div className='flex w-full mt-2'>
-                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
-                              {modalData?.['company_id_payments.is_exempt_irrf'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
-                              <span className='font-semibold ml-2'>Isento IR</span>
-                            </div>
-                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
-                              {modalData?.['company_id_payments.is_exempt_iss'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
-                              <span className='font-semibold ml-2'>Isento ISS</span>
-                            </div>
-                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center mr-2'>
-                              {modalData?.['company_id_payments.is_immune_irrf'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
-                              <span className='font-semibold ml-2'>Imune IR</span>
-                            </div>
-                            <div className='flex p-2 bg-[#ededed] rounded items-center justify-center'>
-                              {modalData?.['company_id_payments.is_immune_iss'] == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
-                              <span className='font-semibold ml-2'>Imune ISS</span>
-                            </div>
-                          </div>
-
-                          {modalData?.['company_id_payments.receipt_link'] != null ?
-                            <div className="w-72 mt-4">
-                              <Button label="Baixar Objeto de contratação" onPress={() => openDocumentInNewTab(modalData?.['company_id_payments.receipt_link'])}/>
-                            </div>
-                            :
-                            <></>
-                          }
                         </div>
                       </div>
                     </chakra.TabPanel>
@@ -386,11 +345,11 @@ const FiscalPayments = () => {
                               <div className='flex'>
                                 <div className='flex flex-col w-80 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
                                   <span className='font-semibold'>Recibo</span>
-                                  <span>{JSON.parse(reinfData).json_retorno[0].recibo}</span>
+                                  <span>{JSON.parse(reinfData).json_retorno[0]?.recibo}</span>
                                 </div>
                                 <div className='flex flex-col w-80 p-2 bg-[#F2F5FF] items-start rounded'>
                                   <span className='font-semibold'>Protocolo</span>
-                                  <span>{JSON.parse(reinfData).json_retorno[0].protocoloEntrega}</span>
+                                  <span>{JSON.parse(reinfData).json_retorno[0]?.protocoloEntrega}</span>
                                 </div>
                               </div>
                             </div>
