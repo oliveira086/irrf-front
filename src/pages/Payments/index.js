@@ -566,11 +566,11 @@ const Payments = () => {
                               <div className='flex'>
                                 <div className='flex flex-col w-80 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
                                   <span className='font-semibold'>Recibo</span>
-                                  <span>{JSON.parse(reinfData).json_retorno[0].recibo}</span>
+                                  <span>{JSON.parse(reinfData).json_retorno[0]?.recibo}</span>
                                 </div>
                                 <div className='flex flex-col w-80 p-2 bg-[#F2F5FF] items-start rounded'>
                                   <span className='font-semibold'>Protocolo</span>
-                                  <span>{JSON.parse(reinfData).json_retorno[0].protocoloEntrega}</span>
+                                  <span>{JSON.parse(reinfData).json_retorno[0]?.protocoloEntrega}</span>
                                 </div>
                               </div>
                             </div>
@@ -580,15 +580,15 @@ const Payments = () => {
                               <div className='flex'>
                                 <div className='flex flex-col w-56 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
                                   <span className='font-semibold'>Valo Base</span>
-                                  <span>{fromCurrency.format(JSON.parse(reinfData).json_retorno[0].R9005.totApurMen[0].vlrBaseCRMen.replace(',', '.'))}</span>
+                                  <span>{fromCurrency.format(JSON.parse(reinfData).json_retorno[0].R9005?.totApurMen[0]?.vlrBaseCRMen.replace(',', '.'))}</span>
                                 </div>
                                 <div className='flex flex-col w-44 p-2 bg-[#F2F5FF] items-start rounded mr-2'>
                                   <span className='font-semibold'>Valor IRRF</span>
-                                  <span>{fromCurrency.format(JSON.parse(reinfData).json_retorno[0].R9005.totApurMen[0].totApurTribMen[0].vlrCRMenInf.replace(',', '.'))}</span>
+                                  <span>{fromCurrency.format(JSON.parse(reinfData).json_retorno[0].R9005?.totApurMen[0]?.totApurTribMen[0].vlrCRMenInf.replace(',', '.'))}</span>
                                 </div>
                                 <div className='flex flex-col w-56 p-2 bg-[#F2F5FF] items-start rounded'>
                                   <span className='font-semibold'>Natureza do rendimento</span>
-                                  <span>{JSON.parse(reinfData).json_retorno[0].R9005.totApurMen[0].natRend}</span>
+                                  <span>{JSON.parse(reinfData).json_retorno[0].R9005?.totApurMen[0]?.natRend}</span>
                                 </div>
                               </div>
                             </div>
