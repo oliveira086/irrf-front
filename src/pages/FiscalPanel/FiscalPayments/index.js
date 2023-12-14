@@ -34,6 +34,7 @@ const FiscalPayments = () => {
   const [userName, setUserName] = useState('');
   const [cityName, setCityName] = useState('');
   const [cnpjSearch, setCnpjSearch] = useState('');
+  const [taxNoteSearch, setTaxNoteSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState();
@@ -75,7 +76,7 @@ const FiscalPayments = () => {
       setCurrentPage(1);
       await initialSearch(citySearch);
     } else {
-      const response = await searchPaymentByCnpj({ cnpj: cnpjSearch, city_id: citySearch });
+      const response = await searchPaymentByCnpj({ cnpj: cnpjSearch, city_id: citySearch, tax_note: taxNoteSearch });
       setRows(response.body.rows);
       setCountPages(response.body.meta.pageCount);
       setIsLoading(false);
@@ -144,6 +145,9 @@ const FiscalPayments = () => {
             
           <div className='w-auto flex justify-between items-end mt-2'>
             <div className='flex items-end'>
+            <div className='w-56 mr-4'>
+                <Input label='Nota fiscal' placeholder='Nota Fiscal' value={taxNoteSearch} onChange={e => setTaxNoteSearch(e.target.value)} />
+              </div>
               <div className='w-72 mr-4'>
                 <Input label='Pesquisar' placeholder='Pesquisar pagamento' value={cnpjSearch} onChange={e => setCnpjSearch(e.target.value)} />
               </div>
