@@ -111,6 +111,11 @@ const FiscalPayments = () => {
     setReinfData(JSON.stringify(responseToget4020Informations.body));
   }
 
+  function generateComprovanteReinf () {
+    sessionStorage.setItem('payment_id', modalData?.id);
+    navigate('/reinf-comprovante');
+  }
+
   useEffect(() => {
     (async () => {
       await getUserInformations({ currentPage: 1 }).then(async response => {
@@ -373,6 +378,12 @@ const FiscalPayments = () => {
                                   <span className='font-semibold'>Natureza do rendimento</span>
                                   <span>{JSON.parse(reinfData).json_retorno[0].R9005.totApurMen[0].natRend}</span>
                                 </div>
+                              </div>
+                            </div>
+
+                            <div className='flex flex-col mt-4'>
+                              <div className='w-72'>
+                                <Button  label='Baixar Comprovante de envio' onPress={() => generateComprovanteReinf() } />
                               </div>
                             </div>
                           </div>

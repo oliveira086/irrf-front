@@ -34,6 +34,7 @@ import EditPaymentSolicitation from './pages/Supplier/EditSolicitiation';
 import SupplierPayments from './pages/Supplier/Payments';
 import HomeAccountant from './pages/Accountant';
 import FiscalPayments from './pages/FiscalPanel/FiscalPayments';
+import FiscalReinfDocument from './pages/FiscalPanel/FiscalReinfDocument';
 
 const theme = extendTheme({
   fonts: {
@@ -76,6 +77,7 @@ function Router(){
           <Route path='/extrato-fornecedor' exact element={ <CompanyDocument />} />
           <Route path='/painel-pagamentos' exact element={<AdminPayments />} />
           <Route path='/pagamentos-fiscal' exact element={ <FiscalPayments />} />
+          <Route path='/reinf-comprovante' exact element={ <FiscalReinfDocument />} />
           <Route path='/solicitacoes-pagamento' exact element={<PaymentSoliciations />} />
           <Route path='/home-contador' exact element={<HomeAccountant />} />
         </Routes>
