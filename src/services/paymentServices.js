@@ -203,7 +203,7 @@ const updatePaymentStatus = async (params) => {
 
 const getAllPaymentsByDate = async (params) => {
   try {
-    let response = await api.post(`/payments/get-all-payments?pageSize=10&currentPage=${params.pageCount}`, params);
+    let response = await api.post(`/payments/get-all-payments?pageSize=20&currentPage=${params.pageCount}`, params);
     return response.data;
   } catch (error) {
     ValidateSession(error.response.status);

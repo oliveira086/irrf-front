@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 const Pagination = ({ currentPage, setCurrentPage, pages }) => {
+  console.log(currentPage, pages)
   
   const [fixedArray, setFixedArray] = useState([]);
   const [arrayData, setArrayData] = useState([]);
@@ -129,6 +130,8 @@ const Pagination = ({ currentPage, setCurrentPage, pages }) => {
   
   return (
     <div className="flex w-auto h-10 mt-2 justify-center">
+
+      {console.log(arrayData)}
       { 
         arrayData.map(PagesArrayBiggestToTenCallback => {
           if(PagesArrayBiggestToTenCallback?.label == currentPage) {
