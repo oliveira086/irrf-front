@@ -140,7 +140,7 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <span style={{fontWeight: 'bold'}}>Competência</span><br></br>
                   <div style={{width: '180px', heigth: '10px', border: '2px solid #000', borderRadius: '6px', padding: '6px'}}>
-                    <span>{`${this.props.month_payment.month} de 2023`}</span>
+                    <span>{`${this.props.month_payment.month} de 2024`}</span>
                   </div>
                 </tr>
                 <tr/>
@@ -348,7 +348,7 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <span style={{fontWeight: 'bold'}}>Competência</span><br></br>
                   <div style={{width: '180px', heigth: '10px', border: '2px solid #000', borderRadius: '6px', padding: '6px'}}>
-                    <span>{`${this.props.month_payment.month} de 2023`}</span>
+                    <span>{`${this.props.month_payment.month} de 2024`}</span>
                   </div>
                 </tr>
                 <tr/>

@@ -98,7 +98,7 @@ const EditPaymentSolicitation = () => {
           "value": parseFloat(convertCurrency(value)),
           "outher_document_name": otherDocumentName,
           "month": monthSelected?.value,
-          "year": "2023",
+          "year": "2024",
           "responsible": responsibleName,
           "responsible_office": responsibleOffice
         }

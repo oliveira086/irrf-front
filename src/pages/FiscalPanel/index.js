@@ -234,7 +234,7 @@ const FiscalPanel = () => {
               <div className='flex w-full justify-end items-end pb-6 gap-x-4'>
 
                 <div className='w-96'>
-                  <Input label='Digite a data do efetivo pagamento' placeholder='2023/01/01'  value={efetiveDate} onChange={(e) => setEfetiveDate(e.target.value)} />
+                  <Input label='Digite a data do efetivo pagamento' placeholder='2024/01/01'  value={efetiveDate} onChange={(e) => setEfetiveDate(e.target.value)} />
                 </div>
                 <div className='w-96'>
                   <Input label='Digite sua senha' placeholder='Senha' type={'password'} value={password} onChange={(e) => setPassword(e.target.value)} />
