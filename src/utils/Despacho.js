@@ -181,7 +181,7 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
                     <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br/>
-                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2023 `} </span>
+                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2024 `} </span>
                   </div>
                 </tr>
                 <tr/>
@@ -389,7 +389,7 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
                     <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br/>
-                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2023 `} </span>
+                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2024 `} </span>
                   </div>
                 </tr>
                 <tr/>
