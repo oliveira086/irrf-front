@@ -7,7 +7,6 @@ import { TbHeartRateMonitor } from 'react-icons/tb';
 import { HiOutlineDocumentArrowUp } from 'react-icons/hi2';
 import { MdAttachMoney, MdExitToApp, MdStore } from 'react-icons/md';
 
-
 import * as chakra from '@chakra-ui/react';
 
 import logo from '../../assets/images/logo-irrf.png'
@@ -76,7 +75,6 @@ const Header = ({ userName, cityName }) => {
               <MdAttachMoney color='#2F4ECC' size={24} className="stroke-[#2F4ECC]" />
               <span className="mt-2 ">Pagamentos</span>
             </button>
-
           </div>
         )
 

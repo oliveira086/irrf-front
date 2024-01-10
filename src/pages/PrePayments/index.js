@@ -395,7 +395,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                 
             <div className={PrePaymentStyle.RowContainer}>
               <div>
-                <span className='mb-2 font-semibold'>{modalData?.type == 'simples' ? 'ISS' : 'IRRF'}</span>
+                <span className={`my-2 font-semibold ${modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false ? 'text-[#18BA18]' : 'text-[#2F4ECC]'}`}>{modalData?.type == 'simples' ? `${modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false  ? 'ISS - Jurisprudencia' : 'ISS - Legal'}` : 'IRRF'}</span>
                 <div className='flex p-2 w-auto border rounded-lg'>
                   <div className='w-44 mr-3'>
                     <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={value} onChange={e => setValue(e.target.value)} />

@@ -449,6 +449,18 @@ const Payments = () => {
                             <span className="font-semibold">{ modalData?.type == 'simples' ? 'Valor do ISS Retido na fonte': 'Valor do IR Retido na Fonte'}</span>
                             <span>{fromCurrency.format(modalData?.withheld_tax)}</span>
                           </div>
+                          
+                          {
+                            modalData?.type == 'simples' ?
+                            <div className="flex w-[32vw] p-2 bg-[#F2F5FF] items-center justify-between rounded mt-2">
+                              <span className="font-semibold">{ modalData?.['city_id_pre_payments.opt_law'] == true ? 'Optante Jurisprudência': 'Optante Legal'}</span>
+                              <span>{'Sim'}</span>
+                            </div>
+                            :
+                            <>
+                            </>
+                          }
+                          
 
                           <div className="flex w-[32vw] p-2 bg-[#F2F5FF] items-center justify-between rounded mt-2">
                             <span className="font-semibold">Valor do Saldo de Pagamento</span>
