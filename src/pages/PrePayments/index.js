@@ -87,10 +87,6 @@ const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, set
               <span>{tax_note}</span>
             </div>
           </div>
-
-          <div className='flex w-56 items-center justify-end'>
-            <Button type='second' label='Deletar' />
-          </div>
         </div>
     </div>
   )
