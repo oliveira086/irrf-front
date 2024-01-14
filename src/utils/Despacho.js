@@ -15,6 +15,8 @@ export class DespachoTemplate extends React.PureComponent {
 
   render() {
     const { text } = this.props;
+
+    console.log(this.props);
     
     let fromCurrency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
     let cnpjOrCpfFormated;
@@ -140,7 +142,7 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <span style={{fontWeight: 'bold'}}>Competência</span><br></br>
                   <div style={{width: '180px', heigth: '10px', border: '2px solid #000', borderRadius: '6px', padding: '6px'}}>
-                    <span>{`${this.props.month_payment.month} de 2024`}</span>
+                    <span>{`${this.props.month_payment.month} de ${this.props.month_payment.year}`}</span>
                   </div>
                 </tr>
                 <tr/>
@@ -181,7 +183,7 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
                     <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br/>
-                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2024 `} </span>
+                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de ${this.props.month_payment.year} `} </span>
                   </div>
                 </tr>
                 <tr/>
@@ -348,7 +350,7 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <span style={{fontWeight: 'bold'}}>Competência</span><br></br>
                   <div style={{width: '180px', heigth: '10px', border: '2px solid #000', borderRadius: '6px', padding: '6px'}}>
-                    <span>{`${this.props.month_payment.month} de 2024`}</span>
+                    <span>{`${this.props.month_payment.month} de ${this.props.month_payment.year}`}</span>
                   </div>
                 </tr>
                 <tr/>
@@ -389,7 +391,7 @@ export class DespachoTemplate extends React.PureComponent {
                 <tr>
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', heigth: '10px', justifyContent: 'center', alignItems: 'center'}}>
                     <br></br><br/><div style={{ width: '60%', heigth: '1px', background: '#000', border: '0.5px solid #000'}}></div><br/>
-                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de 2024 `} </span>
+                    <span style={{fontWeight: 'regular'}}>{`${this.props.city} - ${this.props.UF}, ${this.props.month_payment?.day} de ${this.props.month_payment.month} de ${this.props.month_payment.year} `} </span>
                   </div>
                 </tr>
                 <tr/>

@@ -21,5 +21,15 @@ const getAllServices = async (params) => {
   }
 }
 
+const getAllServicesByCity = async (params) => {
+  try {
+    let response = await api.post('/product-service/get-all-iss-services', params);
+    return response.data
+  } catch (error) {
+    ValidateSession(error.response.status);
+    return error.response.status;
+  }
+}
 
-export { getAllProducts, getAllServices}
+
+export { getAllProducts, getAllServices, getAllServicesByCity}

@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import { AiOutlineSearch, AiOutlinePlus } from "react-icons/ai";
-import { MdLocationCity } from "react-icons/md";
+import { MdAttachMoney, MdLocationCity } from "react-icons/md";
+import { BiStoreAlt } from "react-icons/bi";
+import { GoGraph } from "react-icons/go";
 
 import { Player } from '@lottiefiles/react-lottie-player';
 
@@ -66,23 +68,28 @@ const AdminPanel = () => {
             <>
               {rows.map(rowsCallback => {
                 return (
-                  <div className='flex w-auto min-w-[44vw] rounded p-2 mt-2 bg-[#F5F5FA] items-center justify-between'>
-                    <div className='flex w-5/12'>
-                      <MdLocationCity size={26}  className='mr-4'/>
-                      <span>{rowsCallback.label}</span>
+                  <div className='flex flex-row w-full min-w-36 rounded p-2 mt-2 bg-[#F5F5FA] items-center justify-between'>
+                    <div className='flex flex-col w-full'>
+                      <span className='text-2xl font-semibold'>{rowsCallback.label}</span>
                     </div>
-                    <div className='flex'>
-
-                      <div className='w-44 mr-2'>
-                        <Button label={'Fornecedores'} onPress={() => navigate(`/painel-fornecedores?cityId=${rowsCallback.id}`)} />
+                    <div>
+                      
+                    </div>
+                    <div className='flex mt-2'>
+                      <div className='w-auto mr-2'>
+                        <Button label={<BiStoreAlt color='#fff' size={28}/>} onPress={() => navigate(`/painel-fornecedores?cityId=${rowsCallback.id}`)} />
                       </div>
 
-                      <div className='w-44 mr-2'>
-                        <Button label={'Pagamentos'} onPress={() => navigate(`/painel-pagamentos?cityId=${rowsCallback.id}`)} />
+                      <div className='w-auto mr-2'>
+                        <Button label={<MdAttachMoney color='#fff' size={28} />} onPress={() => navigate(`/painel-pagamentos?cityId=${rowsCallback.id}`)} />
                       </div>
 
-                      <div className='w-44'>
-                        <Button label={'Ordenadores'} onPress={() => navigate(`/fornecedores?cityId=${rowsCallback.id}`) } />
+                      <div className='w-auto mr-2'>
+                        <Button label={<MdLocationCity color='#fff' size={28}/>} onPress={() => navigate(`/painel-ordenadores?cityId=${rowsCallback.id}`) } />
+                      </div>
+
+                      <div className='w-auto'>
+                        <Button label={<GoGraph color='#fff' size={28}/>} onPress={() => navigate(`/painel-aliquotas?cityId=${rowsCallback.id}`) } />
                       </div>
                     </div>
                   </div>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 const Pagination = ({ currentPage, setCurrentPage, pages }) => {
-  console.log(currentPage, pages)
   
   const [fixedArray, setFixedArray] = useState([]);
   const [arrayData, setArrayData] = useState([]);
@@ -13,7 +12,6 @@ const Pagination = ({ currentPage, setCurrentPage, pages }) => {
     pagesArray.push({ label: i })
     fixedArray.push({ label: i })
   }
-  
 
   function validateBiggest (page) {
 
