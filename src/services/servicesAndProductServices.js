@@ -31,5 +31,15 @@ const getAllServicesByCity = async (params) => {
   }
 }
 
+const updateIssService = async (params) => {
+  try {
+    let response = await api.put('/product-service/update-iss-service', params);
+    return response.data
+  } catch (error) {
+    ValidateSession(error.response.status);
+    return error.response.status;
+  }
+}
 
-export { getAllProducts, getAllServices, getAllServicesByCity}
+
+export { getAllProducts, getAllServices, getAllServicesByCity, updateIssService}

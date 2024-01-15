@@ -320,6 +320,8 @@ const AdminSupplier = () => {
       "is_exempt_immune_reinf": exemptImmuneReinf
     }
 
+    console.log(objectToEditCompany, '========');
+
     editCompany(objectToEditCompany).then(response => {
       toast({
         title: 'Empresa editada com sucesso!',

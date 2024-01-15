@@ -184,7 +184,7 @@ const FiscalPayments = () => {
                   let rowBgColor;
                   let bgIndicator;
 
-                  switch (rowsCallback.transferred) {
+                  switch (rowsCallback.reinf_r4020_payload !== null) {
                     case false:
                       rowBgColor = 'bg-[#F5F5FA]';
                       bgIndicator = 'w-[10px] h-[40px] rounded bg-[#2F4ECC]'

@@ -21,7 +21,7 @@ import Modal from "../../components/atoms/Modal";
 import { formatCpfOrCnpj } from '../../utils/formatCpfAndCnpj';
 
 import { getUserInformations } from "../../services/authServices";
-import { getAllServicesByCity } from "../../services/servicesAndProductServices";
+import { getAllServicesByCity, updateIssService } from "../../services/servicesAndProductServices";
 import { getComputersByCity, registerComputer } from "../../services/adminServices";
 
 import { AdminAliquotsStyle } from './style';
@@ -36,7 +36,8 @@ const AdminAliquots = () => {
 
   const [label, setLabel] = useState('');
   const [aliquot, setAliquot] = useState('');
-  const [exception, setException] = useState(false);
+  const [itemId, setItemId] = useState('');
+  const [nonIncidence, setNonIncidence] = useState(false);
 
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
@@ -52,9 +53,37 @@ const AdminAliquots = () => {
     console.log(data);
     setLabel(data?.['iss_services_products_services_id.label']);
     setAliquot(data?.value);
-    setException();
+    setItemId(data?.id);
+    setNonIncidence(data?.non_incidence)
 
     setIsOpen(!isOpen);
+  }
+
+  async function handlerSubmitEdit() {
+
+    const object = {
+      id: itemId,
+      value: aliquot,
+      non_incidence: nonIncidence
+    }
+
+    updateIssService(object).then(response => {
+      toast({
+        title: 'Item editado!',
+        status: 'success',
+        position: 'top-right',
+        isClosable: true,
+      });
+      navigate(0);
+    }).catch(error=> {
+      toast({
+        title: 'Houve um problema ao editar esse item!',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+      console.log(error)
+    })
   }
 
   useEffect(() => {
@@ -77,7 +106,7 @@ const AdminAliquots = () => {
         <div className={AdminAliquotsStyle.TitleContainer}>
           <div className='flex w-full justify-between'>
             <h1 className='text-3xl font-semibold'>Aliquotas</h1>
-            <h2 className='text-2xl font-medium text-[#2F4ECC]'>{cityName}</h2>
+            {/* <h2 className='text-2xl font-medium text-[#2F4ECC]'>{cityName}</h2> */}
           </div>
           <div className='w-auto flex justify-between items-end mt-2'>
 
@@ -168,8 +197,8 @@ const AdminAliquots = () => {
 
             <div className='mb-4 h-80'>
               <div>
-                <chakra.Switch isChecked={exception} onChange={(e) => {setException(!exception)}} />
-                <span className='ml-2'>Exceção</span>
+                <chakra.Switch isChecked={nonIncidence} onChange={(e) => {setNonIncidence(!nonIncidence)}} />
+                <span className='ml-2'>Não incidente</span>
               </div>
             </div>
 
@@ -179,7 +208,7 @@ const AdminAliquots = () => {
               </div>
 
               <div className='w-56'>
-                <Button label='Salvar' onPress={() => handlerSubmit()}/>
+                <Button label='Salvar' onPress={() => handlerSubmitEdit()}/>
               </div>
               
             </div>
