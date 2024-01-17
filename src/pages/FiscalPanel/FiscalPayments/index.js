@@ -84,9 +84,9 @@ const FiscalPayments = () => {
   }
 
   async function openAndCloseModal(data) {
-    if(isOpen == false) {
-      await get4020Function(data?.id);
-    }
+    // if(isOpen == false) {
+    //   await get4020Function(data?.id);
+    // }
 
     setModalData(data);
     setIsOpen(!isOpen);
@@ -181,6 +181,7 @@ const FiscalPayments = () => {
 
               <chakra.Tbody>
                 {rows.map(rowsCallback => {
+                  console.log(rowsCallback, '===========');
                   let rowBgColor;
                   let bgIndicator;
 

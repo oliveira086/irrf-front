@@ -88,10 +88,10 @@ const FiscalPanel = () => {
 
     (async () => await getSecretaryPayments(
       {
-      initDate: moment(initDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-      endDate: moment(endDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-      currentPage: currentPage == 0 ? 1 : currentPage,
-      cnpj: cnpj
+        initDate: moment(initDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+        endDate: moment(endDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+        currentPage: currentPage <= 0 ? 1 : currentPage,
+        cnpj: cnpj
       }
     ).then(response => {
       processPaymentData(response.rows)
@@ -261,6 +261,7 @@ const FiscalPanel = () => {
                 <chakra.Table variant='simple' size='lg' >
                   <chakra.Thead>
                     <chakra.Tr>
+                      <chakra.Th></chakra.Th>
                       <chakra.Th>Nota fiscal</chakra.Th>
                       <chakra.Th>Data</chakra.Th>
                       <chakra.Th>Empresa</chakra.Th>
@@ -271,9 +272,23 @@ const FiscalPanel = () => {
                   </chakra.Thead>
                   <chakra.Tbody>
                     {paymentsData.map(paymentsDataCallback => {
+                      let rowBgColor;
+                      let bgIndicator;
+    
+                      switch (paymentsDataCallback?.['payment_associate_id.reinf_r4020_payload'] == null) {
+                        case false:
+                          rowBgColor = 'bg-[#EEFFF4]';
+                          bgIndicator = 'w-[10px] h-[40px] rounded bg-[#18BA18]'
+                          break
+                        case true:
+                          rowBgColor = 'bg-[#F5F5FA]';
+                          bgIndicator = 'w-[10px] h-[40px] rounded bg-[#2F4ECC]'
+                          break
+                      }
                       return (
                         <>
-                          <chakra.Tr>
+                          <chakra.Tr className={rowBgColor}>
+                            <chakra.Td><div className={bgIndicator}></div></chakra.Td>
                             <chakra.Td>{paymentsDataCallback.tax_note.split('-')[0]}</chakra.Td>
                             <chakra.Td>{moment(paymentsDataCallback.createdAt).format('DD/MM/YYYY')}</chakra.Td>
                             <chakra.Td>{paymentsDataCallback.company_name}</chakra.Td>
