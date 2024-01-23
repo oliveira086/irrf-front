@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import { AiOutlineSearch, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlinePlus, AiOutlineUser } from "react-icons/ai";
 import { MdAttachMoney, MdLocationCity } from "react-icons/md";
 import { BiStoreAlt } from "react-icons/bi";
 import { GoGraph } from "react-icons/go";
@@ -88,8 +88,12 @@ const AdminPanel = () => {
                         <Button label={<MdLocationCity color='#fff' size={28}/>} onPress={() => navigate(`/painel-ordenadores?cityId=${rowsCallback.id}`) } />
                       </div>
 
-                      <div className='w-auto'>
+                      <div className='w-auto mr-2'>
                         <Button label={<GoGraph color='#fff' size={28}/>} onPress={() => navigate(`/painel-aliquotas?cityId=${rowsCallback.id}`) } />
+                      </div>
+
+                      <div className='w-auto'>
+                        <Button label={<AiOutlineUser  color='#fff' size={28}/>} onPress={() => navigate(`/painel-usuarios?cityId=${rowsCallback.id}`) } />
                       </div>
                     </div>
                   </div>

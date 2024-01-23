@@ -37,6 +37,7 @@ import FiscalPayments from './pages/FiscalPanel/FiscalPayments';
 import FiscalReinfDocument from './pages/FiscalPanel/FiscalReinfDocument';
 import AdminComputers from './pages/AdminComputers';
 import AdminAliquots from './pages/AdminAliquots';
+import AdminUsers from './pages/AdminUsers';
 
 const theme = extendTheme({
   fonts: {
@@ -65,6 +66,7 @@ function Router(){
           <Route path='/painel-fornecedores' exact element={<AdminSupplier />} />
           <Route path='/painel-ordenadores' exact element={<AdminComputers />} />
           <Route path='/painel-aliquotas' exact element={<AdminAliquots />} />
+          <Route path='/painel-usuarios' exact element={ <AdminUsers />} />
           <Route path='/retencao' exact element={<Holding />} />
           <Route path='/painel-fiscal' exact element={<FiscalPanel />} />
           <Route path='/extrato-fiscal' exact element={<FiscalDocument />} />
