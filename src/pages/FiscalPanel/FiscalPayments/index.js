@@ -181,7 +181,6 @@ const FiscalPayments = () => {
 
               <chakra.Tbody>
                 {rows.map(rowsCallback => {
-                  console.log(rowsCallback, '===========');
                   let rowBgColor;
                   let bgIndicator;
 

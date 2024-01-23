@@ -125,7 +125,7 @@ const FiscalPanel = () => {
         });
 
         setIsOpen(false);
-        await getPayments();
+        navigate(0);
 
       }).catch(error => {
         if(error == 412) {

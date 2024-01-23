@@ -136,6 +136,7 @@ const AdminSupplier = () => {
   }
 
   async function openAndCloseEditSupplier(data) {
+    console.log(data, '=========');
     
     setCnpj(data?.cnpj);
     setCompanyName(data?.label);
@@ -319,8 +320,6 @@ const AdminSupplier = () => {
       "non_incidence": nonIncidence,
       "is_exempt_immune_reinf": exemptImmuneReinf
     }
-
-    console.log(objectToEditCompany, '========');
 
     editCompany(objectToEditCompany).then(response => {
       toast({
