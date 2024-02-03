@@ -64,7 +64,7 @@ const AdminAliquots = () => {
     const object = {
       id: itemId,
       value: aliquot,
-      non_incidence: nonIncidence
+      incidence: nonIncidence
     }
 
     updateIssService(object).then(response => {

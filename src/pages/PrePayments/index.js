@@ -60,7 +60,7 @@ const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, set
           <img src={img} className='w-28 h-28' />
         </div>
       :
-        <embed src={img} className={`w-28 h-28 mr-10`}></embed>
+        <embed src={img} className={`w-28 h-28 mr-10`} type="application/pdf"></embed>
       }
         <div className={PrePaymentStyle.InfoItemContainer}>
 
@@ -103,6 +103,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   const [aliquot, setAliquot] = useState(`${modalData?.index}`);
   const [taxNote, setTaxNote] = useState(`${modalData?.tax_note}`);
   const [taxNoteSerie, setTaxNoteSerie] = useState(`${modalData?.tax_note_serie}`);
+  const [isTaxable, setIsTaxable] = useState(true);
   // ===================================
   // Estado para Formulario de pagamento associado no Modal ===
   const [valueAssociate, setValueAssociate] = useState(`${modalData?.['pre_payment_associate_id.value']}`);
@@ -121,6 +122,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   // ===================================
   
   useEffect(() => {
+    validateTaxablePayment(modalData);
     setCnpj(modalData?.cnpj);
     setTaxNote(modalData?.tax_note);
     setValue(modalData?.value);
@@ -167,7 +169,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
 
     // Logica para inserir a aliquota correta
     if(params?.value?.is_simple == true && modalData?.index == null) {
-      setAliquot('');
+      setAliquot(0);
     } else if(params?.value?.is_simple == false && params?.value?.is_service == true) {
       setAliquot(params?.value?.['iss_companies_id.iss_companies_iss_services_id.value']);
     } else if(params?.value?.is_product == true && params?.value?.is_service == false) {
@@ -333,6 +335,13 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
     }
   }
 
+  function validateTaxablePayment (prePaymentData) {
+    if(prePaymentData.index == 0) {
+      console.log(prePaymentData.is_taxable);
+      setIsTaxable(prePaymentData.is_taxable == 4 ? false : true );
+    }
+  }
+
   return (
     <Modal isCentered size={'xl'} title={'Auditar Pré Pagamento'} isOpen={isOpen} modalOpenAndClose={openAndCloseModal}>
       <div className={PrePaymentStyle.ModalBodyContainer}>
@@ -351,7 +360,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
         </div>
 
         <div className={PrePaymentStyle.ContentModalContainer}>
-          <form className=' border border-dashed rounded p-2 h-auto '>
+          <form className='border border-dashed rounded p-2 h-auto '>
             <div className={PrePaymentStyle.RowContainer}>
               <div className='w-96'>
                 <Select placeholder={'Ordenador de despesa'}
@@ -395,7 +404,19 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                 
             <div className={PrePaymentStyle.RowContainer}>
               <div>
-                <span className={`my-2 font-semibold ${modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false ? 'text-[#18BA18]' : 'text-[#2F4ECC]'}`}>{modalData?.type == 'simples' ? `${modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false  ? 'ISS - Jurisprudencia' : 'ISS - Legal'}` : 'IRRF'}</span>
+                <span className={`my-2 font-semibold ${ modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false ? 'text-[#18BA18]' : 'text-[#2F4ECC]'}` }>
+                  
+                  {
+                    isTaxable ? 
+                    <>
+                      {modalData?.type == 'simples' ? `${modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false  ? 'ISS - Jurisprudencia' : 'ISS - Legal'}` : 'IRRF'}
+                    </>
+                    :
+                    <>{'Digite o valor da nota e a base de calculo'}</>
+                  }
+
+                  
+                </span>
                 <div className='flex p-2 w-auto border rounded-lg'>
                   <div className='w-44 mr-3'>
                     <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={value} onChange={e => setValue(e.target.value)} />
@@ -405,13 +426,21 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                     <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={modalData?.type == 'simples' ? calculateBasis : value } onChange={e => setCalculateBasis(e.target.value)} />
                   </div>
 
-                  <div className='w-24 mr-3'>
-                    <Input label={modalData?.type == 'simples' ? 'Item' : 'Código'} placeholder='' value={modalData?.type == 'simples' ? issItemCod : irrfItemCod} onChange={e => setAliquot(e.target.value)}/>
-                  </div>
+                  {
+                    isTaxable ?
+                    <>
+                      <div className='w-24 mr-3'>
+                        <Input label={modalData?.type == 'simples' ? 'Item' : 'Código'} placeholder='' value={modalData?.type == 'simples' ? issItemCod : irrfItemCod}/>
+                      </div>
 
-                  <div className='w-36'>
-                    <Input label='Aliquota' placeholder='Aliquota' value={aliquot} onChange={e => setAliquot(e.target.value)}/>
-                  </div>
+                      <div className='w-36'>
+                        <Input label='Aliquota' placeholder='Aliquota' value={aliquot} onChange={e => setAliquot(e.target.value)}/>
+                      </div>
+                    </>
+                    :
+                    <></>
+                  }
+                  
                 </div>
               </div>
             </div>
@@ -422,17 +451,19 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
               <>
                 <div className={PrePaymentStyle.RowContainer}>
                   <div>
-                    <span className='mb-2 font-semibold'>{modalData?.['pre_payment_associate_id.type'] == 'simples' ? 'ISS' : 'IRRF'}</span>
-                    <div className='flex p-2 w-auto border border-[#999] rounded-lg'>
-                      <div className='w-44 mr-4'>
+                    <span className={`my-2 font-semibold ${ modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false ? 'text-[#18BA18]' : 'text-[#2F4ECC]'}`}>
+                      {modalData?.['pre_payment_associate_id.type'] == 'simples' ? `${modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false  ? 'ISS - Jurisprudencia' : 'ISS - Legal'}` : 'IRRF'}
+                    </span>
+                    <div className='flex p-2 w-auto border rounded-lg'>
+                      <div className='w-44 mr-3'>
                         <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={valueAssociate} onChange={e => setValueAssociate(e.target.value)} />
                       </div>
 
-                      <div className='w-44 mr-4'>
+                      <div className='w-44 mr-3'>
                         <MoneyInput label='Base de Cálculo' placeholder='Base de cálculo' value={modalData?.['pre_payment_associate_id.type'] == 'simples' ? calculateBasisAssociate : valueAssociate} onChange={e => setCalculateBasisAssociate(e.target.value)} />
                       </div>
 
-                      <div className='w-24 mr-4'>
+                      <div className='w-24 mr-3'>
                         <Input label={modalData?.['pre_payment_associate_id.type'] == 'simples' ? 'Item' : 'Código'} placeholder='' value={modalData?.['pre_payment_associate_id.type'] == 'simples' ? issItemCod : irrfItemCod} onChange={e => setAliquotAssociate(e.target.value)}/>
                       </div>
 
