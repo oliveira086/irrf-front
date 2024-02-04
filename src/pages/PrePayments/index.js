@@ -167,14 +167,6 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
     setIsSimple(params?.value?.is_simple);
     setCompanySelected(params);
 
-    // Logica para inserir a aliquota correta
-    if(params?.value?.is_simple == true && modalData?.index == null) {
-      setAliquot(0);
-    } else if(params?.value?.is_simple == false && params?.value?.is_service == true) {
-      setAliquot(params?.value?.['iss_companies_id.iss_companies_iss_services_id.value']);
-    } else if(params?.value?.is_product == true && params?.value?.is_service == false) {
-      setAliquot(params?.value?.aliquot);
-    }
   }
 
   const HandleCalculatePrePayment = async () => {
@@ -198,27 +190,37 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
         } else {
           const paymentsToUpdate = [];
 
+          if(calculateBasis == '' || calculateBasis == 'null' || calculateBasis == null || calculateBasis == undefined) {
+            setCalculateBasis(value);
+          }
+
+          if( calculateBasisAssociate == 'null') {
+            setCalculateBasisAssociate(valueAssociate);
+          }
+
           const object = {
             company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
             pre_payment_id: modalData.id,
             tax_note: taxNote,
-            calculation_basis: parseFloat(modalData?.['pre_payment_associate_id.type'] == "simples" ? convertCurrency(calculateBasis) : parseFloat(convertCurrency(value)) ),
+            calculation_basis: parseFloat(convertCurrency(calculateBasis)),
             computer_id: computerSelected.id,
             index: parseFloat(aliquot),
             tax_note_serie: taxNoteSerie,
             value: parseFloat(convertCurrency(value))
           };
+          
 
           paymentsToUpdate.push(object);
 
           if (modalData.pre_payment_associate == null) {
             // fluxo de inserção acaba aqui
           } else {
+
             const objectToAssociate = {
               company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
               pre_payment_id: modalData.pre_payment_associate,
               tax_note: taxNote,
-              calculation_basis: parseFloat(convertCurrency(calculateBasisAssociate)),
+              calculation_basis: parseFloat(convertCurrency(calculateBasisAssociate == 'null' ? valueAssociate : calculateBasisAssociate )),
               computer_id: computerSelected.id,
               index: parseFloat(aliquotAssociate),
               tax_note_serie: taxNoteSerie,
@@ -464,7 +466,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                       </div>
 
                       <div className='w-24 mr-3'>
-                        <Input label={modalData?.['pre_payment_associate_id.type'] == 'simples' ? 'Item' : 'Código'} placeholder='' value={modalData?.['pre_payment_associate_id.type'] == 'simples' ? issItemCod : irrfItemCod} onChange={e => setAliquotAssociate(e.target.value)}/>
+                        <Input label={modalData?.['pre_payment_associate_id.type'] == 'simples' ? 'Item' : 'Código'} placeholder='' value={modalData?.['pre_payment_associate_id.type'] == 'simples' ? issItemCod : irrfItemCod}/>
                       </div>
 
                       <div className='w-36'>

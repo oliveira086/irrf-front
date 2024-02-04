@@ -115,22 +115,24 @@ const Payments = () => {
   }
 
   async function openAndCloseModal(data) {
-
-    if(isOpen == true) {
-      await updatePaymentStatus({ status: status.label, payment_id: modalData.id }).then(response => {
-        navigate(0);
-      })
-      setIsOpen(!isOpen);
-    } else {
-
-      setModalData(data);
-      await get4020Function(data?.id);
-
-      setStatus({ label: data?.status });
-      setIsOpen(!isOpen);
-
-
+    try {
+      if(isOpen == true) {
+        await updatePaymentStatus({ status: status.label, payment_id: modalData.id }).then(response => {
+          navigate(0);
+        })
+        setIsOpen(!isOpen);
+      } else {
+  
+        setModalData(data);
+        await get4020Function(data?.id);
+  
+        setStatus({ label: data?.status });
+        setIsOpen(!isOpen);
+      }
+    } catch(error) {
+      console.log(error);
     }
+    
   }
 
   async function openAndCloseEditModal(data) {
