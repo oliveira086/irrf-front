@@ -338,8 +338,8 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   }
 
   function validateTaxablePayment (prePaymentData) {
-    if(prePaymentData.index == 0) {
-      console.log(prePaymentData.is_taxable);
+
+    if(prePaymentData.index == 0 || prePaymentData.index == null) {
       setIsTaxable(prePaymentData.is_taxable == 4 ? false : true );
     }
   }
