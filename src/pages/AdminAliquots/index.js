@@ -37,7 +37,7 @@ const AdminAliquots = () => {
   const [label, setLabel] = useState('');
   const [aliquot, setAliquot] = useState('');
   const [itemId, setItemId] = useState('');
-  const [nonIncidence, setNonIncidence] = useState(false);
+  const [incidence, setIncidence] = useState(false);
 
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ const AdminAliquots = () => {
     setLabel(data?.['iss_services_products_services_id.label']);
     setAliquot(data?.value);
     setItemId(data?.id);
-    setNonIncidence(data?.non_incidence)
+    setIncidence(data?.incidence)
 
     setIsOpen(!isOpen);
   }
@@ -64,7 +64,7 @@ const AdminAliquots = () => {
     const object = {
       id: itemId,
       value: aliquot,
-      incidence: nonIncidence
+      incidence: incidence
     }
 
     updateIssService(object).then(response => {
@@ -131,7 +131,7 @@ const AdminAliquots = () => {
               <chakra.Thead>
                 <chakra.Tr>
                   <chakra.Th>Nome</chakra.Th>
-                  <chakra.Th>Exceção</chakra.Th>
+                  <chakra.Th>Incidente</chakra.Th>
                   <chakra.Th>Aliquota</chakra.Th>
                   <chakra.Th></chakra.Th>
                 </chakra.Tr>
@@ -145,7 +145,7 @@ const AdminAliquots = () => {
                         return (
                           <chakra.Tr>
                             <chakra.Td>{rowsCallback?.['iss_services_products_services_id.label']}</chakra.Td>
-                            <chakra.Td>{<chakra.Switch className='mr-4' size='md' isChecked={rowsCallback?.['iss_services_products_services_id.to_autarchy']} />}</chakra.Td>
+                            <chakra.Td>{<chakra.Switch className='mr-4' size='md' isChecked={rowsCallback?.incidence} />}</chakra.Td>
                             <chakra.Td>{rowsCallback.value} %</chakra.Td>
                             <chakra.Td><TbEdit size={28} className='cursor-pointer' onClick={() => openAndCloseAliquotEdit(rowsCallback)}/></chakra.Td>
                           </chakra.Tr>
@@ -197,8 +197,8 @@ const AdminAliquots = () => {
 
             <div className='mb-4 h-80'>
               <div>
-                <chakra.Switch isChecked={nonIncidence} onChange={(e) => {setNonIncidence(!nonIncidence)}} />
-                <span className='ml-2'>Não incidente</span>
+                <chakra.Switch isChecked={incidence} onChange={(e) => {setIncidence(!incidence)}} />
+                <span className='ml-2'>Incidente</span>
               </div>
             </div>
 
