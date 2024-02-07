@@ -143,7 +143,8 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
 
     setIssItemCod(`${modalData?.['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label']}`.split('–')[0]);
     setIrrfItemCode(modalData?.['company_id_pre_payments.products_services_id_company.code']);
-  
+    
+    console.log(modalData, '=-=-0=-=-0=-0=')
     // Logica para inserir a aliquota correta
     if(modalData?.['company_id_pre_payments.is_simple'] == true && modalData?.index == null) {
       setAliquot('');
@@ -153,6 +154,9 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
       setAliquot(modalData?.['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.value']);
     } else if(modalData?.['company_id_pre_payments.is_product'] == true && modalData?.['company_id_pre_payments.is_service'] == false) {
       setAliquot(modalData?.['company_id_pre_payments.aliquot']);
+    } 
+    if(Number(modalData?.is_taxable) == 4) {
+      setAliquot(0);
     }
   }, [modalData]);
 
@@ -190,11 +194,11 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
         } else {
           const paymentsToUpdate = [];
 
-          if(calculateBasis == '' || calculateBasis == 'null' || calculateBasis == null || calculateBasis == undefined) {
+          if(calculateBasis == null || calculateBasis == '' || calculateBasis == 'null' || calculateBasis == undefined) {
             setCalculateBasis(value);
           }
 
-          if( calculateBasisAssociate == 'null') {
+          if( calculateBasisAssociate == null || calculateBasisAssociate == 'null' || calculateBasisAssociate == undefined) {
             setCalculateBasisAssociate(valueAssociate);
           }
 
@@ -202,7 +206,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
             company_id: companySelected?.value == undefined ? modalData?.['company_id_pre_payments.id'] : companySelected?.value?.id,
             pre_payment_id: modalData.id,
             tax_note: taxNote,
-            calculation_basis: parseFloat(convertCurrency(calculateBasis)),
+            calculation_basis: parseFloat(convertCurrency(calculateBasis == null ? value : calculateBasis)),
             computer_id: computerSelected.id,
             index: parseFloat(aliquot),
             tax_note_serie: taxNoteSerie,
@@ -232,13 +236,15 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
           };
 
           await Promise.all(paymentsToUpdate.map(async paymentsToUpdateCallback => {
+            console.log("🚀 ~ HandleCalculatePrePayment ~ paymentsToUpdateCallback:", paymentsToUpdateCallback)
+
             await updatePrePaymentById(paymentsToUpdateCallback);
           }));
 
           if (paymentsToUpdate[0] == null || paymentsToUpdate[0] == []) {
             
           } else {
-            await confirmPrePayment({pre_payment_id: paymentsToUpdate[0]?.pre_payment_id}).then(response => {
+            await confirmPrePayment({ pre_payment_id: paymentsToUpdate[0]?.pre_payment_id}).then(response => {
               toast({
                 title: 'Pré pagamento calculado com sucesso!',
                 status: 'success',
@@ -246,7 +252,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                 isClosable: true,
               });
   
-              navigate(0);
+              // navigate(0);
               openAndCloseModal();
   
             }).catch(error => {
@@ -643,6 +649,10 @@ const PrePayment = () => {
       setAliquot(modalData?.['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.value']);
     } else if(modalData?.['company_id_pre_payments.is_product'] == true && modalData?.['company_id_pre_payments.is_service'] == false) {
       setAliquot(modalData?.['company_id_pre_payments.aliquot']);
+    }
+
+    if(Number(modalData?.is_taxable) == 4) {
+      setAliquot(0);
     }
     // =====================================
   }, [modalData]);

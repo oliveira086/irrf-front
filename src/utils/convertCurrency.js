@@ -11,7 +11,7 @@ function convertCurrency (value) {
       return parseFloat(replaceComma).toFixed(2);
     }
   } else {
-    const removeDot = value.toString().replace(/\./g,'');
+    const removeDot = value?.toString().replace(/\./g,'');
     const replaceComma = removeDot.replace(',', '.');
       
     return parseFloat(replaceComma).toFixed(2);
