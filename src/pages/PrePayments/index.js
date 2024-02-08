@@ -236,8 +236,6 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
           };
 
           await Promise.all(paymentsToUpdate.map(async paymentsToUpdateCallback => {
-            console.log("🚀 ~ HandleCalculatePrePayment ~ paymentsToUpdateCallback:", paymentsToUpdateCallback)
-
             await updatePrePaymentById(paymentsToUpdateCallback);
           }));
 
@@ -252,7 +250,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                 isClosable: true,
               });
   
-              // navigate(0);
+              navigate(0);
               openAndCloseModal();
   
             }).catch(error => {
