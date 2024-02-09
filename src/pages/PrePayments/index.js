@@ -440,7 +440,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                       </div>
 
                       <div className='w-36'>
-                        <Input label='Aliquota' placeholder='Aliquota' value={aliquot} onChange={e => aliquot == '' ? setAliquot(e.target.value) : ''}/>
+                        <Input label='Aliquota' placeholder='Aliquota' value={aliquot} onChange={e => modalData?.['company_id_pre_payments.is_simple'] == true ? setAliquot(e.target.value) : ''}/>
                       </div>
                     </>
                     :
@@ -474,7 +474,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                       </div>
 
                       <div className='w-36'>
-                        <Input label='Aliquota' placeholder='Aliquota' value={aliquotAssociate} onChange={e => aliquotAssociate == '' ? setAliquotAssociate(e.target.value) : ''}/>
+                        <Input label='Aliquota' placeholder='Aliquota' value={aliquotAssociate} onChange={e => modalData?.['company_id_pre_payments.is_simple'] == true ? setAliquotAssociate(e.target.value) : ''}/>
                       </div>
                     </div>
                   </div>
