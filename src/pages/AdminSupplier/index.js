@@ -75,6 +75,7 @@ const AdminSupplier = () => {
   const [isImmuneIR, setIsImmuneIR] = useState(false);
   const [nonIncidence, setNonIncidence] = useState(false);
   const [exemptImmuneReinf, setExemptImmuneReinf] = useState(false);
+  const [taxableInCity, setTaxableInCity] = useState(false);
 
   const [fileUpload, setFileUpload] = useState();
 
@@ -136,7 +137,6 @@ const AdminSupplier = () => {
   }
 
   async function openAndCloseEditSupplier(data) {
-    console.log(data, '=========');
     
     setCnpj(data?.cnpj);
     setCompanyName(data?.label);
@@ -162,7 +162,8 @@ const AdminSupplier = () => {
     setIsImmuneIss(data?.immune_iss);
     setCompanyId(data?.id);
     setNonIncidence(data?.non_incidence);
-    setExemptImmuneReinf(data?.is_exempt_immune_reinf)
+    setExemptImmuneReinf(data?.is_exempt_immune_reinf);
+    setTaxableInCity(data?.taxable_event_in_city);
 
     getAllProducts().then(response => {
       setProductAndServices(response.body);
@@ -318,7 +319,8 @@ const AdminSupplier = () => {
       "is_immune_iss": isImmuneIss || 0,
       "iss_item": issItemSelected?.value || issItemSelected?.id,
       "non_incidence": nonIncidence,
-      "is_exempt_immune_reinf": exemptImmuneReinf
+      "is_exempt_immune_reinf": exemptImmuneReinf,
+      "taxable_event_in_city": taxableInCity
     }
 
     editCompany(objectToEditCompany).then(response => {
@@ -596,6 +598,11 @@ const AdminSupplier = () => {
 									{modalData?.is_exempt_immune_reinf  == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
 									<span className='font-semibold ml-4'>Imune / Isento Reinf</span>
 								</div>
+
+                <div className='flex w-56 p-2 bg-[#ededed] rounded items-center justify-center mt-2'>
+									{modalData?.taxable_event_in_city  == true ? <AiOutlineCheckCircle size={20} color={'#18BA18'}/> : <AiOutlineCloseCircle size={20} color={'#BB0000'}/>}
+									<span className='font-semibold ml-4'>Fato Gerador</span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -748,6 +755,11 @@ const AdminSupplier = () => {
               <div>
                 <chakra.Switch isChecked={exemptImmuneReinf} onChange={(e) => {setExemptImmuneReinf(!exemptImmuneReinf)}} />
                 <span className='ml-2'>Imune / Isento Reinf</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={taxableInCity} onChange={(e) => {setTaxableInCity(!taxableInCity)}} />
+                <span className='ml-2'>Fato Gerador</span>
               </div>
             </div>
 
@@ -916,6 +928,11 @@ const AdminSupplier = () => {
               <div>
                 <chakra.Switch isChecked={exemptImmuneReinf} onChange={(e) => {setExemptImmuneReinf(!exemptImmuneReinf)}} />
                 <span className='ml-2'>Imune / Isento Reinf</span>
+              </div>
+
+              <div>
+                <chakra.Switch isChecked={taxableInCity} onChange={(e) => {setTaxableInCity(!taxableInCity)}} />
+                <span className='ml-2'>Fato Gerador</span>
               </div>
               
             </div>
