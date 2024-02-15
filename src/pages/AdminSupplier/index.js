@@ -158,8 +158,8 @@ const AdminSupplier = () => {
     setIsSimei(data?.is_simei);
     setIsExemptIR(data?.is_exempt_irrf);
     setIsExemptISS(data?.is_exempt_iss);
-    setIsImmuneIR(data?.immune_irrf);
-    setIsImmuneIss(data?.immune_iss);
+    setIsImmuneIR(data?.is_immune_irrf);
+    setIsImmuneIss(data?.is_immune_iss);
     setCompanyId(data?.id);
     setNonIncidence(data?.non_incidence);
     setExemptImmuneReinf(data?.is_exempt_immune_reinf);
