@@ -116,16 +116,18 @@ const Companies = () => {
   }
 
   async function searchCompanyByCnpj() {
+
     await findCompanyByCNPJ({ cnpj: cnpj, city_id: query.get("cityId") }).then(response => {
       setCompanyName(response.body?.razao_social);
-      setCep(response.body?.cep);
-      setDistrict(response.body?.bairro);
-      setCity(response.body?.municipio);
-      setState(response.body?.uf);
-      setNumber(response.body?.numero);
-      setIsSimple(response?.body?.opcao_pelo_simples);
-      setAddress(response?.body?.logradouro);
-      setUf(response?.body?.uf);
+      setCep(response.body?.estabelecimento.cep);
+      setDistrict(response.body?.estabelecimento.bairro);
+      setCity(response.body?.estabelecimento.cidade.nome);
+      setState(response.body?.estabelecimento.estado.nome);
+      setNumber(response.body?.estabelecimento.numero);
+      setIsSimple(response?.body?.simples);
+      setAddress(response?.body?.estabelecimento.logradouro);
+      setUf(response?.body?.estabelecimento.estado.nome);
+      setEmail(response?.body?.estabelecimento.email);
     }).catch(async error => {
       await openAndCloseRegisterSupplier();
       toast({
