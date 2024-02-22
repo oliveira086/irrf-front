@@ -59,11 +59,13 @@ const Login = () => {
         position: 'top-right',
         isClosable: true,
       });
+
       setIsLoading(false);
 
       if(responseToAuth.body['x-access-token'] !== null || responseToAuth.body['x-access-token'] !== undefined) {
         cookies.set('@IRRF:bearerToken', responseToAuth.body['x-access-token']);
         sessionStorage.setItem('role', responseToAuth?.body?.role);
+        sessionStorage.setItem('efectiveDate', null);
       }
 
 

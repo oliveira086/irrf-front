@@ -25,9 +25,10 @@ const FiscalPanel = () => {
   const [userName, setUserName] = useState('');
   const [cityName, setCityName] = useState('');
   const [initDate, setInitDate] = useState(moment().subtract(30, 'days').format('DD/MM/YYYY'));
-  const [endDate, setEndDate] = useState(moment().format('DD/MM/YYYY'));
+  const [endDate, setEndDate] = useState(moment(sessionStorage.getItem('efectiveDate') !== null ? sessionStorage.getItem('efectiveDate') : new Date).format('DD/MM/YYYY'));
   const [cnpj, setCnpj] = useState('');
   const [password, setPassword] = useState('');
+
   const [efetiveDate, setEfetiveDate] = useState(moment().format('DD/MM/YYYY'));
 
   const [modalData, setModalData] = useState();
@@ -124,6 +125,7 @@ const FiscalPanel = () => {
           isClosable: true,
         });
 
+        sessionStorage.setItem('efectiveDate', efetiveDate);
         setIsOpen(false);
         navigate(0);
 

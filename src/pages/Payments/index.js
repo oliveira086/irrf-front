@@ -453,9 +453,12 @@ const Payments = () => {
                           </div>
                           
                           {
+                            console.log(modalData)
+                          }
+                          {
                             modalData?.type == 'simples' ?
                             <div className="flex w-[32vw] p-2 bg-[#F2F5FF] items-center justify-between rounded mt-2">
-                              <span className="font-semibold">{ modalData?.['city_id_pre_payments.opt_law'] == true ? 'Optante Jurisprudência': 'Optante Legal'}</span>
+                              <span className="font-semibold">{ modalData?.['city_id_payments.opt_law'] == 1 ? 'Optante Jurisprudência': 'Optante Legal'}</span>
                               <span>{'Sim'}</span>
                             </div>
                             :
