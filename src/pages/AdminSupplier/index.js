@@ -26,7 +26,6 @@ import { getAllProducts, getAllServices } from "../../services/servicesAndProduc
 import { registerCompany, uploadReceiptCompany } from "../../services/companyServices";
 import { getAllReinfCodes } from "../../services/reinfServices";
 
-
 import { AdminSupplierStyle } from './style';
 
 const AdminSupplier = () => {
@@ -204,11 +203,11 @@ const AdminSupplier = () => {
       setCity(response.body?.estabelecimento.cidade.nome);
       setState(response.body?.estabelecimento.estado.nome);
       setNumber(response.body?.estabelecimento.numero);
-      setIsSimple(response?.body?.simples.simples == 'Sim' ? true : false); 
+      setIsSimple(response?.body?.simples?.simples == 'Sim' ? true : false); 
       setAddress(response?.body?.estabelecimento.logradouro);
       setUf(response?.body?.estabelecimento.estado.nome);
       setEmail(response?.body?.estabelecimento.email);
-      setIsSimei(response?.body?.simples.mei == 'Sim' ? true : false);
+      setIsSimei(response?.body?.simples?.mei == 'Sim' ? true : false);
     }).catch(async error => {
       await openAndCloseRegisterSupplier();
       toast({
