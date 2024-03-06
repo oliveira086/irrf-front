@@ -204,10 +204,11 @@ const AdminSupplier = () => {
       setCity(response.body?.estabelecimento.cidade.nome);
       setState(response.body?.estabelecimento.estado.nome);
       setNumber(response.body?.estabelecimento.numero);
-      setIsSimple(response?.body?.simples);
+      setIsSimple(response?.body?.simples.simples == 'Sim' ? true : false); 
       setAddress(response?.body?.estabelecimento.logradouro);
       setUf(response?.body?.estabelecimento.estado.nome);
       setEmail(response?.body?.estabelecimento.email);
+      setIsSimei(response?.body?.simples.mei == 'Sim' ? true : false);
     }).catch(async error => {
       await openAndCloseRegisterSupplier();
       toast({

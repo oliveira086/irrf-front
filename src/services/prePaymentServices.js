@@ -75,4 +75,14 @@ const createPrePaymentByCompany = async (params) => {
   }
 }
 
-export { getAllPrePayments, getPrePaymentById, updatePrePaymentById, confirmPrePayment, createPrePayment, calculePrePayment, createPrePaymentByCompany }
+const getAliquotEfectiveCompany = async (params) => {
+  try {
+    let response = await api.post('/pre-payments/efective-aliquot', params);
+    return response.data
+  } catch (error) {
+    ValidateSession(error.response.status);
+    throw new Error(error.response.status);
+  }
+}
+
+export { getAllPrePayments, getPrePaymentById, updatePrePaymentById, confirmPrePayment, createPrePayment, calculePrePayment, createPrePaymentByCompany, getAliquotEfectiveCompany }

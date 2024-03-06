@@ -38,6 +38,7 @@ import FiscalReinfDocument from './pages/FiscalPanel/FiscalReinfDocument';
 import AdminComputers from './pages/AdminComputers';
 import AdminAliquots from './pages/AdminAliquots';
 import AdminUsers from './pages/AdminUsers';
+import AliquotEfective from './pages/AliquotEfective';
 
 const theme = extendTheme({
   fonts: {
@@ -86,6 +87,7 @@ function Router(){
           <Route path='/reinf-comprovante' exact element={ <FiscalReinfDocument />} />
           <Route path='/solicitacoes-pagamento' exact element={<PaymentSoliciations />} />
           <Route path='/home-contador' exact element={<HomeAccountant />} />
+          <Route path='/aliquota-efetiva' exact element={<AliquotEfective />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
