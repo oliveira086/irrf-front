@@ -22,13 +22,14 @@ import { getComputersByCity } from "../../services/paymentServices";
 import { verifyCompany } from "../../services/companyServices";
 
 import convertCurrency from '../../utils/convertCurrency';
-import { socket } from '../../utils/socket';
+// import { socket } from '../../utils/socket';
 
 import { PrePaymentStyle } from './style';
 
 const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, setData, onClick, computers, setComputer, computerSelected,
   setComputerSelected, companyData, setCompanyData }) => {
   
+    console.log(date);
   async function openModal() {
     setData(data);
     onClick();
@@ -143,8 +144,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
 
     setIssItemCod(`${modalData?.['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label']}`.split('–')[0]);
     setIrrfItemCode(modalData?.['company_id_pre_payments.products_services_id_company.code']);
-    
-    console.log(modalData, '=-=-0=-=-0=-0=')
+
     // Logica para inserir a aliquota correta
     if(modalData?.['company_id_pre_payments.is_simple'] == true && modalData?.index == null) {
       setAliquot('');
@@ -690,7 +690,7 @@ const PrePayment = () => {
                     img={prePaymentDataCallback.tax_note_link}
                     city={prePaymentDataCallback['city_id_pre_payments.label']}
                     state={prePaymentDataCallback['city_id_pre_payments.city_uf_id.label']}
-                    date={moment(prePaymentDataCallback.createdAt).format('DD/MM/YYYY')}
+                    date={moment(prePaymentDataCallback.createdAt).format('DD/MM/YYYY : HH:mm:ss')}
                     tax_note={prePaymentDataCallback.tax_note}
                     data={prePaymentDataCallback}
                     modalData={modalData}
