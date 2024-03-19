@@ -55,8 +55,7 @@ const AdminAliquots = () => {
     setAliquot(data?.value);
     setItemId(data?.id);
     setIncidence(data?.incidence)
-    setDeduction(data?.['iss_services_products_services_id.products_services_id_discount.enabled'] == 0 || null ? false : true)
-
+    setDeduction(validateDeduction(data?.['iss_services_products_services_id.products_services_id_discount.enabled']));
     setIsOpen(!isOpen);
   }
 
