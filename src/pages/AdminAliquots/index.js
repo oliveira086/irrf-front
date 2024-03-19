@@ -38,6 +38,7 @@ const AdminAliquots = () => {
   const [aliquot, setAliquot] = useState('');
   const [itemId, setItemId] = useState('');
   const [incidence, setIncidence] = useState(false);
+  const [deduction, setDeduction] = useState(false);
 
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
@@ -50,13 +51,21 @@ const AdminAliquots = () => {
   }
 
   async function openAndCloseAliquotEdit(data) {
-    console.log(data);
     setLabel(data?.['iss_services_products_services_id.label']);
     setAliquot(data?.value);
     setItemId(data?.id);
     setIncidence(data?.incidence)
+    setDeduction(data?.['iss_services_products_services_id.products_services_id_discount.enabled'] == 0 || null ? false : true)
 
     setIsOpen(!isOpen);
+  }
+
+  function validateDeduction (data) {
+    if(data == null || data == 0) {
+      return false
+    } else {
+      return true
+    }
   }
 
   async function handlerSubmitEdit() {
@@ -64,7 +73,8 @@ const AdminAliquots = () => {
     const object = {
       id: itemId,
       value: aliquot,
-      incidence: incidence
+      incidence: incidence,
+      deduction: deduction
     }
 
     updateIssService(object).then(response => {
@@ -131,6 +141,7 @@ const AdminAliquots = () => {
               <chakra.Thead>
                 <chakra.Tr>
                   <chakra.Th>Nome</chakra.Th>
+                  <chakra.Th>Dedução</chakra.Th>
                   <chakra.Th>Incidente</chakra.Th>
                   <chakra.Th>Aliquota</chakra.Th>
                   <chakra.Th></chakra.Th>
@@ -145,6 +156,7 @@ const AdminAliquots = () => {
                         return (
                           <chakra.Tr>
                             <chakra.Td>{rowsCallback?.['iss_services_products_services_id.label']}</chakra.Td>
+                            <chakra.Td>{<chakra.Switch className='mr-4' size='md' isChecked={ validateDeduction(rowsCallback?.['iss_services_products_services_id.products_services_id_discount.enabled'])} /> }</chakra.Td>
                             <chakra.Td>{<chakra.Switch className='mr-4' size='md' isChecked={rowsCallback?.incidence} />}</chakra.Td>
                             <chakra.Td>{rowsCallback.value} %</chakra.Td>
                             <chakra.Td><TbEdit size={28} className='cursor-pointer' onClick={() => openAndCloseAliquotEdit(rowsCallback)}/></chakra.Td>
@@ -199,6 +211,10 @@ const AdminAliquots = () => {
               <div>
                 <chakra.Switch isChecked={incidence} onChange={(e) => {setIncidence(!incidence)}} />
                 <span className='ml-2'>Incidente</span>
+              </div>
+              <div>
+                <chakra.Switch isChecked={deduction} onChange={(e) => {setDeduction(!deduction)}} />
+                <span className='ml-2'>Dedução da base de cálculo</span>
               </div>
             </div>
 
