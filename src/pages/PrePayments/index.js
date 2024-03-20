@@ -167,12 +167,24 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
         modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.enabled'],
         modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.products_services_id']
       ));
+
+      setHasDiscountAssociate(validateDeduction(
+        true,
+        modalData?.products_services_id
+      ));
     }
     else {
       setHasDiscount(validateDeduction(
         true,
         modalData?.products_services_id
       ));
+
+      setHasDiscountAssociate(
+        validateDeduction(
+          modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.enabled'],
+          modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.products_services_id']
+        )
+      )
     }
 
     // Logica para inserir a aliquota correta
@@ -492,6 +504,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                     <span className={`my-2 font-semibold ${ modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false ? 'text-[#18BA18]' : 'text-[#2F4ECC]'}`}>
                       {modalData?.['pre_payment_associate_id.type'] == 'simples' ? `${modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false  ? 'ISS - Jurisprudencia' : 'ISS - Legal'}` : 'IRRF'}
                     </span>
+                    <span className={`my-2 font-semibold ml-2 text-[#BB0000] `}>{hasDiscountAssociate == true ? '- Dedução da base de cálculo' : ''}</span>
                     <div className='flex p-2 w-auto border rounded-lg'>
                       <div className='w-44 mr-3'>
                         <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={valueAssociate} onChange={e => setValueAssociate(e.target.value)} />
