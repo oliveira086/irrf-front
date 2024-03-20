@@ -29,7 +29,6 @@ import { PrePaymentStyle } from './style';
 const PrePaymentItem = ({ img, city, state, date, tax_note, data, modalData, setData, onClick, computers, setComputer, computerSelected,
   setComputerSelected, companyData, setCompanyData }) => {
   
-    console.log(date);
   async function openModal() {
     setData(data);
     onClick();
@@ -105,6 +104,8 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   const [taxNote, setTaxNote] = useState(`${modalData?.tax_note}`);
   const [taxNoteSerie, setTaxNoteSerie] = useState(`${modalData?.tax_note_serie}`);
   const [isTaxable, setIsTaxable] = useState(true);
+  const [hasDiscount, setHasDiscount] = useState(false);
+  const [hasDiscountAssociate, setHasDiscountAssociate] = useState(false)
   // ===================================
   // Estado para Formulario de pagamento associado no Modal ===
   const [valueAssociate, setValueAssociate] = useState(`${modalData?.['pre_payment_associate_id.value']}`);
@@ -122,6 +123,22 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   const [comment, setComment] = useState('');
   // ===================================
   
+  function validateDeduction (data, id) {
+    const irrfDeductionItemsCode = [130, 132, 133, 138, 139];
+
+    if(modalData?.type == 'ordinario') {
+      if(irrfDeductionItemsCode.find((el) => el == id)) {
+        return true;
+      }
+    } else {
+      if(data == null || data == 0) {
+        return false
+      } else {
+        return true
+      }
+    }
+  }
+
   useEffect(() => {
     validateTaxablePayment(modalData);
     setCnpj(modalData?.cnpj);
@@ -144,6 +161,19 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
 
     setIssItemCod(`${modalData?.['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label']}`.split('–')[0]);
     setIrrfItemCode(modalData?.['company_id_pre_payments.products_services_id_company.code']);
+
+    if(modalData?.type == 'simples') {
+      setHasDiscount(validateDeduction(
+        modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.enabled'],
+        modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.products_services_id']
+      ));
+    }
+    else {
+      setHasDiscount(validateDeduction(
+        true,
+        modalData?.products_services_id
+      ));
+    }
 
     // Logica para inserir a aliquota correta
     if(modalData?.['company_id_pre_payments.is_simple'] == true && modalData?.index == null) {
@@ -266,7 +296,6 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
       };
       
     } catch (error) {
-      console.log(error);
       toast({
         title: 'Houve um problema ao calcular esse pré pagamento!',
         status: 'error',
@@ -410,6 +439,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                 
             <div className={PrePaymentStyle.RowContainer}>
               <div>
+                
                 <span className={`my-2 font-semibold ${ modalData?.['city_id_pre_payments.opt_law'] == true && modalData?.['city_id_pre_payments.opt_legal'] == false ? 'text-[#18BA18]' : 'text-[#2F4ECC]'}` }>
                   
                   {
@@ -423,6 +453,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
 
                   
                 </span>
+                <span className={`my-2 font-semibold ml-2 text-[#BB0000] `}>{hasDiscount == true ? '- Dedução da base de cálculo' : ''}</span>
                 <div className='flex p-2 w-auto border rounded-lg'>
                   <div className='w-44 mr-3'>
                     <MoneyInput label='Crédito / Pagamento' placeholder='Crédito de pagamento' value={value} onChange={e => setValue(e.target.value)} />
@@ -449,6 +480,7 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
                   
                 </div>
               </div>
+              
             </div>
 
             { modalData?.pre_payment_associate == null ?
