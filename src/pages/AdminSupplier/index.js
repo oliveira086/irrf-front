@@ -196,7 +196,7 @@ const AdminSupplier = () => {
   }
 
   async function searchCompanyByCnpj() {
-    await findCompanyByCNPJ({ cnpj: cnpj, city_id: query.get("cityId") }).then(response => { 
+    await findCompanyByCNPJ({ cnpj: cnpj, city_id: query.get("cityId") }).then(response => {
       setCompanyName(response.body?.razao_social);
       setCep(response.body?.estabelecimento.cep);
       setDistrict(response.body?.estabelecimento.bairro);

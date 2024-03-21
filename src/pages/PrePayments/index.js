@@ -123,10 +123,10 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
   const [comment, setComment] = useState('');
   // ===================================
   
-  function validateDeduction (data, id) {
+  function validateDeduction (data, id, type) {
     const irrfDeductionItemsCode = [130, 132, 133, 138, 139];
 
-    if(modalData?.type == 'ordinario') {
+    if(type == 'ordinario') {
       if(irrfDeductionItemsCode.find((el) => el == id)) {
         return true;
       }
@@ -162,27 +162,33 @@ const PrePaymentModal = ({ isOpen, setIsOpen, imagem, modalData, computerSelecte
     setIssItemCod(`${modalData?.['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.label']}`.split('–')[0]);
     setIrrfItemCode(modalData?.['company_id_pre_payments.products_services_id_company.code']);
 
+    console.log(modalData);
+
     if(modalData?.type == 'simples') {
       setHasDiscount(validateDeduction(
         modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.enabled'],
-        modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.products_services_id']
+        modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.products_services_id'],
+        modalData?.type
       ));
 
       setHasDiscountAssociate(validateDeduction(
-        true,
-        modalData?.products_services_id
+        1,
+        modalData?.products_services_id,
+        modalData?.['pre_payment_associate_id.type']
       ));
     }
     else {
       setHasDiscount(validateDeduction(
-        true,
-        modalData?.products_services_id
+        1,
+        modalData?.products_services_id,
+        modalData?.type
       ));
 
       setHasDiscountAssociate(
         validateDeduction(
           modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.enabled'],
-          modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.products_services_id']
+          modalData['company_id_pre_payments.iss_companies_id.iss_companies_iss_services_id.iss_services_products_services_id.products_services_id_discount.products_services_id'],
+          modalData?.['pre_payment_associate_id.type']
         )
       )
     }
