@@ -60,11 +60,11 @@ const AdminAliquots = () => {
   }
 
   function validateDeduction (data) {
-    if(data == null || data == 0) {
-      return false
-    } else {
+    if(data == 1) {
       return true
     }
+
+    return false
   }
 
   async function handlerSubmitEdit() {
